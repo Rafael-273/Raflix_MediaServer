@@ -37,7 +37,6 @@ class User(models.Model):
         origin_width, origin_height = img_pil.size
 
         if origin_width <= new_width:
-            print('largura igual ou menor que a original')
             img_pil.close()
             return
 
@@ -48,8 +47,6 @@ class User(models.Model):
             optimize=True,
             quality=50
         )
-
-        print('imagem redimensionada')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
