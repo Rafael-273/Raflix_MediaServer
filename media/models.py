@@ -3,6 +3,8 @@ from embed_video.fields import EmbedVideoField
 from PIL import Image
 import os
 from django.conf import settings
+from django.utils.text import slugify
+from django.core.validators import FileExtensionValidator
 
 class Admin(models.Model):
     admin = models.CharField(
@@ -23,7 +25,7 @@ class Admin(models.Model):
 
 class User(models.Model):
     name = models.CharField(max_length=55, blank=False)
-    photo = models.ImageField(blank=True)
+    photo = models.ImageField(upload_to='static/media/img', default='img' ,blank=True, null=True)
     email = models.EmailField(blank=False)
     password = models.CharField(max_length=20, blank=False, null=False)
     telephone = models.IntegerField(blank=True)
@@ -79,9 +81,16 @@ class Evaluation(models.Model):
     
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
+    slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
     poster = models.ImageField(blank=True)
-    media = EmbedVideoField()
+    media = models.FileField(
+        null=False,
+        blank=False,
+        upload_to='static/media/video',
+        validators=[
+            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])
+        ])
     trailer = EmbedVideoField()
 
     @staticmethod
@@ -106,6 +115,10 @@ class Media(models.Model):
         print('imagem redimensionada')
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            slug = f'{slugify(self.title)}'
+            self.slug = slug
+
         super().save(*args, **kwargs)
 
         max_image_size = 800

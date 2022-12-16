@@ -1,0 +1,29 @@
+{% load embed_video_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../pplayer/assets/pplayer.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../pplayer/assets/pplayer.js"></script>
+</head>
+<body>
+
+{% for movie in movies %}
+
+{{ movie.title }}
+
+<img src="{{ movie.poster.url }}" alt="">
+<video autoplay="autoplay" controls="controls" preload="preload">
+
+    <source src="img/{{ movie.media }}" type="video/mp4">
+
+</video>
+
+{% endfor %}
+</body>
+</html>
