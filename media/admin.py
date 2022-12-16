@@ -4,7 +4,11 @@ from . import models
 admin.site.register(models.Admin)
 admin.site.register(models.User)
 admin.site.register(models.Evaluation)
-admin.site.register(models.Media)
+
+class MediaAdmin(admin.ModelAdmin):
+    list_display = ['title', 'release_year']
+
+admin.site.register(models.Media, MediaAdmin)
 admin.site.register(models.Movie)
 admin.site.register(models.Serie)
 admin.site.register(models.Season)
