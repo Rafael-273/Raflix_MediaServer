@@ -1,29 +1,117 @@
+{% extends 'static/base.html' %}
+{%  load static %}
 {% load embed_video_tags %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="../pplayer/assets/pplayer.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="../pplayer/assets/pplayer.js"></script>
-</head>
-<body>
+{% block conteudo %}
 
-{% for movie in movies %}
+    <!-- Header -->
+    <div class="banner">
+        <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/esquadrao_capa.webp" class="bg">
+            <source src="{% static 'assets/trailer_banner.mp4' %}" type="video/mp4">
+            <object>
+              <embed src="{% static 'assets/trailer_banner.mp4' %}" type="application/x-shockwave-flash" 
+              allowfullscreen="false" allowscriptaccess="always">  		
+            </object>
+            Formato não suportado  
+          </video>
+        <div class="content">
+            <img src="{% static 'assets/title1.png' %}" class="movieTitle">
+            <h4>
+                <span>2021</span>
+                <span><i>16+</i></span>
+                <span>2h 12m</span>
+                <span>Ação</span>
+            </h4>
+            <p>
+                O governo envia os supervilões mais perigosos do mundo para a remota ilha de Corto Maltese, repleta de inimigos. Armados com armas de alta tecnologia, eles viajam pela selva perigosa em uma missão de busca e destruição com o Coronel Rick Flag.
+            </p>
 
-{{ movie.title }}
+            <div class="buttons">
+                <a href="#"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
+                <a href="#"><i class="fa fa-plus" aria-hidden = "true"></i>   Minha Lista</a>
+            </div>
+        </div>
+        <div class="banner--fadeBottom"></div>
+    </div>
 
-<img src="{{ movie.poster.url }}" alt="">
-<video autoplay="autoplay" controls="controls" preload="preload">
+    <!--Recentes-->
+    <div class="category_row">
+        <h1>Recentes</h1>
+        <div class="container">
+            <div class="slider">
+                <a href="home.html"><video width="440px" class="trailer" id="link" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link1" controls muted controls poster="{% static 'assets/batman.png' %}" onmouseout="this.src='assets/batman.png';" onmouseover="this.src='assets/batman_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link2" controls muted controls poster="{% static 'assets/freeguy.png' %}" onmouseout="this.src='assets/freeguy.png';" onmouseover="this.src='assets/freeguy_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link3" controls muted controls poster="{% static 'assets/esquadrao.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/esquadrao_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link4" controls muted controls poster="{% static 'assets/007.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/007_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link5" controls muted controls poster="{% static 'assets/venon2.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/venon2_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link6" controls muted controls poster="{% static 'assets/matrix.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/matrix_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link7" controls muted controls poster="{% static 'assets/viuva.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/viuva_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" class="trailer" id="link8" controls muted controls poster="{% static 'assets/mulher.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/mulher_trailer.mp4';"></video></a>
+            </div>
+        </div>
 
-    <source src="img/{{ movie.media }}" type="video/mp4">
+    <!--Marvel-->
+    <div class="category_row">
+        <h1>Marvel</h1>
+        <div class="container">
+            <div class="slider">
+                <a href="home.html"><video width="440px" id="link9" controls muted controls poster="{% static 'assets/loki.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='assets/loki_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link10" controls muted controls poster="{% static 'assets/ultimato.jpg' %}" onmouseout="this.src='assets/batman.png';" onmouseover="this.src='assets/ultimato_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link11" controls muted controls poster="{% static 'assets/guardioes2.png' %}" onmouseout="this.src='assets/freeguy.png';" onmouseover="this.src='assets/guardiões_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link12" controls muted controls poster="{% static 'assets/thor.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/thor3_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link13" controls muted controls poster="{% static 'assets/shang.jpg' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/shang_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link14" controls muted controls poster="{% static 'assets/ultron.jpg' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/ultron_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link15" controls muted controls poster="{% static 'assets/what.jpg' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/whatif_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link16" controls muted controls poster="{% static 'assets/homem2.jpg' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/homem2_trailer.mp4';"></video></a>
+                <a href="home.html"><video width="440px" id="link17" controls muted controls poster="{% static 'assets/eternos.png' %}" onmouseout="this.src='assets/esquadrao.png';" onmouseover="this.src='assets/eternos_trailer.mp4';"></video></a>
+            </div>
+        </div>
 
-</video>
+        <div class="recent_row">
+            <h1 class="recentes">Recentes</h1>
+            <div class="glider-contain category_row_teste">
+                <div class="glider slider_teste ">
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                </div>
+              
+                <button aria-label="Previous" class="glider-prev button_carousel">«</button>
+                <button aria-label="Next" class="glider-next button_carousel">»</button>
+                <div role="tablist" class="dots"></div>
+            </div>
+        </div>
 
-{% endfor %}
-</body>
-</html>
+        <div class="container_row">
+            <h1 class="recentes">Recentes</h1>
+            <div class="glider-contain category_row_teste">
+                <div class="glider1 slider_teste ">
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                  <div><a href="home.html"><video width="440px" class="trailer" controls muted controls poster="{% static 'assets/homem_aranha.png' %}" onmouseout="this.src='assets/homem_aranha.png';" onmouseover="this.src='{% static "assets/trailer2.mp4" %}';"></video></a></div>
+                </div>
+              
+                <button aria-label="Previous" class="glider-prev button_carousel">«</button>
+                <button aria-label="Next" class="glider-next button_carousel">»</button>
+                <div role="tablist" class="dots"></div>
+            </div>
+        </div>
+
+{% endblock %}

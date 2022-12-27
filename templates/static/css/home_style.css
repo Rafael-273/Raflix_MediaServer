@@ -1,0 +1,220 @@
+/* Geral */
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+}
+
+:root{
+    --handle-size: 3rem;
+    --video-gap: .25rem;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+video::-webkit-media-controls {
+    display: none;
+}
+
+/* Main Banner */
+
+.banner {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+	height: 180px;
+	-webkit-mask-image: linear-gradient(to top, transparent 0%, black 50%);
+    mask-image: none;
+}
+
+.banner .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(80%);
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+    margin-bottom: 4%;
+    padding-left: 50px;
+    margin-left: -90px;
+}
+
+.movieTitle {
+    max-width: 680px;
+    margin-left: -125px;
+    margin-bottom: -50px;
+}
+
+.banner .content h4 {
+    color: rgba(253, 253, 253, 0.7);
+    font-weight: 500;
+    margin-top: 14px;
+}
+
+.banner .content h4 span{
+    padding: 0 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.banner .content h4 span:first-child {
+    padding-left: 0;
+}
+
+.banner .content h4 span:last-child {
+    border-right: none;
+}
+
+.banner .content h4 span i {
+    background: red;
+    color: white;
+    padding: 0 8px;
+    display: inline-block;
+    font-style: normal;
+    border-radius: 2px;
+}
+
+.banner .content p {
+    font-size: 1em;
+    font-weight: 300px;
+    line-height: 1.5em;
+    color: white;
+    margin: 10px 0 15px;
+}
+
+.banner .content .buttons {
+    position: relative;
+}
+
+.banner .content .buttons a {
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+    background: red;
+    color: white;
+    padding: 6px 20px;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.banner .content .buttons a:nth-child(2) {
+    background: rgba(14, 14, 14, 0.8);
+}
+
+.banner .content .buttons a:hover:nth-child(2) {
+    background: red;
+}
+
+/* Category Row*/
+
+.slider a video {
+    width: 210px;
+    padding: 5px;
+    margin-top: 7px;
+    border-radius: 1rem;
+    padding: var(--video-gap);
+}
+
+.category_row {
+    margin-top: -4%;
+    margin-left: 20px;
+}
+
+.category_row_teste {
+    position: relative;
+    top: 200px;
+    margin-left: 20px;
+}
+
+.recent_row {
+    position: relative;
+    bottom: 70px;
+    margin-bottom: 150px;
+}
+
+.container_row {
+    position: relative;
+    margin-bottom: 250px;
+}
+
+.slider_teste {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 var(--video-gap);
+    margin-right: 100px;
+    transition: transform 250ms ease-in-out;
+    justify-content: center;
+}
+
+.slider_teste div a video {
+    width: 210px;
+    margin: 5px;
+    margin-top: 7px;
+    border-radius: 1rem;
+    padding: var(--video-gap);
+}
+
+.slider_teste div a video:first-child {
+    margin-left: 90px;
+}
+
+
+.slider_teste div {
+    position: relative;
+    margin: 0 -82px;
+}
+
+.category_row .button_carousel {
+    margin-top: -95px;
+    z-index: 999;
+    padding: 132px 8px 132px 10px;
+    border-radius: 6px;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.category_row .glider-next {
+    margin-right: 23px;
+}
+
+.category_row h1 {
+    margin-left: 23px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 100px;
+    margin-bottom: -195px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 200px;
+}
+
+.slider {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 var(--video-gap);
+    transition: transform 250ms ease-in-out;
+    justify-content: center;
+}
