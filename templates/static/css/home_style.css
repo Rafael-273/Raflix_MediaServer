@@ -173,14 +173,15 @@ video::-webkit-media-controls {
     padding: var(--video-gap);
 }
 
-.slider_teste div a video:first-child {
-    margin-left: 90px;
+.slider_teste div:first-child {
+    position: relative;
+    left: 5%;
 }
 
 
 .slider_teste div {
     position: relative;
-    margin: 0 -82px;
+    margin: 0 -75px;
 }
 
 .category_row .button_carousel {
@@ -189,8 +190,8 @@ video::-webkit-media-controls {
     padding: 132px 8px 132px 10px;
     border-radius: 6px;
     background-color: transparent;
-    backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 }
 
 .category_row .glider-next {
