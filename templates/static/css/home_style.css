@@ -197,3 +197,110 @@ video::-webkit-media-controls {
     bottom: 260px;
 }
 
+/* modal */
+
+.modal {
+    width: 25%;
+    height: 500px;
+    background-color: rgb(17, 17, 17);
+    border-radius: 10px;
+    box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.7);
+}
+
+.modal video {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal div {
+    justify-content: center;
+}
+
+.first_row {
+    margin-top: 15px;
+}
+
+.first_row .play {
+    background-color: transparent;
+    color: white;
+    border-radius: 100%;
+    border-color: white;
+    cursor: pointer;
+    width: 11%;
+    height: 50px;
+}
+
+.first_row .play:hover {
+    background-color: aliceblue;
+    color: black;
+    border: 0;
+    transition: 0.5s;
+}
+
+.first_row .play span {
+    margin-top: 3px;
+}
+
+.first_row .play {
+    margin: 0 2px 0 15px;
+}
+
+.first_row .favorite {
+    background-color: transparent;
+    color: white;
+    border-radius: 100%;
+    border-color: white;
+    width: 11%;
+    height: 50px;
+    cursor: pointer;
+}
+
+.first_row .favorite:hover {
+    background-color: aliceblue;
+    color: black;
+    border: 0;
+    transition: 0.5s;
+}
+
+.first_row .favorite span {
+    margin-top: 3px;
+}
+
+.first_row .favorite span:hover {
+    color: rgb(255, 7, 7);
+    border: 0;
+    transition: 0.3s;
+}
+
+.first_row .info {
+    position: relative;
+    left: 57%;
+    background-color: transparent;
+    color: white;
+    border-radius: 100%;
+    border-color: white;
+    width: 11%;
+    height: 50px;
+    cursor: pointer;
+}
+
+.first_row .info:hover {
+    background-color: aliceblue;
+    color: black;
+    border: 0;
+    transition: 0.5s;
+}
+
+.material-symbols-outlined:hover {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+
+.first_row .info span {
+    margin-top: 3px;
+}

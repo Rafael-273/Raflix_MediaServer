@@ -39,21 +39,9 @@
     <article class="c-carousel">
         <h1 class="title_row">Recentes</h1>
         <div class="c-carousel__slides js-carousel--responsive">
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
+            {% for movie in movies %}
+            <div class="c-carousel__slide"><a href=""><img src="{{ movie.poster.url }}"></a></div>
+            {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-prev button-carousel__left">«</button>
         <button aria-label="Next" class="js-carousel--responsive-next button-carousel__rigth">»</button>
@@ -65,25 +53,47 @@
     <article class="c-carousel">
         <h1 class="title_row">Marvel</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
-            <div class="c-carousel__slide"><a href=""><img src="{% static 'assets/batman.png' %}"></a></div>
+            {% for movie in movies %}
+            <div class="c-carousel__slide"><a href=""><img src="{{ movie.poster.url }}"></a></div>
+            {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-category-prev button-carousel__left">«</button>
         <button aria-label="Next" class="js-carousel--responsive-category-next button-carousel__rigth">»</button>
         <div class="js-carousel--responsive-category-dots dots-carousel" role="tablist"></div>
     </article>
+
+    <!-- Modal -->
+
+    {% for movie in movies %}
+    {% if forloop.first %}
+    <div class="modal">
+        <video loop="true" autoplay="true" controls muted controls>
+            <source src="{{ movie.media.url }}" type="video/mp4"> 
+        </video>
+        <div class="first_row">
+            <button class="play">
+                <span class="material-symbols-outlined">
+                    play_arrow
+                </span>
+            </button>
+            <button class="favorite">
+                <span class="material-symbols-outlined">
+                    favorite
+                </span>
+            </button>
+            <button class="info">
+                <span class="material-symbols-outlined">
+                    expand_more
+                </span>
+            </button>
+        </div>
+        <div>
+            <span class="classificação">{{ movie.getClassification }}</span>
+            <span class="duração">{{ movie.getDuration }}</span>
+            <span class="category">{{ movie.getCategory }}</span>
+        </div>
+    </div>
+    {% endif %}
+    {%  endfor %}
 
 {% endblock %}
