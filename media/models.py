@@ -83,7 +83,7 @@ class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
     slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
-    poster = models.ImageField(blank=True)
+    poster = models.ImageField(upload_to='static/media/poster', blank=True)
     media = models.FileField(
         null=False,
         blank=False,
@@ -129,15 +129,35 @@ class Media(models.Model):
     def __str__(self):
         return self.title
 
+    def getClassification(self):
+        movies = self.media_has_movie.all()
+        for movie in movies:
+            return movie.classification
+
+    def getDuration(self):
+        movies = self.media_has_movie.all()
+        for movie in movies:
+            return movie.duration
+
+    def getCategory(self):
+        movies = self.media_has_movie.all()
+        for movie in movies:
+            genre = movie.movie_has_genre
+        return genre
+
 class Movie(models.Model):
     description = models.TextField()
     duration = models.FloatField(blank=True)
+    classification = models.IntegerField(default=12)
     media = models.ForeignKey(
         'Media', related_name='media_has_movie', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Movie'
         verbose_name_plural = 'Movies'
+
+    def __str__(self):
+        return '{0}'.format(self.media)
 
 class Serie(models.Model):
     description = models.TextField()
@@ -206,6 +226,7 @@ class Movie_has_genre(models.Model):
         'Genre', related_name='genre_has_movie', on_delete=models.CASCADE)
     movie = models.ForeignKey(
         'Movie', related_name='movie_has_genre', on_delete=models.CASCADE)
+    
 
 class Serie_has_genre(models.Model):
     genre = models.ForeignKey(
