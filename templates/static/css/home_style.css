@@ -201,10 +201,10 @@ video::-webkit-media-controls {
 
 .modal {
     width: 25%;
-    height: 500px;
-    background-color: rgb(17, 17, 17);
+    height: 425px;
+    background-color: rgb(12, 12, 12);
     border-radius: 10px;
-    box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.7);
+    box-shadow: 10px 0px 20px rgba(10, 10, 10, 0.7);
 }
 
 .modal video {
@@ -222,8 +222,8 @@ video::-webkit-media-controls {
 }
 
 .first_row .play {
-    background-color: transparent;
-    color: white;
+    background-color: aliceblue;
+    color: rgb(0, 0, 0);
     border-radius: 100%;
     border-color: white;
     cursor: pointer;
@@ -240,6 +240,12 @@ video::-webkit-media-controls {
 
 .first_row .play span {
     margin-top: 3px;
+    font-size: 30px;
+}
+
+.first_row .play:hover > span {
+    color: rgb(255, 7, 7);
+    transition: 0.5s;
 }
 
 .first_row .play {
@@ -267,7 +273,7 @@ video::-webkit-media-controls {
     margin-top: 3px;
 }
 
-.first_row .favorite span:hover {
+.first_row .favorite:hover > span {
     color: rgb(255, 7, 7);
     border: 0;
     transition: 0.3s;
@@ -292,7 +298,7 @@ video::-webkit-media-controls {
     transition: 0.5s;
 }
 
-.material-symbols-outlined:hover {
+.material-symbols-outlined {
   font-variation-settings:
   'FILL' 1,
   'wght' 400,
@@ -303,4 +309,25 @@ video::-webkit-media-controls {
 
 .first_row .info span {
     margin-top: 3px;
+}
+
+.classification {
+    background-color: red;
+    padding: 8px 5px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+}
+
+.duration {
+    background-color: rgb(196, 246, 255);
+    padding: 8px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.info_media {
+    position: relative;
+    top: 7%;
+    left: 4%;
 }
