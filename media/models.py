@@ -142,12 +142,13 @@ class Media(models.Model):
     def getCategory(self):
         movies = self.media_has_movie.all()
         for movie in movies:
-            genre = movie.movie_has_genre
-        return genre
+            genres = movie.movie_has_genre.all()
+            for genre in genres:
+                return genre
 
 class Movie(models.Model):
     description = models.TextField()
-    duration = models.FloatField(blank=True)
+    duration = models.CharField(max_length=10)
     classification = models.IntegerField(default=12)
     media = models.ForeignKey(
         'Media', related_name='media_has_movie', on_delete=models.CASCADE)
