@@ -91,7 +91,14 @@ class Media(models.Model):
         validators=[
             FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])
         ])
-    trailer = EmbedVideoField()
+    trailer = models.FileField(
+        null=False,
+        blank=False,
+        upload_to='static/media/trailer',
+        validators=[
+            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])
+        ])
+    added_in = models.DateField(auto_now = True)
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -142,9 +149,8 @@ class Media(models.Model):
     def getCategory(self):
         movies = self.media_has_movie.all()
         for movie in movies:
-            genres = movie.movie_has_genre.all()
-            for genre in genres:
-                return genre
+            genre = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
+        return genre
 
 class Movie(models.Model):
     description = models.TextField()
@@ -194,13 +200,7 @@ class Episode(models.Model):
         verbose_name = 'Episode'
         verbose_name_plural = 'Episodes'
 
-
-class Genre(models.Model):
-    category = models.CharField(
-        default='N',
-        max_length=2,
-        choices=(
-            ('N', 'Não Definido'),
+genre_choices = (('N', 'Não Definido'),
             ('A', 'Ação'),
             ('AN', 'Animação'),
             ('AV', 'Aventura'),
@@ -211,12 +211,22 @@ class Genre(models.Model):
             ('G', 'Guerra'),
             ('M', 'Musical'),
             ('R', 'Romance'),
-            ('T', 'Terror')
-        )
+            ('T', 'Terror'))
+
+class Genre(models.Model):
+    category = models.CharField(
+        default='N',
+        max_length=2,
+        choices=genre_choices
         )
 
+    def get_genre(self):
+        for genre_content in genre_choices:
+            if self.category in genre_content:
+                return genre_content[1]
+
     def __str__(self):
-        return self.category 
+        return self.get_genre() 
 
     class Meta:
         verbose_name = 'Genre'

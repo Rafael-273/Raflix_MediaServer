@@ -7,10 +7,13 @@
 <div>
     <ul class="menu_list">
         <li>
-            <a href="home.html">Início</a>
+            <a href="{% url 'home' %}">Início</a>
         </li>
         <li>
-            <a href="movies.html">Filmes/Séries</a>
+            <a href="{% url 'movies' %}">Filmes</a>
+        </li>
+        <li>
+            <a href="{% url 'series' %}">Séries</a>
         </li>
         <div class="search">
             <input type="text" placeholder="Search">
