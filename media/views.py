@@ -10,7 +10,9 @@ class Home(ListView):
     context_object_name = 'movies'
 
 class Movies(ListView):
-    pass
+    model = models.Media
+    template_name = 'front/movie.html'
+    context_object_name = 'movies'
 
 class Series(ListView):
     pass  

@@ -89,3 +89,9 @@ new Glider(responsiveCategoryCarousel, {
         
     ]
 })
+
+
+
+
+
+
