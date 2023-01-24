@@ -110,10 +110,12 @@
             var y = position.top - 1105
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
-            modal.removeClass('closed')
-            modal.addClass('open')
-            modal.css('left', x);
-            modal.css('bottom', y);
+            setTimeout(function(){
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x);
+                modal.css('bottom', y);
+            }, 300);
         }
 
         function modalDisplayRecent(movie){
@@ -122,10 +124,12 @@
             var y = position.top - 250
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
-            modal.removeClass('closed')
-            modal.addClass('open')
-            modal.css('left', x);
-            modal.css('bottom', y);
+            setTimeout(function(){
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x);
+                modal.css('bottom', y);
+            }, 300);
         }
 
         function modalPlay(movie){
