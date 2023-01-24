@@ -98,7 +98,12 @@ class Media(models.Model):
         validators=[
             FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])
         ])
-    added_in = models.DateField(auto_now = True)
+    created = models.DateField(auto_now = True)
+
+    def get_recents_movies(self):
+        recent_movies = []
+        if self.created:
+            pass
 
     @staticmethod
     def resize_image(img, new_width=800):
