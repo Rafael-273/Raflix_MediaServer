@@ -121,11 +121,13 @@
             const all_modal = $('.modal');
             setTimeout(function(){
                 all_modal.removeClass('open')
+                setTimeout(function(){
                 modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x);
-                modal.css('bottom', y);
+                    modal.addClass('open')
+                    modal.css('left', x);
+                    modal.css('bottom', y);
             }, 700);
+            }, 300);
         }
 
         function modalDisplayRecent(movie){
@@ -134,14 +136,10 @@
             var y = position.top - 250
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
-            const all_modal = $('.modal');
-            setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x);
-                modal.css('bottom', y);
-            }, 700);
+            modal.removeClass('closed')
+            modal.addClass('open')
+            modal.css('left', x);
+            modal.css('bottom', y);
         }
 
         function modalPlay(movie){
