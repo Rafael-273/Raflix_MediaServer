@@ -1,0 +1,101 @@
+/* Geral */
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+}
+
+:root{
+    --handle-size: 3rem;
+    --video-gap: .25rem;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+video::-webkit-media-controls {
+    display: none;
+}
+
+
+/* carrossel */
+
+.c-carousel {
+    max-width: 100%;
+    padding: 0 30px;
+    height: 435px;
+}
+
+.c-carousel:first-of-type {
+    margin-top: 80px;
+}
+
+.c-carousel__slides {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+}
+
+.c-carousel__slide a img {
+    max-width: 200px;
+    border-radius: 1rem;
+}
+
+.button-carousel__rigth {
+    position: relative;
+    bottom: 300px;
+    left: 97%;
+    padding: 135px 8px 135px 10px;
+    border-radius: 6px;
+    border: 0;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: -8px 0px 10px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    z-index: 999;
+}
+
+.button-carousel__left {
+    position: relative;
+    right: 5px;
+    bottom: 300px;
+    padding: 135px 8px 135px 10px;
+    border-radius: 6px;
+    border: 0;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    z-index: 999;
+}
+
+.dots-carousel {
+    position: relative;
+    bottom: 260px;
+}
+
+
+/* GlideJs Carousel */
+
+.title_row {
+    z-index: 9999;
+    position: relative;
+    bottom: 28px;
+    left: 30px;
+    font-size: 33px;
+    color: rgba(255, 255, 255, 0.8);
+}
