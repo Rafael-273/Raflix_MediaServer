@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+{% extends 'static/base.html' %}
+{%  load static %}
 
-</head>
-<body>
+{% block head %}
 
+    <!-- Home -->
+    <link rel="stylesheet" href="{% static 'css/movie_style.css' %}">
+    <script src="{% static 'js/scripts_home.js' %}" defer></script>
+
+{% endblock %}
+
+{% block conteudo %}
+
+    <!-- Header -->
     <div class="banner">
         <div class="content">
-            <img src="assets/title_freeguy.png" class="movieTitle">
+            <img src="{% static 'assets/title_freeguy.png' %}" class="movieTitle">
             <h4>
                 <span>2021</span>
                 <span><i>16+</i></span>
@@ -28,9 +31,9 @@
             </div>
         </div>
         <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/banner_freeguy.jpg" class="bg">
-            <source src="assets/trailer_freeguy.mp4" type="video/mp4">
+            <source src="{% static 'assets/freeguy_trailer.mp4' %}" type="video/mp4">
             <object>
-              <embed src="assets/trailer_banner.mp4" type="application/x-shockwave-flash" 
+              <embed src="{% static 'assets/freeguy_trailer.mp4' %}" type="application/x-shockwave-flash" 
               allowfullscreen="false" allowscriptaccess="always">  		
             </object>
             Formato não suportado  
@@ -38,41 +41,18 @@
     </div>
 
 
-    <div class="row">
-        <div>
-            <h1>Recentes</h1>
-        </div>
-        <div class="container">
-            <div class="slider">
-                <a href="home.html"><img src="assets/homem_aranha.png"/></a>
-                <a href="home.html"><img src="assets/batman.png"/></a>
-                <a href="home.html"><img src="assets/freeguy.png"/></a>
-                <a href="home.html"><img src="assets/esquadrao.png"/></a>
-                <a href="home.html"><img src="assets/007.png"/></a>
-                <a href="home.html"><img src="assets/venon2.png"/></a>
-                <a href="home.html"><img src="assets/matrix.png"/></a>
-                <a href="home.html"><img src="assets/viuva.png"/></a>
-                <a href="home.html"><img src="assets/mulher.png"/></a>
-            </div>
-        </div>
-    </div>
+     <!-- Category Row -->
 
-    <!--Rodapé-->
-    <footer id="myFooter">
-        <img src="assets/RAFLIX1.png" alt="" class="logo-footer">
-        <div class="footer-social">
-            <a href="https://www.facebook.com/rafael.pinheiro.9421450/" class="social-icons"><i class="fa fa-facebook"></i></a>
-            <a href="https://www.instagram.com/rafaelpinheiro_ofc/" class="social-icons"><i class="fa fa-instagram"></i></a>
-            <a href="https://www.youtube.com/" class="social-icons"><i class="fa fa-youtube"></i></a>
-            <a href="https://twitter.com/i/flow/login?input_flow_data=%7B%22requested_variant%22%3A%22eyJsYW5nIjoicHQifQ%3D%3D%22%7D" class="social-icons"><i class="fa fa-twitter"></i></a>
+     <article class="c-carousel">
+        <h1 class="title_row">Mais como esse</h1>
+        <div class="c-carousel__slides js-carousel--responsive-category">
+            {% for movie in movies %}
+            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href=""><img src="{{ movie.poster.url }}"></a></div>
+            {% endfor %}
         </div>
-        <div class="container1">
-            <p class="footer-copyright">© 2022 Copyright - Rafael Pinheiro</p>
-        </div>
-    </footer>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <button aria-label="Previous" class="js-carousel--responsive-category-prev button-carousel__left">«</button>
+        <button aria-label="Next" class="js-carousel--responsive-category-next button-carousel__rigth">»</button>
+        <div class="js-carousel--responsive-category-dots dots-carousel" role="tablist"></div>
+    </article>
 
-
-
-</body>
-</html>
+{% endblock %}

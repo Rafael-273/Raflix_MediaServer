@@ -1,6 +1,14 @@
 {% extends 'static/base.html' %}
 {%  load static %}
 
+{% block head %}
+
+    <!-- Home -->
+    <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
+    <script src="{% static 'js/scripts_home.js' %}" defer></script>
+
+{% endblock %}
+
 {% block conteudo %}
 
     <!-- Header -->
@@ -41,7 +49,7 @@
         <h1 class="title_row">Recentes</h1>
         <div class="c-carousel__slides js-carousel--responsive">
             {% for movie in movies %}
-            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><a href=""><img src="{{ movie.poster.url }}"></a></div>
+            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-prev button-carousel__left">«</button>
@@ -55,7 +63,7 @@
         <h1 class="title_row">Marvel</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
             {% for movie in movies %}
-            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href=""><img src="{{ movie.poster.url }}"></a></div>
+            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-category-prev button-carousel__left">«</button>
@@ -82,9 +90,9 @@
                 </span>
             </button>
             <button class="info">
-                <span class="material-symbols-outlined">
+                <a href="{% url 'movies' %}"><span class="material-symbols-outlined">
                     expand_more
-                </span>
+                </span></a>
             </button>
         </div>
         <div class="info_media">
@@ -110,10 +118,14 @@
             var y = position.top - 1105
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
-            modal.removeClass('closed')
-            modal.addClass('open')
-            modal.css('left', x);
-            modal.css('bottom', y);
+            const all_modal = $('.modal');
+            setTimeout(function(){
+                all_modal.removeClass('open')
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x);
+                modal.css('bottom', y);
+            }, 700);
         }
 
         function modalDisplayRecent(movie){
@@ -122,10 +134,14 @@
             var y = position.top - 250
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
-            modal.removeClass('closed')
-            modal.addClass('open')
-            modal.css('left', x);
-            modal.css('bottom', y);
+            const all_modal = $('.modal');
+            setTimeout(function(){
+                all_modal.removeClass('open')
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x);
+                modal.css('bottom', y);
+            }, 700);
         }
 
         function modalPlay(movie){
