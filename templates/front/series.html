@@ -1,0 +1,43 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block head %}
+
+    <!-- Home -->
+    <link rel="stylesheet" href="{% static 'css/series_style.css' %}">
+    <script src="{% static 'js/scripts_home.js' %}" defer></script>
+
+{% endblock %}
+{% block conteudo %}
+
+    <!-- Header -->
+    <div class="banner">
+        <div class="content">
+            <img src="{% static 'assets/title_freeguy.png' %}" class="movieTitle">
+            <h4>
+                <span>2021</span>
+                <span><i>16+</i></span>
+                <span>2h 12m</span>
+                <span>Ação</span>
+            </h4>
+            <p>
+                O governo envia os supervilões mais perigosos do mundo para a remota ilha de Corto Maltese, repleta de inimigos. Armados com armas de alta tecnologia, eles viajam pela selva perigosa em uma missão de busca e destruição com o Coronel Rick Flag.
+            </p>
+
+            <div class="buttons">
+                <a href="play.html"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
+                <a href="movies.html"><i class="fa fa-plus" aria-hidden = "true"></i>   Mais Filmes</a>
+            </div>
+        </div>
+        <img src="{% static 'assets/banner_freeguy.jpg' %}" class="image" />
+    </div>
+
+    <!--Filmes-->
+    <div class="movies">
+        <div class="movies_all">
+            {% for movie in movies %}
+            <div name="{{ movie.slug }}" class="movie" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

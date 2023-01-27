@@ -3,6 +3,8 @@ from django.views.generic.list import ListView
 from django.views import View
 from . import models
 
+class Login(ListView):
+    template_name = 'front/login.html'
 
 class Home(ListView):
     model = models.Media
@@ -11,14 +13,18 @@ class Home(ListView):
 
 class Movies(ListView):
     model = models.Media
-    template_name = 'front/movie.html'
+    template_name = 'front/movies.html'
     context_object_name = 'movies'
 
 class Series(ListView):
-    pass  
+    model = models.Media
+    template_name = 'front/series.html'
+    context_object_name = 'movies' 
 
 class Media(ListView):
-    pass 
+    model = models.Media
+    template_name = 'front/movie.html'
+    context_object_name = 'movies'
 
 class User(ListView):
     pass 
