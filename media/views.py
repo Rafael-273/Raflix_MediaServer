@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views import View
 from . import models
 
 class Login(ListView):
+    model = models.Media
     template_name = 'front/login.html'
+    context_object_name = 'movies'
 
 class Home(ListView):
     model = models.Media
@@ -21,10 +24,11 @@ class Series(ListView):
     template_name = 'front/series.html'
     context_object_name = 'movies' 
 
-class Media(ListView):
+class Media(DetailView):
     model = models.Media
     template_name = 'front/movie.html'
     context_object_name = 'movies'
+    slug_url_kwarg = 'slug'
 
 class User(ListView):
     pass 
