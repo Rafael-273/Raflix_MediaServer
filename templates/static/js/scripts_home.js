@@ -16,15 +16,15 @@ new Glider(responsiveCarousel, {
         {
             breakpoint: 1700,
             settings: {
-                slidesToShow: 8.7,
-                slidesToScroll: 8.7,
+                slidesToShow: 9,
+                slidesToScroll: 9,
             }
         },
         {
             breakpoint: 1410,
             settings: {
-                slidesToShow: 7.85,
-                slidesToScroll: 7.85,
+                slidesToShow: 8,
+                slidesToScroll: 8,
             }
         },
         {
@@ -61,8 +61,8 @@ new Glider(responsiveCategoryCarousel, {
         {
             breakpoint: 1700,
             settings: {
-                slidesToShow: 8.7,
-                slidesToScroll: 8.7,
+                slidesToShow: 9,
+                slidesToScroll: 9,
             }
         },
         {
