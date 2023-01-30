@@ -14,24 +14,30 @@
     <!-- Header -->
     <div class="banner">
         <div class="content">
-            <img src="{% static 'assets/title_freeguy.png' %}" class="movieTitle">
+            <img src="{{ movie.title_img.url }}" class="movieTitle">
             <h4>
-                <span>2021</span>
-                <span><i>16+</i></span>
-                <span>2h 12m</span>
-                <span>Ação</span>
+                <span>{{ movie.release_year}}</span>
+                <span><i>{{ movie.getClassification }}+</i></span>
+                <span>{{ movie.getDuration }}H</span>
+                <span>
+                    {% for genre in movie.getCategory %}
+
+                    {{ genre }}
+
+                    {% endfor %}
+                </span>
             </h4>
-            <p>
-                O governo envia os supervilões mais perigosos do mundo para a remota ilha de Corto Maltese, repleta de inimigos. Armados com armas de alta tecnologia, eles viajam pela selva perigosa em uma missão de busca e destruição com o Coronel Rick Flag.
+            <p class="description" onclick="description(this)">
+                {{ movie.getDescription }}
             </p>
 
             <div class="buttons">
                 <a href="play.html"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
-                <a href="movies.html"><i class="fa fa-plus" aria-hidden = "true"></i> Mais filmes</a>
+                <a href="{% url 'movies' %}"><i class="fa fa-plus" aria-hidden = "true"></i> Mais filmes</a>
             </div>
         </div>
         <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/banner_freeguy.jpg" class="bg">
-            <source src="{% static 'assets/freeguy_trailer.mp4' %}" type="video/mp4">
+            <source src="{{ movie.trailer.url }}" type="video/mp4">
             <object>
               <embed src="{% static 'assets/freeguy_trailer.mp4' %}" type="application/x-shockwave-flash" 
               allowfullscreen="false" allowscriptaccess="always">  		
@@ -43,16 +49,33 @@
 
      <!-- Category Row -->
 
-     <article class="c-carousel">
+     <!-- <article class="c-carousel">
         <h1 class="title_row">Mais como esse</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
-            {% for movie in movies %}
+            {% for movie in get_media %}
             <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href=""><img src="{{ movie.poster.url }}"></a></div>
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-category-prev button-carousel__left">«</button>
         <button aria-label="Next" class="js-carousel--responsive-category-next button-carousel__rigth">»</button>
         <div class="js-carousel--responsive-category-dots dots-carousel" role="tablist"></div>
-    </article>
+    </article> -->
+
+    <script>
+
+        function description(span){
+            const description = span.innerText
+            const permission = 300
+            const total = description.length
+            var Array = []
+            Array.push(description)
+            if(total > permission){
+                rest = permission - total
+                span.value = span.substr(0, permission)
+            }
+            console.log(description.length)
+        }
+
+    </script>
 
 {% endblock %}

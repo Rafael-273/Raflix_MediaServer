@@ -90,7 +90,7 @@
                 </span>
             </button>
             <button class="info">
-                <a href="{% url 'movies' %}"><span class="material-symbols-outlined">
+                <a href="{{ movie.slug }}"><span class="material-symbols-outlined">
                     expand_more
                 </span></a>
             </button>
@@ -124,7 +124,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x);
-                modal.css('bottom', y);
+                modal.css('bottom', y+50);
             }, 700);
         }
 
@@ -140,7 +140,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x);
-                modal.css('bottom', y);
+                modal.css('bottom', y+50);
             }, 700);
         }
 

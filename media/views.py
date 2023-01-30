@@ -27,7 +27,7 @@ class Series(ListView):
 class Media(DetailView):
     model = models.Media
     template_name = 'front/movie.html'
-    context_object_name = 'movies'
+    context_object_name = 'movie'
     slug_url_kwarg = 'slug'
 
 class User(ListView):
