@@ -127,7 +127,7 @@
 
 .movieTitle {
     max-width: 700px;
-    margin-bottom: -70px;
+    margin-bottom: 10px;
     margin-left: -10px;
 }
 
@@ -259,4 +259,11 @@ a img:hover{
     transform: scale(1.06);
     margin: 0 8px;
     border-radius: 30px;
+}
+
+.description {
+    max-width: 600px; // Limite maximo do texto
+    white-space: nowrap; // Removendo quebra de linha
+    overflow: hidden; // Removendo a barra de rolagem
+    text-overflow: ellipsis; // Adicionando "..." ao final do texto
 }

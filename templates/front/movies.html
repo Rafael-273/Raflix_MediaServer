@@ -36,7 +36,7 @@
     <div class="movies">
         <div class="movies_all">
             {% for movie in movies %}
-            <div name="{{ movie.slug }}" class="movie" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            <div name="{{ movie.slug }}" class="movie" onmouseenter="modalDisplayRecent(this)"><a href="{{ movie.slug }}"><img src="{{ movie.poster.url }}"></a></div>
             {% endfor %}
         </div>
     </div>
