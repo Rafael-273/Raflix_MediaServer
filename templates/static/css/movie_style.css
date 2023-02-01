@@ -107,12 +107,22 @@
     height: 1200px;
     margin-bottom: -400px;
     mask-image: none;
+    z-index: 9999 !important;
 }
 
 .bg {
     margin-left: 5px;
     width: 100%;
     -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
+}
+
+.shadow {
+    position: relative;
+    bottom: 15%;
+    max-width: 800px;
+    height: 1000px;
+    background: linear-gradient(270deg, transparent, rgb(0, 0, 0));
+    z-index: 5 !important;
 }
 
 .content {
@@ -151,9 +161,8 @@
 }
 
 .banner .content h4 span i {
-    background: #2486cc;
     color: white;
-    padding: 0 8px;
+    padding: 0 10px;
     display: inline-block;
     font-style: normal;
     border-radius: 2px;
@@ -262,8 +271,12 @@ a img:hover{
 }
 
 .description {
-    max-width: 600px; // Limite maximo do texto
-    white-space: nowrap; // Removendo quebra de linha
-    overflow: hidden; // Removendo a barra de rolagem
-    text-overflow: ellipsis; // Adicionando "..." ao final do texto
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;     /* fallback */
+    max-height: 170px;      /* fallback */
+    -webkit-line-clamp: 6; /* number of lines to show */
+    -webkit-box-orient: vertical;
+    cursor: pointer;
 }
