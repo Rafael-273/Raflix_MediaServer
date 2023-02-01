@@ -17,7 +17,15 @@
             <img src="{{ movie.title_img.url }}" class="movieTitle">
             <h4>
                 <span>{{ movie.release_year}}</span>
-                <span><i>{{ movie.getClassification }}+</i></span>
+                {% if movie.getClassification == 12 %}
+                <span><i style="background-color: #2486cc;">{{ movie.getClassification }}+</i></span>
+                {% elif movie.getClassification == 14 %}
+                <span><i style="background-color: #cc7e24;">{{ movie.getClassification }}+</i></span>
+                {% elif movie.getClassification == 16 %}
+                <span><i style="background-color: #ff0000;">{{ movie.getClassification }}+</i></span>
+                {% elif movie.getClassification == 18 %}
+                <span><i style="background-color: #000000;">{{ movie.getClassification }}+</i></span>
+                {% endif %}
                 <span>{{ movie.getDuration }}H</span>
                 <span>
                     {% for genre in movie.getCategory %}
@@ -36,6 +44,7 @@
                 <a href="{% url 'movies' %}"><i class="fa fa-plus" aria-hidden = "true"></i> Mais filmes</a>
             </div>
         </div>
+        <div class="shadow"></div>
         <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/banner_freeguy.jpg" class="bg">
             <source src="{{ movie.trailer.url }}" type="video/mp4">
             <object>
@@ -64,16 +73,12 @@
     <script>
 
         function description(span){
-            const description = span.innerText
-            const permission = 300
-            const total = description.length
-            var Array = []
-            Array.push(description)
-            if(total > permission){
-                rest = permission - total
-                span.value = span.substr(0, permission)
+            if($(span).is('.description')){
+                $(span).removeClass('description')
             }
-            console.log(description.length)
+            else {
+                $(span).addClass('description')
+            }
         }
 
     </script>
