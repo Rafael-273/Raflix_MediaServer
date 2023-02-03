@@ -160,8 +160,12 @@ class Media(models.Model):
     def getCategory(self):
         movies = self.media_has_movie.all()
         for movie in movies:
-            genre = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
-        return genre
+            genres = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
+            for genre in genres:
+                return genre
+
+    def getMedia(self):
+        return self.Media
 
 class Movie(models.Model):
     description = models.TextField()
@@ -222,7 +226,8 @@ genre_choices = (('N', 'Não Definido'),
             ('G', 'Guerra'),
             ('M', 'Musical'),
             ('R', 'Romance'),
-            ('T', 'Terror'))
+            ('T', 'Terror'),
+            ('MA', 'Marvel'))
 
 class Genre(models.Model):
     category = models.CharField(

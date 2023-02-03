@@ -13,6 +13,7 @@
 
     <!-- Header -->
     <div class="banner">
+        <div class="shadow"></div>
         <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/esquadrao_capa.webp" class="bg">
             <source src="{% static 'assets/trailer_banner.mp4' %}" type="video/mp4">
             <object>
@@ -20,7 +21,7 @@
               allowfullscreen="false" allowscriptaccess="always">  		
             </object>
             Formato não suportado  
-          </video>
+        </video>
         <div class="content">
             <img src="{% static 'assets/title1.png' %}" class="movieTitle">
             <h4>
@@ -59,11 +60,14 @@
 
     <!-- Category Row -->
 
+
     <article class="c-carousel">
         <h1 class="title_row">Marvel</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
             {% for movie in movies %}
+            {% if movie.getCategory == 'Marvel' %}
             <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            {% endif %}
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-category-prev button-carousel__left">«</button>
@@ -98,14 +102,12 @@
         <div class="info_media">
             <span class="classification">+{{ movie.getClassification }}</span>
             <span class="duration">{{ movie.getDuration }}h</span>
-            {% for genre in movie.getCategory %}
             <span class="category">
                 <span class="material-symbols-outlined">
                     movie
                 </span>
-                {{ genre }}
+                {{ movie.getCategory }}
             </span>
-            {% endfor %}
         </div>
     </div>
     {%  endfor %}
@@ -125,7 +127,7 @@
                 modal.addClass('open')
                 modal.css('left', x);
                 modal.css('bottom', y+50);
-            }, 700);
+            }, 900);
         }
 
         function modalDisplayRecent(movie){
@@ -141,7 +143,7 @@
                 modal.addClass('open')
                 modal.css('left', x);
                 modal.css('bottom', y+50);
-            }, 700);
+            }, 900);
         }
 
         function modalPlay(movie){
