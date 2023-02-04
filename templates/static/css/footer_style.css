@@ -1,13 +1,25 @@
-#myFooter {
-    margin-right: 40px;
-}
-
 .container1 {
     margin-top: -10px !important;
     margin-left: 10px !important;
-    margin-bottom: 70px !important;
 }
 
 .logo-footer {
-    margin-top: -20px;
+    margin-top: 50px;
+}
+
+#myFooter .container1{
+    text-align: center;
+}
+
+#myFooter .footer-copyright{
+    text-align: center;
+}
+
+#myFooter p{
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#myFooter .logo-footer {
+    max-width: 200px;
+    margin-left: 45%;
 }
