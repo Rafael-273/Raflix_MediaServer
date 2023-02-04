@@ -101,11 +101,6 @@ class Media(models.Model):
         ])
     created = models.DateField(auto_now = True)
 
-    def get_recents_movies(self):
-        recent_movies = []
-        if self.created:
-            pass
-
     @staticmethod
     def resize_image(img, new_width=800):
         img_full_path = os.path.join(settings.MEDIA_ROOT, img.name)
