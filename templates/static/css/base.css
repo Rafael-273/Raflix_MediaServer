@@ -49,9 +49,9 @@ video::-webkit-media-controls {
 
 .button-carousel__rigth {
     position: relative;
-    bottom: 300px;
-    left: 97%;
-    padding: 135px 8px 135px 10px;
+    bottom: 305px;
+    left: 95%;
+    padding: 142px 18px 142px 18px;
     border-radius: 6px;
     border: 0;
     background-color: transparent;
@@ -68,8 +68,8 @@ video::-webkit-media-controls {
 .button-carousel__left {
     position: relative;
     right: 5px;
-    bottom: 300px;
-    padding: 135px 8px 135px 10px;
+    bottom: 305px;
+    padding: 142px 18px 142px 18px;
     border-radius: 6px;
     border: 0;
     background-color: transparent;
@@ -92,7 +92,7 @@ video::-webkit-media-controls {
 /* GlideJs Carousel */
 
 .title_row {
-    z-index: 9999;
+    z-index: 998;
     position: relative;
     bottom: 28px;
     left: 30px;
