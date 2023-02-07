@@ -30,6 +30,12 @@ class Media(DetailView):
     context_object_name = 'movie'
     slug_url_kwarg = 'slug'
 
+class Play(DetailView):
+    model = models.Media
+    template_name = 'front/play.html'
+    context_object_name = 'movie'
+    slug_url_kwarg = 'slug'
+
 class User(ListView):
     pass 
 
