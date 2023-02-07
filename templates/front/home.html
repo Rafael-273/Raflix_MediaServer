@@ -51,7 +51,11 @@
         <h1 class="title_row">Recentes</h1>
         <div class="c-carousel__slides js-carousel--responsive">
             {% for movie in movies %}
+            {% if movie == movies|first %}
+            <div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            {% elif movie != movies|first %}
             <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            {% endif %}
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-prev button-carousel__left">«</button>
@@ -65,7 +69,9 @@
         <h1 class="title_row">Marvel</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
             {% for movie in movies %}
-            {% if movie.getCategory == 'Marvel' %}
+            {% if movie == movies|first and movie.getCategory == 'Marvel' %}
+            <div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplay(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            {% elif movie != movies|first and movie.getCategory == 'Marvel' %}
             <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
             {% endif %}
             {% endfor %}
@@ -128,6 +134,16 @@
                 modal.css('left', x);
                 modal.css('bottom', y+50);
             }, 900);
+            if($(movie).hasClass('first')){
+                console.log('teste33')
+                setTimeout(function(){
+                all_modal.removeClass('open')
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x+135);
+                modal.css('bottom', y+50);
+                }, 900);
+            }
         }
 
         function modalDisplayRecent(movie){
@@ -144,6 +160,16 @@
                 modal.css('left', x);
                 modal.css('bottom', y+50);
             }, 900);
+            if($(movie).hasClass('first')){
+                console.log('teste33')
+                setTimeout(function(){
+                all_modal.removeClass('open')
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x+135);
+                modal.css('bottom', y+50);
+                }, 900);
+            }
         }
 
         function modalPlay(movie){

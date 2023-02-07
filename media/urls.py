@@ -7,6 +7,7 @@ urlpatterns = [
     path('movies', views.Movies.as_view(), name='movies'),
     path('series', views.Series.as_view(), name='series'),
     path('<slug>', views.Media.as_view(), name='media'),
+    path('play/<slug>', views.Play.as_view(), name='play'),
     path('user', views.User.as_view(), name='user'),
     path('favorites', views.Favorites.as_view(), name='favorites'),
 ]

@@ -100,7 +100,6 @@ new Glider(responsiveCategoryCarousel, {
                 slidesToScroll: 4.8,
             }
         },
-        
     ]
 })
 
