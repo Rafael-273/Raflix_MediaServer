@@ -30,13 +30,13 @@ function playVideo() {
     mainVideo.play();
   }
   
-  // Pause video function
+// Pause video function
 function pauseVideo() {
     play_pause.innerHTML = "play_arrow";
     play_pause.title = "play";
     video_player.classList.remove("paused");
     mainVideo.pause();
-  }
+}
   
 play_pause.addEventListener("click", () => {
     const isVideoPaused = video_player.classList.contains("paused");
@@ -214,11 +214,12 @@ fullscreen.addEventListener('click',()=>{
         video_player.classList.add('openFullScreen');
         fullscreen.innerHTML = "fullscreen_exit"
         video_player.requestFullscreen();
-        mainVideo.style.margin = "0 0 320px 0";
+        mainVideo.style.margin = "1.55vw 0 0 0";
     }else {
         video_player.classList.remove('openFullScreen');
         fullscreen.innerHTML = "fullscreen"
         document.exitFullscreen();
+        mainVideo.style.margin = "0 0 0 0";
     }
 });
 
@@ -229,18 +230,19 @@ mainVideo.addEventListener('dblclick',()=>{
         video_player.classList.add('openFullScreen');
         fullscreen.innerHTML = "fullscreen_exit"
         video_player.requestFullscreen();
-        mainVideo.style.margin = "0 0 320px 0";
+        mainVideo.style.margin = "1.55vw 0 0 0";
     }else {
         video_player.classList.remove('openFullScreen');
         mainVideo.innerHTML = "fullscreen"
         document.exitFullscreen();
+        mainVideo.style.margin = "0 0 0 0";
     }
 });
 
 //Aparecer e sumir controles
 
 mainVideo.addEventListener('click',()=>{
-    controls.style.display = "inline";
+    controls.style.removeProperty('display')
 })
 
 controls.addEventListener('mouseleave',()=>{
@@ -250,11 +252,12 @@ controls.addEventListener('mouseleave',()=>{
 //Aparecer e sumir banner top
 
 mainVideo.addEventListener('click',()=>{
-    top_banner.style.display = "inline";
+    top_banner.classList.remove('display_none')
 })
 
 controls.addEventListener('mouseleave',()=>{
-    top_banner.style.display = "none";
+    top_banner.classList.add('display_none')
+    playback.classList.add('display_none')
 })
 
 //Aparecer e sumir Mouse
