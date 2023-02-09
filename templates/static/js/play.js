@@ -20,9 +20,10 @@ picture_in_picture = video_player.querySelector('.picture_in_picture'),
 fullscreen = video_player.querySelector('.fullscreen'),
 settings = video_player.querySelector('.settings'),
 playback = video_player.querySelectorAll('.playback li');
-
+let duration_video_moment = null;
 
 //Função Play
+
 function playVideo() {
     play_pause.innerHTML = "pause";
     play_pause.title = "pause";
@@ -31,6 +32,7 @@ function playVideo() {
   }
   
 // Pause video function
+
 function pauseVideo() {
     play_pause.innerHTML = "play_arrow";
     play_pause.title = "play";
@@ -45,19 +47,18 @@ play_pause.addEventListener("click", () => {
   
 mainVideo.addEventListener("play", () => {
     playVideo();
-  });
+});
   
 mainVideo.addEventListener("pause", () => {
     pauseVideo();
-  });
-  
+});
 
 //Função Play
 function playVideo1() {
     pp.innerHTML = "pause";
     video_player.classList.add("paused");
     mainVideo.play();
-  }
+}
   
   // Pause video function
 function pauseVideo1() {
@@ -69,7 +70,8 @@ function pauseVideo1() {
 pp.addEventListener("click", () => {
     const isVideoPaused = video_player.classList.contains("paused");
     isVideoPaused ? pauseVideo1() : playVideo1();
-  });
+    settings.classList.remove('active');
+});
   
 mainVideo.addEventListener("play", () => {
     playVideo1();
@@ -79,19 +81,6 @@ mainVideo.addEventListener("pause", () => {
     pauseVideo1();
   });
   
-
-//Função Retroceder
-
-fast_rewind.addEventListener('click', ()=>{
-    mainVideo.currentTime -=10;
-})
-
-//Função Avançar
-
-fast_foward.addEventListener('click', ()=>{
-    mainVideo.currentTime +=10;
-})
-
 //Duração completa do vídeo
 
 mainVideo.addEventListener("loadeddata", (e)=>{
@@ -107,6 +96,7 @@ mainVideo.addEventListener("loadeddata", (e)=>{
 
 mainVideo.addEventListener('timeupdate', (e)=>{
     let currentVideoTime = e.target.currentTime
+    duration_video_moment = currentVideoTime
     let currentMin = Math.floor(currentVideoTime / 60);
     let currentSec = Math.floor(currentVideoTime % 60);
 
@@ -118,6 +108,19 @@ mainVideo.addEventListener('timeupdate', (e)=>{
     let progressWidth = (currentVideoTime / videoDuration) * 100;
     progress_Bar.style.width = `${progressWidth}%`;
 })
+
+//Função Retroceder
+
+fast_rewind.addEventListener('click', ()=>{
+    mainVideo.currentTime = duration_video_moment - 10;
+})
+
+//Função Avançar
+
+fast_foward.addEventListener('click', ()=>{
+    mainVideo.currentTime = duration_video_moment + 10;
+})
+
 
 // Atualizar a hora atual de acordo com a barra de progresso
 
@@ -215,11 +218,13 @@ fullscreen.addEventListener('click',()=>{
         fullscreen.innerHTML = "fullscreen_exit"
         video_player.requestFullscreen();
         mainVideo.style.margin = "1.55vw 0 0 0";
+        controls.classList.add('position_controls')
     }else {
         video_player.classList.remove('openFullScreen');
         fullscreen.innerHTML = "fullscreen"
         document.exitFullscreen();
         mainVideo.style.margin = "0 0 0 0";
+        controls.classList.remove('position_controls')
     }
 });
 
@@ -231,11 +236,14 @@ mainVideo.addEventListener('dblclick',()=>{
         fullscreen.innerHTML = "fullscreen_exit"
         video_player.requestFullscreen();
         mainVideo.style.margin = "1.55vw 0 0 0";
+        controls.classList.add('position_controls')
     }else {
         video_player.classList.remove('openFullScreen');
         mainVideo.innerHTML = "fullscreen"
         document.exitFullscreen();
         mainVideo.style.margin = "0 0 0 0";
+        controls.style.margin = "0 0 0 0"
+        controls.classList.remove('position_controls')
     }
 });
 
@@ -257,7 +265,6 @@ mainVideo.addEventListener('click',()=>{
 
 controls.addEventListener('mouseleave',()=>{
     top_banner.classList.add('display_none')
-    playback.classList.add('display_none')
 })
 
 //Aparecer e sumir Mouse

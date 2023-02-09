@@ -97,6 +97,11 @@ video {
     transform: translateY(0);
 }
 
+.position_controls {
+    position: relative;
+    top: 95.4%;
+}
+
 #video_player .controls .progress-area {
     width: 100%;
     height: 5px;
