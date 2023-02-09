@@ -42,7 +42,7 @@ video::-webkit-media-controls {
     justify-content: left;
 }
 
-.c-carousel__slide a img {
+.c-carousel__slide img {
     max-width: 200px;
     border-radius: 1rem;
 }

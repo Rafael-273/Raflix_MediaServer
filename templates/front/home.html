@@ -52,9 +52,9 @@
         <div class="c-carousel__slides js-carousel--responsive">
             {% for movie in movies %}
             {% if movie == movies|first %}
-            <div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% elif movie != movies|first %}
-            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% endif %}
             {% endfor %}
         </div>
@@ -70,9 +70,9 @@
         <div class="c-carousel__slides js-carousel--responsive-category">
             {% for movie in movies %}
             {% if movie == movies|first and movie.getCategory == 'Marvel' %}
-            <div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplay(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% elif movie != movies|first and movie.getCategory == 'Marvel' %}
-            <div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><a href="{% url 'movies' %}"><img src="{{ movie.poster.url }}"></a></div>
+            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% endif %}
             {% endfor %}
         </div>
@@ -90,9 +90,9 @@
         </video>
         <div class="first_row">
             <button class="play">
-                <span class="material-symbols-outlined">
+                <a href="play/{{ movie.slug }}"><span class="material-symbols-outlined">
                     play_arrow
-                </span>
+                </span></a>
             </button>
             <button class="favorite">
                 <span class="material-symbols-outlined">
