@@ -215,28 +215,22 @@ video {
 }
 
 .controls .icon .volume_range {
-    -webkit-appearance: none;
-    appearance: none;
     width: 0px;
-    height: 3px;
-    background: white;
-    color: white;
-    cursor: pointer;
-    outline: none;
-    border: none;
     transition: 0.4s;
+    color: red;
 }
+
 
 .controls .icon .volume_range::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 12px;
+    width: 17px;
     height: 12px;
     border-radius: 50%;
     border: none;
     outline: none;
-    background: white;
-    color: white;
+    background: rgb(255, 0, 0);
+    color: rgb(255, 0, 0);
     opacity: 0;
     transition: 0.3s;
 }
@@ -248,13 +242,13 @@ video {
 
 .controls .icon:hover .volume_range::-webkit-slider-thumb {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events:visible;
     transition: 0.5s;
 }
 
 .controls-right .icon .auto-play {
-    width: 30px;
-    height: 10px;
+    width: 45px;
+    height: 20px;
     border-radius: 20px;
     position: relative;
     margin-right: 8px !important;
@@ -264,7 +258,7 @@ video {
 .controls-right .icon .auto-play::before {
     content: '\e034';
     position: absolute;
-    left: -5px;
+    left: 2px;
     top: 50%;
     transform: translateY(-50%);
     width: 17px;
@@ -277,13 +271,15 @@ video {
     align-items: center;
     cursor: pointer;
     border-radius: 50%;
+    transition: 0.5s;
 }
 
 .controls-right .icon .auto-play.active::before {
     content: '\e037';
-    left: 15px;
+    left: 25px;
     font-family: "Material Symbols Outlined";
-
+    transition: 0.5s;
+    background: #ff1212;
 }
 
 .controls-right .icon .material-symbols-outlined.settingsBtn {
@@ -298,7 +294,7 @@ video {
 #video_player .settings {
     position: absolute;
     right: 25px;
-    bottom: 62px;
+    bottom: 12%;
     background: rgb(28 28 28 / 80%);
     width: 200px;
     height: 250px;
