@@ -22,7 +22,7 @@
                 <div></div>
                 <a href="{% url 'home' %}"><img src="{% static 'assets/logo.png' %}"/></a>
             </div>
-            <video src="{{ movie.trailer.url }}" id="main_video" class="pp"></video>
+            <video src="{{ movie.trailer.url }}" autoplay id="main_video" class="pp"></video>
             <div class="progressAreaTime">0:00</div>
             <div class="controls">
                 <div class="progress-area">
