@@ -124,6 +124,7 @@
     display: none;
 }
 
+
 @keyframes openModal {
     from{
         opacity: 0;
@@ -253,6 +254,19 @@
     border: 0;
     transition: 0.5s;
 }
+
+.first_row .play a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+
+.first_row .play a:hover {
+    background-color: aliceblue;
+    color: rgb(255, 0, 0);
+    border: 0;
+    transition: 0.5s;
+}
+
 
 .first_row .info:hover > a{
     color: black;
