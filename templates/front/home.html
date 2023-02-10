@@ -46,16 +46,11 @@
 
     <!-- Recents Row -->
 
-
     <article class="c-carousel">
         <h1 class="title_row">Recentes</h1>
         <div class="c-carousel__slides js-carousel--responsive">
             {% for movie in movies %}
-            {% if movie == movies|first %}
-            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>
-            {% elif movie != movies|first %}
             <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>
-            {% endif %}
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-prev button-carousel__left">«</button>
@@ -69,9 +64,7 @@
         <h1 class="title_row">Marvel</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
             {% for movie in movies %}
-            {% if movie == movies|first and movie.getCategory == 'Marvel' %}
-            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide first" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
-            {% elif movie != movies|first and movie.getCategory == 'Marvel' %}
+            {% if movie.getCategory == 'Marvel' %}
             <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% endif %}
             {% endfor %}
@@ -127,22 +120,33 @@
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
             const all_modal = $('.modal');
+            const movie_data = movie.parentElement
             setTimeout(function(){
                 all_modal.removeClass('open')
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x);
                 modal.css('bottom', y+50);
-            }, 900);
-            if($(movie).hasClass('first')){
-                console.log('teste33')
+            }, 1000);
+            if(movie_data.classList.contains('left-4')){
+                console.log('teste')
                 setTimeout(function(){
                 all_modal.removeClass('open')
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x+135);
                 modal.css('bottom', y+50);
-                }, 900);
+                }, 1000);
+            }
+            else if(movie_data.classList.contains('right-4')){
+                console.log('teste2')
+                setTimeout(function(){
+                all_modal.removeClass('open')
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x-135);
+                modal.css('bottom', y+50);
+                }, 1000);
             }
         }
 
@@ -153,22 +157,33 @@
             const name_modal = $(movie).attr('name');
             const modal = $('#modal_'+name_modal);
             const all_modal = $('.modal');
+            const movie_data = movie.parentElement
             setTimeout(function(){
                 all_modal.removeClass('open')
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x);
                 modal.css('bottom', y+50);
-            }, 900);
-            if($(movie).hasClass('first')){
-                console.log('teste33')
+            }, 1000);
+            if(movie_data.classList.contains('left-4')){
+                console.log('teste')
                 setTimeout(function(){
                 all_modal.removeClass('open')
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x+135);
                 modal.css('bottom', y+50);
-                }, 900);
+                }, 1000);
+            }
+            else if(movie_data.classList.contains('right-4')){
+                console.log('teste2')
+                setTimeout(function(){
+                all_modal.removeClass('open')
+                modal.removeClass('closed')
+                modal.addClass('open')
+                modal.css('left', x-135);
+                modal.css('bottom', y+50);
+                }, 1000);
             }
         }
 
