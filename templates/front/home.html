@@ -11,8 +11,10 @@
 
 {% block conteudo %}
 
+    <div id="background" onmousemove="modalClosed()"></div>
+
     <!-- Header -->
-    <div class="banner">
+    <div class="banner" onmousemove="modalClosed()">
         <div class="shadow"></div>
         <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/esquadrao_capa.webp" class="bg">
             <source src="{% static 'assets/trailer_banner.mp4' %}" type="video/mp4">
@@ -127,7 +129,7 @@
                 modal.addClass('open')
                 modal.css('left', x);
                 modal.css('bottom', y+50);
-            }, 1000);
+            }, 500);
             if(movie_data.classList.contains('left-4')){
                 console.log('teste')
                 setTimeout(function(){
@@ -166,7 +168,6 @@
                 modal.css('bottom', y+50);
             }, 1000);
             if(movie_data.classList.contains('left-4')){
-                console.log('teste')
                 setTimeout(function(){
                 all_modal.removeClass('open')
                 modal.removeClass('closed')
@@ -176,7 +177,6 @@
                 }, 1000);
             }
             else if(movie_data.classList.contains('right-4')){
-                console.log('teste2')
                 setTimeout(function(){
                 all_modal.removeClass('open')
                 modal.removeClass('closed')
@@ -213,6 +213,11 @@
                     modal.addClass('closed')
                 }
             }, 300);
+        }
+
+        function modalClosed(){
+            const all_modal = $('.modal');
+            all_modal.removeClass('open')
         }
 
     </script>
