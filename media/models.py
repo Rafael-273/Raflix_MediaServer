@@ -156,8 +156,7 @@ class Media(models.Model):
         movies = self.media_has_movie.all()
         for movie in movies:
             genres = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
-            for genre in genres:
-                return genre
+            return genres
 
     def getMedia(self):
         return self.Media
@@ -222,7 +221,8 @@ genre_choices = (('N', 'Não Definido'),
             ('M', 'Musical'),
             ('R', 'Romance'),
             ('T', 'Terror'),
-            ('MA', 'Marvel'))
+            ('MA', 'Marvel'),
+            ('LA', 'Lançamento'))
 
 class Genre(models.Model):
     category = models.CharField(
@@ -248,7 +248,6 @@ class Movie_has_genre(models.Model):
         'Genre', related_name='genre_has_movie', on_delete=models.CASCADE)
     movie = models.ForeignKey(
         'Movie', related_name='movie_has_genre', on_delete=models.CASCADE)
-    
 
 class Serie_has_genre(models.Model):
     genre = models.ForeignKey(

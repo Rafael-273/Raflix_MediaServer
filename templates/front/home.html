@@ -66,7 +66,7 @@
         <h1 class="title_row">Marvel</h1>
         <div class="c-carousel__slides js-carousel--responsive-category">
             {% for movie in movies %}
-            {% if movie.getCategory == 'Marvel' %}
+            {% if movie.getCategory|first == 'Marvel' %}
             <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% endif %}
             {% endfor %}
@@ -107,11 +107,37 @@
                 <span class="material-symbols-outlined">
                     movie
                 </span>
-                {{ movie.getCategory }}
+                {% for genre in movie.getCategory %}
+
+                {{ genre }}
+
+                {% endfor %}
             </span>
         </div>
     </div>
     {%  endfor %}
+
+    <!-- info banner -->
+    {% for movie in movies %}
+    {% if movie.getCategory|last == 'Lançamento' %}
+
+    <div class="trailer_banner" hidden>{{ movie.trailer }}</div>
+    <div class="title_banner" hidden>{{ movie.title_img }}</div>
+    <div class="year_banner" hidden>{{ movie.release_year }}</div>
+    <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
+    <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
+    <div class="category_banner" hidden>
+        {% for genre in movie.getCategory %}
+
+        {{ genre }}
+
+        {% endfor %}
+    </div>
+    <div class="description_banner" hidden>{{ movie.getDescription }}</div>
+
+    {% endif %}
+    {% endfor %}
+
 
     <script>
 
@@ -219,6 +245,8 @@
             const all_modal = $('.modal');
             all_modal.removeClass('open')
         }
+
+        
 
     </script>
 
