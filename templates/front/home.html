@@ -14,10 +14,10 @@
     <div id="background" onmousemove="modalClosed()"></div>
 
     <!-- Header -->
-    <div class="banner" onmousemove="modalClosed()">
+    <div class="banner" onmousemove="modalClosed()" onload="banner_init(this)">
         <div class="shadow"></div>
-        <video width="440px" loop="true" autoplay="true" controls muted controls poster="assets/esquadrao_capa.webp" class="bg">
-            <source src="{% static 'assets/trailer_banner.mp4' %}" type="video/mp4">
+        <video width="440px" loop="true" autoplay="true" controls muted controls class="bg">
+            <source class="video_url" src="" type="video/mp4">
             <object>
               <embed src="{% static 'assets/trailer_banner.mp4' %}" type="application/x-shockwave-flash" 
               allowfullscreen="false" allowscriptaccess="always">  		
@@ -25,15 +25,14 @@
             Formato não suportado  
         </video>
         <div class="content">
-            <img src="{% static 'assets/title1.png' %}" class="movieTitle">
+            <img src="" class="movieTitle">
             <h4>
-                <span>2021</span>
-                <span><i>16+</i></span>
-                <span>2h 12m</span>
-                <span>Ação</span>
+                <span class="year_banner"></span>
+                <span><i class="class_banner"></i></span>
+                <span class="durationBanner"></span>
+                <span class="categoryBanner"></span>
             </h4>
-            <p>
-                O governo envia os supervilões mais perigosos do mundo para a remota ilha de Corto Maltese, repleta de inimigos. Armados com armas de alta tecnologia, eles viajam pela selva perigosa em uma missão de busca e destruição com o Coronel Rick Flag.
+            <p class="descriptionBanner description">
             </p>
 
             <div class="buttons">
@@ -121,8 +120,8 @@
     {% for movie in movies %}
     {% if movie.getCategory|last == 'Lançamento' %}
 
-    <div class="trailer_banner" hidden>{{ movie.trailer }}</div>
-    <div class="title_banner" hidden>{{ movie.title_img }}</div>
+    <div class="trailer_banner" hidden>{{ movie.trailer.url }}</div>
+    <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
     <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
     <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
@@ -246,6 +245,59 @@
             all_modal.removeClass('open')
         }
 
+        const banner = document.querySelectorAll('.banner')
+        const trailer = document.querySelectorAll('.trailer_banner')
+        const title = document.querySelectorAll('.title_banner')
+        const year = document.querySelectorAll('.year_banner')
+        const classification = document.querySelectorAll('.classification_banner')
+        const duration = document.querySelectorAll('.duration_banner')
+        const category = document.querySelectorAll('.category_banner')
+        const description = document.querySelectorAll('.description_banner')
+        const videoBanner = banner[0].querySelectorAll('.video_url')
+        const titleBanner = banner[0].querySelectorAll('.movieTitle')
+        const yearBanner = banner[0].querySelectorAll('.year_banner')
+        const classificationBanner = banner[0].querySelectorAll('.class_banner')
+        const durationBanner = banner[0].querySelectorAll('.durationBanner')
+        const categoryBanner = banner[0].querySelectorAll('.categoryBanner')
+        const descriptionBanner = banner[0].querySelectorAll('.descriptionBanner')
+        
+        var index = 0
+
+        setInterval(function(){
+            if(index == 0){
+            videoBanner[0].setAttribute('src', trailer[index].innerText)
+            titleBanner[0].setAttribute('src', title[index].innerText)
+            yearBanner[0].textContent = year[index].innerText
+            classificationBanner[0].innerHTML = classification[index].innerText + "+"
+            durationBanner[0].textContent = duration[index].innerText + "H"
+            categoryBanner[0].textContent = category[index].innerText
+            descriptionBanner[0].textContent = description[index].innerText
+            index += 1
+            }
+            else if(index == 1){
+                videoBanner[0].setAttribute('src', trailer[index].innerText)
+                titleBanner[0].setAttribute('src', title[index].innerText)
+                yearBanner[0].textContent = year[index].innerText
+                classificationBanner[0].innerHTML = classification[index].innerText + "+"
+                durationBanner[0].textContent = duration[index].innerText + "H"
+                categoryBanner[0].textContent = category[index].innerText
+                descriptionBanner[0].textContent = description[index].innerText
+                index += 1
+            }
+            else if(index == 2){
+                videoBanner[0].setAttribute('src', trailer[index].innerText)
+                titleBanner[0].setAttribute('src', title[index].innerText)
+                yearBanner[0].textContent = year[index].innerText
+                classificationBanner[0].innerHTML = classification[index].innerText + "+"
+                durationBanner[0].textContent = duration[index].innerText + "H"
+                categoryBanner[0].textContent = category[index].innerText
+                descriptionBanner[0].textContent = description[index].innerText
+                index = 0
+            }
+            else {
+                index == 0
+            }
+        }, 5000)
         
 
     </script>

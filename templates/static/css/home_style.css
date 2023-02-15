@@ -35,8 +35,17 @@
 
 .movieTitle {
     max-width: 680px;
-    margin-left: -125px;
-    margin-bottom: -50px;
+}
+
+.description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;     /* fallback */
+    max-height: 170px;      /* fallback */
+    -webkit-line-clamp: 6; /* number of lines to show */
+    -webkit-box-orient: vertical;
+    cursor: pointer;
 }
 
 .banner .content h4 {
