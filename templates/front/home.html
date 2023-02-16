@@ -16,14 +16,7 @@
     <!-- Header -->
     <div class="banner" onmousemove="modalClosed()" onload="banner_init(this)">
         <div class="shadow"></div>
-        <video width="440px" loop="true" autoplay="true" controls muted controls class="bg">
-            <source class="video_url" src="" type="video/mp4">
-            <object>
-              <embed src="{% static 'assets/trailer_banner.mp4' %}" type="application/x-shockwave-flash" 
-              allowfullscreen="false" allowscriptaccess="always">  		
-            </object>
-            Formato não suportado  
-        </video>
+        <video src="" width="440px" loop="true" autoplay="true" muted autoplay id="main_video" class="bg video_url" controls></video>
         <div class="content">
             <img src="" class="movieTitle">
             <h4>
@@ -263,8 +256,7 @@
         
         var index = 0
 
-        setInterval(function(){
-            if(index == 0){
+        if(index == 0){
             videoBanner[0].setAttribute('src', trailer[index].innerText)
             titleBanner[0].setAttribute('src', title[index].innerText)
             yearBanner[0].textContent = year[index].innerText
@@ -273,6 +265,18 @@
             categoryBanner[0].textContent = category[index].innerText
             descriptionBanner[0].textContent = description[index].innerText
             index += 1
+        }
+
+        setInterval(function(){
+            if(index == 0){
+                videoBanner[0].setAttribute('src', trailer[index].innerText)
+                titleBanner[0].setAttribute('src', title[index].innerText)
+                yearBanner[0].textContent = year[index].innerText
+                classificationBanner[0].innerHTML = classification[index].innerText + "+"
+                durationBanner[0].textContent = duration[index].innerText + "H"
+                categoryBanner[0].textContent = category[index].innerText
+                descriptionBanner[0].textContent = description[index].innerText
+                index += 1
             }
             else if(index == 1){
                 videoBanner[0].setAttribute('src', trailer[index].innerText)
@@ -297,7 +301,7 @@
             else {
                 index == 0
             }
-        }, 5000)
+        }, 15000)
         
 
     </script>

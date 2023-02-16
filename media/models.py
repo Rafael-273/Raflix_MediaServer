@@ -90,14 +90,14 @@ class Media(models.Model):
         blank=False,
         upload_to='static/media/video',
         validators=[
-            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])
+            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv','h264'])
         ])
     trailer = models.FileField(
         null=False,
         blank=False,
         upload_to='static/media/trailer',
         validators=[
-            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])
+            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv','h264'])
         ])
     created = models.DateField(auto_now = True)
 
