@@ -15,12 +15,12 @@
         <div class="content">
             <img src="{% static 'assets/title_freeguy.png' %}" class="movieTitle">
             <h4>
-                <span>2021</span>
-                <span><i>16+</i></span>
-                <span>2h 12m</span>
-                <span>Ação</span>
+                <span class="year_banner">2021</span>
+                <span><i class="class_banner">16+</i></span>
+                <span class="durationBanner">2h 12m</span>
+                <span class="categoryBanner">Ação</span>
             </h4>
-            <p>
+            <p class="descriptionBanner description">
                 O governo envia os supervilões mais perigosos do mundo para a remota ilha de Corto Maltese, repleta de inimigos. Armados com armas de alta tecnologia, eles viajam pela selva perigosa em uma missão de busca e destruição com o Coronel Rick Flag.
             </p>
 
@@ -29,7 +29,7 @@
                 <a href="movies.html"><i class="fa fa-plus" aria-hidden = "true"></i>   Mais Filmes</a>
             </div>
         </div>
-        <img src="{% static 'assets/banner_freeguy.jpg' %}" class="image" />
+        <img src="{% static 'assets/banner_freeguy.jpg' %}" class="image img_url" />
     </div>
 
     <!--Filmes-->
@@ -40,4 +40,92 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- info banner -->
+    {% for movie in movies %}
+    {% if movie.getCategory|last == 'Lançamento' %}
+
+    <div class="img_banner" hidden>{{ movie.banner.url }}</div>
+    <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
+    <div class="year_banner" hidden>{{ movie.release_year }}</div>
+    <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
+    <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
+    <div class="category_banner" hidden>
+        {% for genre in movie.getCategory %}
+
+        {{ genre }}
+
+        {% endfor %}
+    </div>
+    <div class="description_banner" hidden>{{ movie.getShortDescription }}</div>
+
+    {% endif %}
+    {% endfor %}
+
+    <script>
+        const banner = document.querySelectorAll('.banner')
+        const img_banner = document.querySelectorAll('.img_banner')
+        const title = document.querySelectorAll('.title_banner')
+        const year = document.querySelectorAll('.year_banner')
+        const classification = document.querySelectorAll('.classification_banner')
+        const duration = document.querySelectorAll('.duration_banner')
+        const category = document.querySelectorAll('.category_banner')
+        const description = document.querySelectorAll('.description_banner')
+        const imgBanner = banner[0].querySelectorAll('.img_url')
+        const titleBanner = banner[0].querySelectorAll('.movieTitle')
+        const yearBanner = banner[0].querySelectorAll('.year_banner')
+        const classificationBanner = banner[0].querySelectorAll('.class_banner')
+        const durationBanner = banner[0].querySelectorAll('.durationBanner')
+        const categoryBanner = banner[0].querySelectorAll('.categoryBanner')
+        const descriptionBanner = banner[0].querySelectorAll('.descriptionBanner')
+        
+        var index = 0
+
+        if(index == 0){
+            imgBanner[0].setAttribute('src', img_banner[index].innerText)
+            titleBanner[0].setAttribute('src', title[index].innerText)
+            yearBanner[0].textContent = year[index].innerText
+            classificationBanner[0].innerHTML = classification[index].innerText + "+"
+            durationBanner[0].textContent = duration[index].innerText + "H"
+            categoryBanner[0].textContent = category[index].innerText
+            descriptionBanner[0].textContent = description[index].innerText
+            index += 1
+        }
+
+        setInterval(function(){
+            if(index == 0){
+                imgBanner[0].setAttribute('src', img_banner[index].innerText)
+                titleBanner[0].setAttribute('src', title[index].innerText)
+                yearBanner[0].textContent = year[index].innerText
+                classificationBanner[0].innerHTML = classification[index].innerText + "+"
+                durationBanner[0].textContent = duration[index].innerText + "H"
+                categoryBanner[0].textContent = category[index].innerText
+                descriptionBanner[0].textContent = description[index].innerText
+                index += 1
+            }
+            else if(index == 1){
+                imgBanner[0].setAttribute('src', img_banner[index].innerText)
+                titleBanner[0].setAttribute('src', title[index].innerText)
+                yearBanner[0].textContent = year[index].innerText
+                classificationBanner[0].innerHTML = classification[index].innerText + "+"
+                durationBanner[0].textContent = duration[index].innerText + "H"
+                categoryBanner[0].textContent = category[index].innerText
+                descriptionBanner[0].textContent = description[index].innerText
+                index += 1
+            }
+            else if(index == 2){
+                imgBanner[0].setAttribute('src', img_banner[index].innerText)
+                titleBanner[0].setAttribute('src', title[index].innerText)
+                yearBanner[0].textContent = year[index].innerText
+                classificationBanner[0].innerHTML = classification[index].innerText + "+"
+                durationBanner[0].textContent = duration[index].innerText + "H"
+                categoryBanner[0].textContent = category[index].innerText
+                descriptionBanner[0].textContent = description[index].innerText
+                index = 0
+            }
+            else {
+                index == 0
+            }
+        }, 10000)
+    </script>
 {% endblock %}
