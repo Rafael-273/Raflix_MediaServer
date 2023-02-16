@@ -84,6 +84,7 @@ class Media(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
     poster = models.ImageField(upload_to='static/media/poster', blank=True)
+    banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
     title_img = models.ImageField(upload_to='static/media/title', blank=True)
     media = models.FileField(
         null=False,
@@ -152,6 +153,11 @@ class Media(models.Model):
         for movie in movies:
             return movie.description
 
+    def getShortDescription(self):
+        movies = self.media_has_movie.all()
+        for movie in movies:
+            return movie.short_description
+
     def getCategory(self):
         movies = self.media_has_movie.all()
         for movie in movies:
@@ -163,6 +169,7 @@ class Media(models.Model):
 
 class Movie(models.Model):
     description = models.TextField()
+    short_description = models.TextField(max_length=255, null=True, blank=True)
     duration = models.CharField(max_length=10)
     classification = models.IntegerField(default=12)
     media = models.ForeignKey(
