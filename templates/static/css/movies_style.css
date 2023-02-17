@@ -225,6 +225,7 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
     height: 1200px;
     margin-bottom: -550px;
     mask-image: none;
+    justify-content: flex-start;
 }
 
 .image {
@@ -238,15 +239,15 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 .content {
     position: absolute;
     z-index: 1;
-    max-width: 600px;
-    margin-bottom: 4%;
-    padding-left: 60px;
-    margin-left: -20px;
-    margin-top: 170px;
+    max-width: 700px;
+    height: 27vw;
+    top: 20%;
+    left: 2%;
 }
 
 .movieTitle {
     max-width: 680px;
+    object-fit: cover;
 }
 
 .banner .content h4 {
