@@ -1,10 +1,10 @@
 /* Main Banner */
 
+
 .banner {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    padding: 0 100px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -25,13 +25,18 @@
     transform: scale(1.3);
 }
 
+.grid_banner {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    width: 100%;
+    height: 47vw;
+    position: absolute;
+}
+
 .content {
     position: relative;
     z-index: 1;
-    max-width: 650px;
-    margin-bottom: 4%;
-    padding-left: 50px;
-    margin-left: -90px;
+    left: 3%;
 }
 
 .movieTitle {
@@ -47,6 +52,7 @@
     -webkit-line-clamp: 6; /* number of lines to show */
     -webkit-box-orient: vertical;
     cursor: pointer;
+    max-width: 600px;
 }
 
 .banner .content h4 {
@@ -112,21 +118,26 @@
 /* modal */
 
 .modal {
+    display: grid;
+    grid-template-rows: 2fr 0.5fr 0.5fr;
     position: relative;
     width: 25%;
-    height: 425px;
+    height: 22vw;
     background-color: rgb(14, 14, 14);
     border-radius: 10px;
     display: none;
     box-shadow: 10px 0px 20px rgba(10, 10, 10, 0.7);
     cursor: pointer;
-    margin-bottom: -425px;
     z-index: 999;
+    justify-content: left;
+    align-items: left;
 }
 
 .modal.open {
     display: flex;
+    flex-direction: column;
     animation: openModal 0.7s;
+    margin-bottom: -422px;
 }
 
 .modal.closed {
@@ -167,20 +178,14 @@
     width: 100%;
     align-items: center;
     justify-content: center;
-    height: 270px;
+    object-fit: cover;
     cursor: pointer;
-}
-
-.modal div {
-    justify-content: center;
 }
 
 .first_row {
     position: relative;
-    top: 70%;
-    right: 100%;
-    height: 0px;
     display: flex;
+    margin-top: 4.5%;
 }
 
 .first_row .play {
@@ -327,11 +332,10 @@
 }
 
 .info_media {
-    height: 0;
     display: flex;
     position: relative;
-    top: 87%;
-    right: 131.5%;
+    margin-top: 3.7%;
+    margin-left: 4.2%;
 }
 
 .info_media span {
