@@ -317,7 +317,7 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 
 .grid_section {
     display: grid;
-    grid-template-rows: 1.19fr 1fr;
+    grid-template-rows: 1.23fr 1fr;
 }
 
 .movies {
