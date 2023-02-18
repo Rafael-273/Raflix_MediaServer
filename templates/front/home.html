@@ -1,6 +1,12 @@
 {% extends 'static/base.html' %}
 {%  load static %}
 
+{% block title %}
+
+Home
+
+{% endblock %}
+
 {% block head %}
 
     <!-- Home -->
@@ -17,21 +23,25 @@
     <div class="banner" onmousemove="modalClosed()" onload="banner_init(this)">
         <div class="shadow"></div>
         <video src="" width="440px" loop="true" autoplay="true" muted autoplay id="main_video" class="bg video_url" controls></video>
-        <div class="content">
-            <img src="" class="movieTitle">
-            <h4>
-                <span class="year_banner"></span>
-                <span><i class="class_banner"></i></span>
-                <span class="durationBanner"></span>
-                <span class="categoryBanner"></span>
-            </h4>
-            <p class="descriptionBanner description">
-            </p>
-
-            <div class="buttons">
-                <a href="#"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
-                <a href="#"><i class="fa fa-plus" aria-hidden = "true"></i>   Minha Lista</a>
+        <div class="grid_banner">
+            <div></div>
+            <div class="content">
+                <img src="" class="movieTitle">
+                <h4>
+                    <span class="year_banner"></span>
+                    <span><i class="class_banner"></i></span>
+                    <span class="durationBanner"></span>
+                    <span class="categoryBanner"></span>
+                </h4>
+                <p class="descriptionBanner description">
+                </p>
+    
+                <div class="buttons">
+                    <a href="#"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
+                    <a href="#"><i class="fa fa-plus" aria-hidden = "true"></i>   Minha Lista</a>
+                </div>
             </div>
+            <div></div>
         </div>
         <div class="banner--fadeBottom"></div>
     </div>
@@ -146,7 +156,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x);
-                modal.css('bottom', y+75);
+                modal.css('bottom', y+100);
             }, 500);
             if(movie_data.classList.contains('left-4')){
                 console.log('teste')
@@ -155,7 +165,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x+135);
-                modal.css('bottom', y+75);
+                modal.css('bottom', y+100);
                 }, 1000);
             }
             else if(movie_data.classList.contains('right-4')){
@@ -165,7 +175,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x-135);
-                modal.css('bottom', y+75);
+                modal.css('bottom', y+100);
                 }, 1000);
             }
         }
@@ -183,7 +193,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x);
-                modal.css('bottom', y+75);
+                modal.css('bottom', y+100);
             }, 1000);
             if(movie_data.classList.contains('left-4')){
                 setTimeout(function(){
@@ -191,7 +201,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x+135);
-                modal.css('bottom', y+75);
+                modal.css('bottom', y+100);
                 }, 1000);
             }
             else if(movie_data.classList.contains('right-4')){
@@ -200,7 +210,7 @@
                 modal.removeClass('closed')
                 modal.addClass('open')
                 modal.css('left', x-135);
-                modal.css('bottom', y+75);
+                modal.css('bottom', y+100);
                 }, 1000);
             }
         }
