@@ -24,3 +24,18 @@
     max-width: 200px;
     margin-left: 45%;
 }
+
+@media screen  and (min-width: 350px) and (max-width: 700px) {
+    .container1 {
+        margin-top: -10px !important;
+        margin-left: 10px !important;
+        margin-bottom: 0;
+    }
+    
+    .logo-footer {
+        position: relative;
+        left: -12%;
+        transform: scale(1.2);
+        margin-top: 0px;
+    }
+}

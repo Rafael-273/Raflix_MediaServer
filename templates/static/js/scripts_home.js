@@ -14,6 +14,13 @@ new Glider(responsiveCarousel, {
     scrollLock: true,
     responsive: [
         {
+            breakpoint: 2500,
+            settings: {
+                slidesToShow: 12,
+                slidesToScroll: 12,
+            }
+        },
+        {
             breakpoint: 1900,
             settings: {
                 slidesToShow: 9,
@@ -48,7 +55,13 @@ new Glider(responsiveCarousel, {
                 slidesToScroll: 4.8,
             }
         },
-        
+        {
+            breakpoint: 375,
+            settings: {
+                slidesToShow: 2.1,
+                slidesToScroll: 2.1,
+            }
+        },        
     ]
 })
 
@@ -65,6 +78,13 @@ new Glider(responsiveCategoryCarousel, {
     },
     scrollLock: true,
     responsive: [
+        {
+            breakpoint: 2500,
+            settings: {
+                slidesToShow: 12,
+                slidesToScroll: 12,
+            }
+        },
         {
             breakpoint: 1900,
             settings: {
@@ -100,6 +120,13 @@ new Glider(responsiveCategoryCarousel, {
                 slidesToScroll: 4.8,
             }
         },
+        {
+            breakpoint: 375,
+            settings: {
+                slidesToShow: 2.1,
+                slidesToScroll: 2.1,
+            }
+        }, 
     ]
 })
 
