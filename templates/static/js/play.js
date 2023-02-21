@@ -1,5 +1,5 @@
 const video_player = document.querySelector('#video_player'),
-mainVideo = video_player.querySelector('#main_video'),
+mainVideo = videojs('my-video'),
 progressAreaTime = video_player.querySelector('.progressAreaTime'),
 controls = video_player.querySelector('.controls'),
 progressArea = video_player.querySelector('.progress-area'),
@@ -25,10 +25,10 @@ let duration_video_moment = null;
 //Função Play
 
 function playVideo() {
-    play_pause.innerHTML = "pause";
+    play_pause.innerHTML = "pause_arrow";
     play_pause.title = "pause";
     video_player.classList.add("paused");
-    mainVideo.play();
+    player.play();
   }
   
 // Pause video function
@@ -37,7 +37,7 @@ function pauseVideo() {
     play_pause.innerHTML = "play_arrow";
     play_pause.title = "play";
     video_player.classList.remove("paused");
-    mainVideo.pause();
+    player.pause();
 }
   
 play_pause.addEventListener("click", () => {
@@ -45,39 +45,39 @@ play_pause.addEventListener("click", () => {
     isVideoPaused ? pauseVideo() : playVideo();
   });
   
-mainVideo.addEventListener("play", () => {
+player.addEventListener("play", () => {
     playVideo();
 });
   
-mainVideo.addEventListener("pause", () => {
+player.addEventListener("pause", () => {
     pauseVideo();
 });
 
 //Função Play
 function playVideo1() {
-    pp.innerHTML = "pause";
+    player.innerHTML = "pause";
     video_player.classList.add("paused");
-    mainVideo.play();
+    player.play();
 }
   
   // Pause video function
 function pauseVideo1() {
-    pp.innerHTML = "play_arrow";
+    player.innerHTML = "play_arrow";
     video_player.classList.remove("paused");
-    mainVideo.pause();
+    player.pause();
   }
   
-pp.addEventListener("click", () => {
+player.addEventListener("click", () => {
     const isVideoPaused = video_player.classList.contains("paused");
     isVideoPaused ? pauseVideo1() : playVideo1();
     settings.classList.remove('active');
 });
   
-mainVideo.addEventListener("play", () => {
+player.addEventListener("play", () => {
     playVideo1();
   });
   
-mainVideo.addEventListener("pause", () => {
+player.addEventListener("pause", () => {
     pauseVideo1();
   });
   

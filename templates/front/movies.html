@@ -35,7 +35,7 @@ Movies
                 </p>
     
                 <div class="buttons">
-                    <a href="play.html"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
+                    <a class="play_banner" href="play.html"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
                     <a href="movies.html"><i class="fa fa-plus" aria-hidden = "true"></i>   Mais Filmes</a>
                 </div>
             </div>
@@ -59,6 +59,7 @@ Movies
     {% for movie in movies %}
     {% if movie.getCategory|last == 'Lançamento' %}
 
+    <div class="url_banner" hidden>play/{{ movie.slug }}</div>
     <div class="img_banner" hidden>{{ movie.banner.url }}</div>
     <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
@@ -78,6 +79,7 @@ Movies
 
     <script>
         const banner = document.querySelectorAll('.banner')
+        const url = document.querySelectorAll('.url_banner')
         const img_banner = document.querySelectorAll('.img_banner')
         const title = document.querySelectorAll('.title_banner')
         const year = document.querySelectorAll('.year_banner')
@@ -88,6 +90,7 @@ Movies
         const imgBanner = banner[0].querySelectorAll('.img_url')
         const titleBanner = banner[0].querySelectorAll('.movieTitle')
         const yearBanner = banner[0].querySelectorAll('.year_banner')
+        const urlBanner = banner[0].querySelectorAll('.play_banner')
         const classificationBanner = banner[0].querySelectorAll('.class_banner')
         const durationBanner = banner[0].querySelectorAll('.durationBanner')
         const categoryBanner = banner[0].querySelectorAll('.categoryBanner')
@@ -103,6 +106,7 @@ Movies
             durationBanner[0].textContent = duration[index].innerText + "H"
             categoryBanner[0].textContent = category[index].innerText
             descriptionBanner[0].textContent = description[index].innerText
+            urlBanner[0].href = url[index].innerText
             index += 1
         }
 
@@ -115,6 +119,7 @@ Movies
                 durationBanner[0].textContent = duration[index].innerText + "H"
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
+                urlBanner[0].href = url[index].innerText
                 index += 1
             }
             else if(index == 1){
@@ -125,6 +130,7 @@ Movies
                 durationBanner[0].textContent = duration[index].innerText + "H"
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
+                urlBanner[0].href = url[index].innerText
                 index += 1
             }
             else if(index == 2){
@@ -135,6 +141,7 @@ Movies
                 durationBanner[0].textContent = duration[index].innerText + "H"
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
+                urlBanner[0].href = url[index].innerText
                 index = 0
             }
             else {
