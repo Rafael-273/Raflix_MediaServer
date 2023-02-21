@@ -37,7 +37,7 @@ Home
                 </p>
     
                 <div class="buttons">
-                    <a href="#"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
+                    <a class="play_banner" href="#"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
                     <a href="#"><i class="fa fa-plus" aria-hidden = "true"></i>   Minha Lista</a>
                 </div>
             </div>
@@ -54,7 +54,7 @@ Home
         <h1 class="title_row">Recentes</h1>
         <div class="c-carousel__slides js-carousel--responsive">
             {% for movie in movies %}
-            <a href="{% url 'movies' %}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>
+            <a href="{{ movie.slug }}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>
             {% endfor %}
         </div>
         <button aria-label="Previous" class="js-carousel--responsive-prev button-carousel__left">«</button>
@@ -123,6 +123,7 @@ Home
     {% for movie in movies %}
     {% if movie.getCategory|last == 'Lançamento' %}
 
+    <div class="url_banner" hidden>play/{{ movie.slug }}</div>
     <div class="trailer_banner" hidden>{{ movie.trailer.url }}</div>
     <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
@@ -249,6 +250,7 @@ Home
         }
 
         const banner = document.querySelectorAll('.banner')
+        const url = document.querySelectorAll('.url_banner')
         const trailer = document.querySelectorAll('.trailer_banner')
         const title = document.querySelectorAll('.title_banner')
         const year = document.querySelectorAll('.year_banner')
@@ -259,6 +261,7 @@ Home
         const videoBanner = banner[0].querySelectorAll('.video_url')
         const titleBanner = banner[0].querySelectorAll('.movieTitle')
         const yearBanner = banner[0].querySelectorAll('.year_banner')
+        const urlBanner = banner[0].querySelectorAll('.play_banner')
         const classificationBanner = banner[0].querySelectorAll('.class_banner')
         const durationBanner = banner[0].querySelectorAll('.durationBanner')
         const categoryBanner = banner[0].querySelectorAll('.categoryBanner')
@@ -274,6 +277,7 @@ Home
             durationBanner[0].textContent = duration[index].innerText + "H"
             categoryBanner[0].textContent = category[index].innerText
             descriptionBanner[0].textContent = description[index].innerText
+            urlBanner[0].href = url[index].innerText
             index += 1
         }
 
@@ -286,6 +290,7 @@ Home
                 durationBanner[0].textContent = duration[index].innerText + "H"
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
+                urlBanner[0].href = url[index].innerText
                 index += 1
             }
             else if(index == 1){
@@ -296,6 +301,7 @@ Home
                 durationBanner[0].textContent = duration[index].innerText + "H"
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
+                urlBanner[0].href = url[index].innerText
                 index += 1
             }
             else if(index == 2){
@@ -306,6 +312,7 @@ Home
                 durationBanner[0].textContent = duration[index].innerText + "H"
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
+                urlBanner[0].href = url[index].innerText
                 index = 0
             }
             else {
