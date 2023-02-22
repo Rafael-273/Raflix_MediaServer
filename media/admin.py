@@ -3,7 +3,6 @@ from . import models
 
 admin.site.register(models.Admin)
 admin.site.register(models.User)
-admin.site.register(models.Evaluation)
 
 class MediaAdmin(admin.ModelAdmin):
     list_display = ['title', 'release_year']
