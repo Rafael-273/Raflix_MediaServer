@@ -38,6 +38,12 @@ class Play(DetailView):
     context_object_name = 'movie'
     slug_url_kwarg = 'slug'
 
+class Trailer(DetailView):
+    model = models.Media
+    template_name = 'front/trailer.html'
+    context_object_name = 'movie'
+    slug_url_kwarg = 'slug'
+
 class User(ListView):
     pass 
 
@@ -53,3 +59,12 @@ class ToggleFavorite(View):
         media.favorited = not media.favorited
         media.save()
         return JsonResponse({'favorited': media.favorited})
+
+class UpdateFavoriteView(View):
+    def post(self, request, *args, **kwargs):
+        movie_slug = request.POST.get('slug')
+        movie = get_object_or_404(models.Media, slug=movie_slug)
+        movie.favorited = not movie.favorited
+        movie.save()
+        return JsonResponse({'favorited': movie.favorited})
+

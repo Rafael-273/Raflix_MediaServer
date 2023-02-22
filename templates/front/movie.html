@@ -47,7 +47,7 @@
 
             <div class="buttons">
                 <a href="play/{{ movie.slug }}"><i class="fa fa-play" aria-hidden = "true"></i>Play</a>
-                <a href="{% url 'movies' %}" class="trailer-button"><i class="fa fa-plus" aria-hidden = "true"></i>Trailer</a>
+                <a href="trailer/{{ movie.slug }}" class="trailer-button"><i class="fa fa-plus" aria-hidden = "true"></i>Trailer</a>
                 <form method="POST">
                     {% csrf_token %}
                     {% if movie.favorited %}
