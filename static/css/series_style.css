@@ -1,0 +1,342 @@
+
+.container {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 200px;
+}
+
+.container1 {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.container h1 {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.slider {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 var(--video-gap);
+    transition: transform 250ms ease-in-out;
+    justify-content: center;
+}
+
+.handle {
+    border: none;
+    border-radius: 1rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    margin: var(--video-gap) 0;
+    width: var(--handle-size);
+    cursor: pointer;
+    font-size: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    line-height: 0;
+    transition: transform 150ms ease-in-out;
+}
+
+.left-randle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.right-randle {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.handle:hover,
+.handle:focus {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.text {
+    transition: transform 150ms ease-in-out;
+}
+
+.handle:hover .text,
+.handle:focus .text {
+    transform: scale(1.2);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: .1rem calc(var(--video-gap) * 2 + var(--handle-size));
+    align-items: center;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.progress-bar {
+    display: flex;
+    gap: .25rem;
+}
+
+.progress-item {
+    flex: 0 0 1.5rem;
+    min-width: 1.5rem;
+    height: .5rem;
+    background-color: rgba(255,255,255, .5);
+}
+
+.progress-item.active {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 1000px) {
+    .slider {
+        --items-per-screen: 3;
+    }
+}
+
+@media (max-width: 500px) {
+    .slider {
+        --items-per-screen: 2;
+    }
+}
+
+video::-webkit-media-controls { /* Works only on Chrome-based browsers */
+    display: none;
+}
+
+.nav__logo {
+    width: 150px;
+    object-fit: contain;
+}
+
+.nav__avatar {
+    width: 30px;
+    object-fit: contain;
+}
+
+.nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    z-index: 1;
+    transition-timing-function: ease-in;
+    transition: all 0.5seg;
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.nav__black {
+    background-color: #111;
+}
+
+.menu_list {
+    list-style: none;
+    padding-left: 0;
+    padding-top: 7px;
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 32px;
+    padding-left: 190px;
+    z-index: 1;
+    transition-timing-function: ease-in;
+    transition: all 0.5seg;
+    width: 45rem;
+    line-height: 1.3;
+    font-size: 0.85rem;
+    max-width: 360px;
+    height: 180px;
+}
+
+.menu_list li {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.menu_list li a {
+    color: rgb(219, 219, 219);
+    text-decoration: none;
+}
+
+.menu_list li:hover {
+    text-decoration: underline;
+}
+
+.search {
+    position: relative;
+    width: 300px;
+    height: 40px;
+    margin-left: 1270px;
+    margin-top: -7px;
+}
+
+.search input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 80%;
+    color: white;
+    background: transparent;
+    border: 1px solid;
+    outline: none;
+    border-radius: 4px;
+    padding: 0 10px 0 25px;
+    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.search input::placeholder {
+    color: white;
+    padding: 15px;
+    
+}
+
+.search .fa-search {
+    position: absolute;
+    top: 27%;
+    left: 47px;
+    transform: translateX(-50%);
+    padding-right: 50px;
+    color: white;
+    border-radius: 1px solid white;
+}
+
+#myFooter {
+    margin-right: 40px;
+}
+
+.banner {
+    background-size: cover;
+    background-position: center center;
+    color: white;
+    object-fit: contain;
+    margin-top: 0%;
+    height: 1200px;
+    margin-bottom: -550px;
+    mask-image: none;
+}
+
+.image {
+    margin-left: 5px;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
+}
+
+.content {
+    position: absolute;
+    z-index: 1;
+    max-width: 600px;
+    margin-bottom: 4%;
+    padding-left: 60px;
+    margin-left: -20px;
+    margin-top: 170px;
+}
+
+.movieTitle {
+    max-width: 700px;
+    margin-bottom: -70px;
+    margin-left: -10px;
+}
+
+.banner .content h4 {
+    color: rgba(253, 253, 253, 0.7);
+    font-weight: 500;
+    padding-top: 14px;
+}
+
+.banner .content h4 span{
+    padding: 0 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.banner .content h4 span:first-child {
+    padding-left: 0;
+}
+
+.banner .content h4 span:last-child {
+    border-right: none;
+}
+
+.banner .content h4 span i {
+    background: #2486cc;
+    color: white;
+    padding: 0 8px;
+    display: inline-block;
+    font-style: normal;
+    border-radius: 2px;
+}
+
+.banner .content p {
+    font-size: 1em;
+    font-weight: 300px;
+    line-height: 1.5em;
+    color: white;
+    margin: 10px 0 15px;
+}
+
+.banner .content .buttons {
+    position: relative;
+}
+
+.banner .content .buttons a {
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+    background: #2486cc;
+    color: white;
+    padding: 6px 20px;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.banner .content .buttons a:nth-child(2) {
+    background: rgba(14, 14, 14, 0.8);
+}
+
+.banner .content .buttons a:hover:nth-child(2) {
+    background: #2486cc;
+}
+
+.movies {
+    max-width: 100%;
+    padding: 0 30px;
+    height: 435px;
+    margin-top: 11%;
+    margin-bottom: 13%;
+    padding: 50px;
+}
+
+.movies:first-of-type {
+    margin-top: 80px;
+}
+
+.movies_all {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto;
+    grid-row-gap: 1%;
+    grid-column-gap: 5px;
+}
+
+.movie a img {
+    max-width: 200px;
+    border-radius: 1rem;
+}
+
+.movie a img:hover{
+    transform: scale(1.2);
+    border-radius: 1rem;
+    transition: 0.9s;
+    box-shadow: 0px -0px 20px rgb(0, 0, 0);
+}

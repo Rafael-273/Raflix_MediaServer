@@ -65,24 +65,11 @@ class User(models.Model):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
-class Evaluation(models.Model):
-    evaluation = models.CharField(
-        default='Y',
-        max_length=1,
-        choices=(
-            ('Y', 'Like'),
-            ('N', "Don't Like")
-        )
-        )
-    user = models.ForeignKey(
-        'User', related_name='evaluation_has_user', on_delete=models.CASCADE)
-    media = models.ForeignKey(
-        'Media', related_name='media_has_user', on_delete=models.CASCADE)
-    
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
     slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
+    favorited = models.BooleanField(default=False)
     poster = models.ImageField(upload_to='static/media/poster', blank=True)
     banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
     title_img = models.ImageField(upload_to='static/media/title', blank=True)
@@ -109,7 +96,6 @@ class Media(models.Model):
         origin_width, origin_height = img_pil.size
 
         if origin_width <= new_width:
-            print('largura igual ou menor que a original')
             img_pil.close()
             return
 

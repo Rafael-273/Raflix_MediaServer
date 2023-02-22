@@ -143,6 +143,7 @@
 
 .banner .content .buttons {
     position: relative;
+    display: flex;
 }
 
 .banner .content .buttons a {
@@ -157,12 +158,32 @@
     letter-spacing: 1px;
 }
 
-.banner .content .buttons a:nth-child(2) {
-    background: rgba(14, 14, 14, 0.8);
+.banner .content .buttons .trailer-button {
+    background: rgba(14, 14, 14, 0.8) !important;
 }
 
-.banner .content .buttons a:hover:nth-child(2) {
-    background: #2486cc;
+.banner .content .buttons .trailer-button:hover{
+    background: #2486cc !important;
+}
+
+.favorite-button.favorite_color {
+    background-color: #dd2a2a !important;
+    font-style: normal;
+}
+
+.favorite-button.no_favorite_color {
+    background: rgba(14, 14, 14, 0.8) !important;
+    font-style: normal;
+}
+
+.favorite-button {
+    background: rgba(14, 14, 14, 0.8) !important;
+    cursor: pointer;
+}
+
+.favorite-button:hover {
+    background-color: #dd2a2a !important;
+    transition: 0.5s;
 }
 
 #myFooter {
