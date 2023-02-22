@@ -23,25 +23,26 @@ Movies
         <div class="grid_banner">
             <div></div>
             <div class="content">
-                <img src="{% static 'assets/title_freeguy.png' %}" class="movieTitle">
+                <img src="" class="movieTitle">
                 <h4>
-                    <span class="year_banner">2021</span>
-                    <span><i class="class_banner">16+</i></span>
-                    <span class="durationBanner">2h 12m</span>
-                    <span class="categoryBanner">Ação</span>
+                    <span class="year_banner"></span>
+                    <span><i class="class_banner"></i></span>
+                    <span class="durationBanner"></span>
+                    <span class="categoryBanner"></span>
                 </h4>
                 <p class="descriptionBanner description">
-                    O governo envia os supervilões mais perigosos do mundo para a remota ilha de Corto Maltese, repleta de inimigos. Armados com armas de alta tecnologia, eles viajam pela selva perigosa em uma missão de busca e destruição com o Coronel Rick Flag.
+    
                 </p>
     
                 <div class="buttons">
-                    <a class="play_banner" href="play.html"><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
-                    <a href="movies.html"><i class="fa fa-plus" aria-hidden = "true"></i>   Mais Filmes</a>
+                    <a class="play_banner" href=""><i class="fa fa-play" aria-hidden = "true"></i>   Play</a>
+                    <a href="" class="info_banner"><i class="fa fa-plus" aria-hidden = "true"></i>Mais Informações</a>
                 </div>
             </div>
             <div></div>
         </div>
-        <img src="{% static 'assets/banner_freeguy.jpg' %}" class="image img_url" />
+        <div class="banner--fadeLeft"></div>
+        <img src="" class="image img_url" />
     </div>
 
     <!--Filmes-->
@@ -60,6 +61,7 @@ Movies
     {% if movie.getCategory|last == 'Lançamento' %}
 
     <div class="url_banner" hidden>play/{{ movie.slug }}</div>
+    <div class="url_info" hidden>{{ movie.slug }}</div>
     <div class="img_banner" hidden>{{ movie.banner.url }}</div>
     <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
@@ -79,6 +81,7 @@ Movies
 
     <script>
         const banner = document.querySelectorAll('.banner')
+        const url_info = document.querySelectorAll('.url_info')
         const url = document.querySelectorAll('.url_banner')
         const img_banner = document.querySelectorAll('.img_banner')
         const title = document.querySelectorAll('.title_banner')
@@ -88,6 +91,7 @@ Movies
         const category = document.querySelectorAll('.category_banner')
         const description = document.querySelectorAll('.description_banner')
         const imgBanner = banner[0].querySelectorAll('.img_url')
+        const infoBanner = document.querySelectorAll('.info_banner')
         const titleBanner = banner[0].querySelectorAll('.movieTitle')
         const yearBanner = banner[0].querySelectorAll('.year_banner')
         const urlBanner = banner[0].querySelectorAll('.play_banner')
@@ -107,6 +111,7 @@ Movies
             categoryBanner[0].textContent = category[index].innerText
             descriptionBanner[0].textContent = description[index].innerText
             urlBanner[0].href = url[index].innerText
+            infoBanner[0].href = url_info[index].innerText
             index += 1
         }
 
@@ -120,6 +125,7 @@ Movies
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
                 urlBanner[0].href = url[index].innerText
+                infoBanner[0].href = url_info[index].innerText
                 index += 1
             }
             else if(index == 1){
@@ -131,6 +137,7 @@ Movies
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
                 urlBanner[0].href = url[index].innerText
+                infoBanner[0].href = url_info[index].innerText
                 index += 1
             }
             else if(index == 2){
@@ -142,6 +149,7 @@ Movies
                 categoryBanner[0].textContent = category[index].innerText
                 descriptionBanner[0].textContent = description[index].innerText
                 urlBanner[0].href = url[index].innerText
+                infoBanner[0].href = url_info[index].innerText
                 index = 0
             }
             else {

@@ -228,12 +228,22 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
     justify-content: flex-start;
 }
 
+.banner--fadeLeft {
+    position: absolute;
+    width: 100%;
+    height: 45vw;
+    right: 20vw;
+    background: linear-gradient(270deg, transparent, rgba(0, 0, 0, 0.4));
+    z-index: 2;
+}
+
 .image {
     width: 100%;
     height: 44vw;
     object-fit: cover;
     object-position: center;
     -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
+    z-index: 1;
 }
 
 .grid_banner {
@@ -246,7 +256,7 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 
 .content {
     position: relative;
-    z-index: 1;
+    z-index: 6;
     left: 3%;
 }
 
@@ -317,15 +327,15 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 
 .grid_section {
     display: grid;
-    grid-template-rows: 1.23fr 1fr;
+    grid-template-rows: 2.2fr 1fr;
 }
 
 .movies {
     max-width: 100%;
     padding: 0 30px;
     height: 435px;
-    margin-bottom: 13%;
     padding: 50px;
+    margin-bottom: -2%;
 }
 
 .movies:first-of-type {
