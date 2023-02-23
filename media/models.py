@@ -150,9 +150,6 @@ class Media(models.Model):
             genres = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
             return genres
 
-    def getMedia(self):
-        return self.Media
-
 class Movie(models.Model):
     description = models.TextField()
     short_description = models.TextField(max_length=255, null=True, blank=True)
