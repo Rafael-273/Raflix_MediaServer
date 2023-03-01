@@ -3,6 +3,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views import View
 from . import models
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
@@ -68,3 +69,12 @@ class UpdateFavoriteView(View):
         movie.save()
         return JsonResponse({'favorited': movie.favorited})
 
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q')
+        if query:
+            movies = models.Media.objects.filter(Q(title__icontains=query))
+            print(movies)
+            return render(request, 'front/search_results.html', {'movies': movies})
+        else:
+            return render(request, 'front/home.html')

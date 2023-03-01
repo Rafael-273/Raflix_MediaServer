@@ -15,9 +15,34 @@
         <li>
             <a href="{% url 'favorites' %}">Favoritos</a>
         </li>
-        <div class="search">
-            <input type="text" placeholder="Search">
-            <i class="fas fa-search"></i>
-        </div>
+        <li>
+            <a href="{% url 'favorites' %}">Config</a>
+        </li>
+        <form id="search-form" method="GET" action="{% url 'search' %}">
+            {% csrf_token %}
+            <div class="search">
+              <input id="search-input" type="text" placeholder="Search" name="q">
+              <i class="fas fa-search"></i>
+            </div>
+        </form>
     </ul>
 </div>
+
+
+<script>
+
+    const form = document.getElementById('search-form');
+    const input = document.getElementById('search-input');
+
+    form.addEventListener('submit', (event) => {
+    event.preventDefault(); // previne o envio padrão do formulário
+    const query = input.value.trim(); // obtém o valor da caixa de texto, removendo espaços em branco no começo e no final
+    if (query) {
+        const url = form.action + '?q=' + encodeURIComponent(query); // constrói a URL de busca com a query string
+        window.location.href = url; // redireciona o usuário para a página de resultados de pesquisa
+    }
+    });
+
+
+
+</script>
