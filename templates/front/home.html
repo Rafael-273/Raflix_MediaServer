@@ -158,75 +158,88 @@ Home
 
     <script>
 
+        //fechar modal com click
+
+        $(document).click(function(e) {
+        if(!$(e.target).closest('.modal').length) {
+            $('.modal').removeClass('open');
+        }
+        });
+
         function modalDisplay(movie){
-            var position = $(movie).offset();
-            var x = position.left - 140
-            var y = position.top - 1105
-            const name_modal = $(movie).attr('name');
-            const modal = $('#modal_'+name_modal);
-            const all_modal = $('.modal');
-            const movie_data = movie.parentElement
-            setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x);
-                modal.css('bottom', y+75);
-            }, 500);
-            if(movie_data.classList.contains('left-4')){
-                console.log('teste')
+            if (window.innerWidth >= 1025 && window.innerWidth <= 3000) {
+                var position = $(movie).offset();
+                var x = position.left - 140
+                var y = position.top - 1105
+                const name_modal = $(movie).attr('name');
+                const modal = $('#modal_'+name_modal);
+                const all_modal = $('.modal');
+                const movie_data = movie.parentElement
                 setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x+135);
-                modal.css('bottom', y+75);
-                }, 1000);
-            }
-            else if(movie_data.classList.contains('right-4')){
-                console.log('teste2')
-                setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x-135);
-                modal.css('bottom', y+75);
-                }, 1000);
+                    all_modal.removeClass('open')
+                    modal.removeClass('closed')
+                    modal.addClass('open')
+                    modal.css('left', x);
+                    modal.css('bottom', y+75);
+                }, 500);
+                if(movie_data.classList.contains('left-4')){
+                    console.log('teste')
+                    setTimeout(function(){
+                    all_modal.removeClass('open')
+                    modal.removeClass('closed')
+                    modal.addClass('open')
+                    modal.css('left', x+135);
+                    modal.css('bottom', y+75);
+                    }, 1000);
+                }
+                else if(movie_data.classList.contains('right-4')){
+                    console.log('teste2')
+                    setTimeout(function(){
+                    all_modal.removeClass('open')
+                    modal.removeClass('closed')
+                    modal.addClass('open')
+                    modal.css('left', x-135);
+                    modal.css('bottom', y+75);
+                    }, 1000);
+                }
             }
         }
 
         function modalDisplayRecent(movie){
-            var position = $(movie).offset();
-            var x = position.left - 140
-            var y = position.top - 250
-            const name_modal = $(movie).attr('name');
-            const modal = $('#modal_'+name_modal);
-            const all_modal = $('.modal');
-            const movie_data = movie.parentElement
-            setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x);
-                modal.css('bottom', y+75);
-            }, 1000);
-            if(movie_data.classList.contains('left-4')){
+            console.log(window.innerWidth)
+            if (window.innerWidth >= 1025 && window.innerWidth <= 3000) {
+                var position = $(movie).offset();
+                var x = position.left - 140
+                var y = position.top - 250
+                const name_modal = $(movie).attr('name');
+                const modal = $('#modal_'+name_modal);
+                const all_modal = $('.modal');
+                const movie_data = movie.parentElement
                 setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x+135);
-                modal.css('bottom', y+75);
+                    all_modal.removeClass('open')
+                    modal.removeClass('closed')
+                    modal.addClass('open')
+                    modal.css('left', x);
+                    modal.css('bottom', y+75);
                 }, 1000);
-            }
-            else if(movie_data.classList.contains('right-4')){
-                setTimeout(function(){
-                all_modal.removeClass('open')
-                modal.removeClass('closed')
-                modal.addClass('open')
-                modal.css('left', x-135);
-                modal.css('bottom', y+75);
-                }, 1000);
+                if(movie_data.classList.contains('left-4')){
+                    setTimeout(function(){
+                    all_modal.removeClass('open')
+                    modal.removeClass('closed')
+                    modal.addClass('open')
+                    modal.css('left', x+135);
+                    modal.css('bottom', y+75);
+                    }, 1000);
+                }
+                else if(movie_data.classList.contains('right-4')){
+                    setTimeout(function(){
+                    all_modal.removeClass('open')
+                    modal.removeClass('closed')
+                    modal.addClass('open')
+                    modal.css('left', x-135);
+                    modal.css('bottom', y+75);
+                    }, 1000);
+                }
             }
         }
 
