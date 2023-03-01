@@ -1,0 +1,35 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+
+{% block title %}
+
+Search
+
+{% endblock %}
+
+{% block head %}
+
+    <!-- Home -->
+    <link rel="stylesheet" href="{% static 'css/result_style.css' %}">
+
+{% endblock %}
+
+{% block conteudo %}
+
+{% if movies %}
+    <div class="movies">
+        <h1 class="title_row">Search:</h1>
+        <div class="movies_all">
+            {% for movie in movies %}
+                <div name="{{ movie.slug }}" class="movie" onmouseenter="modalDisplayRecent(this)"><a href="{{ movie.slug }}"><img src="{{ movie.poster.url }}"></a></div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+<div class="movies">
+    <h1 class="title_row">Sem Resultados para sua Busca...</h1>
+</div>
+{% endif %}
+
+{% endblock %}

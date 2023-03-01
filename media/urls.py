@@ -14,6 +14,7 @@ urlpatterns = [
     path('user', views.User.as_view(), name='user'),
     path('toggle_favorite/', views.ToggleFavorite.as_view(), name='toggle_favorite'),
     path('update_favorite/', views.UpdateFavoriteView.as_view(), name='update_favorite'),
+    path('search/', views.SearchView.as_view(), name='search'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
 
