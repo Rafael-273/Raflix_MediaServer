@@ -5,32 +5,16 @@ import os
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
-class Admin(models.Model):
-    admin = models.CharField(
-        default='Y',
-        max_length=1,
-        choices=(
-            ('Y', 'Admin'),
-            ('N', "Not Admin ")
-        )
-        )
-
-    def __str__(self):
-        return self.admin
-        
-    class Meta:
-        verbose_name = 'Admin'
-        verbose_name_plural = 'Admin'
-
-class User(models.Model):
+class User(AbstractUser):
     name = models.CharField(max_length=55, blank=False)
-    photo = models.ImageField(upload_to='static/media/img', default='img' ,blank=True, null=True)
-    email = models.EmailField(blank=False)
-    password = models.CharField(max_length=20, blank=False, null=False)
+    photo = models.ImageField(upload_to='static/media/user', default='img' ,blank=False, null=False)
     telephone = models.IntegerField(blank=True)
-    admin = models.ForeignKey(
-        'Admin', related_name='user_has_admin' ,on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group, related_name='user_group_set')
+    user_permissions = models.ManyToManyField(Permission, related_name='user_permission_set')
+
 
     @staticmethod
     def resize_image(img, new_width=800):
