@@ -15,10 +15,13 @@
         <li>
             <a href="{% url 'favorites' %}">Favoritos</a>
         </li>
-        <li>
-            <a href="{% url 'favorites' %}">Config</a>
-        </li>
-        <a href="{% url 'logout' %}">Logout</a>
+        <div class="icon_user" onclick="modalAccount(this)">
+            {% for user in request.my_data %}
+                <div class="profile-picture">
+                    <img src="{{ user.photo.url }}" alt="{{ user.name }}">
+                </div>
+            {% endfor %}
+        </div>
         <form id="search-form" method="GET" action="{% url 'search' %}">
             {% csrf_token %}
             <div class="search">
@@ -29,6 +32,19 @@
     </ul>
 </div>
 
+<!-- Modal -->
+
+<div id="modal" style="display: none" onclick="closedModal(this)">
+    <div>
+        <h5 class="title">Sua Conta</h5>
+    </div>
+    <div><a href=""><h5>Configurações</h5></a></div>
+    <div>
+        <a href="{% url 'logout' %}"><span class="material-symbols-outlined logout">
+            logout
+        </span></a>
+    </div>
+</div>
 
 <script>
 
@@ -44,6 +60,17 @@
     }
     });
 
+    function modalAccount(icon){
+        const modal = document.getElementById('modal')
+        modal.style.cssText = "display: grid; transition: 0.5s;"
+        icon.style.cssText = "display: none;"
+    }
+
+    function closedModal(modal){
+        const icon = document.getElementsByClassName('icon_user')
+        modal.style.cssText = "display: none;"
+        icon[0].style.display = 'flex';
+    }
 
 
 </script>

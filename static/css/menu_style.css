@@ -100,3 +100,7 @@
     border-radius: 1px solid white;
 }
 
+.profile-picture {
+    width: 100px;
+    height: 50px;
+}

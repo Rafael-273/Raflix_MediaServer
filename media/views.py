@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .forms import LoginForm
 from django.contrib.auth import authenticate, login
+from django.views.generic import TemplateView
 
 class CustomLoginView(LoginView):
     template_name = 'front/login.html'
@@ -21,21 +22,23 @@ class CustomLoginView(LoginView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
+        print('remembado')
         remember_me = form.cleaned_data.get('remember_me')
-        print(remember_me)
         if remember_me:
             self.request.session.set_expiry(1209600) # 2 weeks
         else:
             self.request.session.set_expiry(0) # expire at browser close
-        
         return super().form_valid(form)
 
     def get_success_url(self):
         if 'next' in self.request.GET:
+            print('passou aqui??')
             next_url = self.request.GET['next']
         else:
+            print('passou aqui')
             next_url = reverse_lazy('home')
         return next_url
+    
 
 class LogoutView(View):
     def get(self, request):
@@ -100,6 +103,19 @@ class Favorites(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+class User(ListView):
+    model = models.User
+    template_name = 'front/user.html'
+    context_object_name = 'users'
+
+class Menu(TemplateView):
+    template_name = 'parciais/menu.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
 class ToggleFavorite(View):
     def post(self, request, *args, **kwargs):

@@ -21,7 +21,9 @@ class LoginForm(AuthenticationForm):
         if username:
             try:
                 User.objects.get(Q(username=username) | Q(email=username))
+                print('existe')
             except User.DoesNotExist:
+                print('nãoexiste')
                 raise forms.ValidationError('Invalid username or email')
         return username
 
