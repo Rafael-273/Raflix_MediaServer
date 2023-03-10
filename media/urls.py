@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout', views.LogoutView.as_view(), name='logout'),
     path('movies', views.Movies.as_view(), name='movies'),
     path('series', views.Series.as_view(), name='series'),
+    path('user', views.User.as_view(), name='user'),
     path('favorites', views.Favorites.as_view(), name='favorites'),
     path('play/<slug>', views.Play.as_view(), name='play'),
     path('trailer/<slug>', views.Trailer.as_view(), name='trailer'),
