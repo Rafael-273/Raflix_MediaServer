@@ -109,6 +109,11 @@ class User(ListView):
     template_name = 'front/user.html'
     context_object_name = 'users'
 
+class Config(ListView):
+    model = models.Media
+    template_name = 'front/config.html'
+    context_object_name = 'users'
+
 class Menu(TemplateView):
     template_name = 'parciais/menu.html'
 
