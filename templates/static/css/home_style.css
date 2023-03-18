@@ -205,7 +205,10 @@
 
 .first_row {
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: 0.2fr 0.2fr 1fr;
+    justify-content: space-between;
+    width: 100%;
     margin-top: 4.5%;
 }
 
@@ -293,8 +296,8 @@
 }
 
 .first_row .info {
-    position: relative;
-    left: 290px;
+    justify-self: end;
+    margin-right: 20px;
     background-color: transparent;
     color: white;
     border-radius: 100%;
