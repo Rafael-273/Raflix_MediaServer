@@ -48,10 +48,8 @@ Favoritos
     <!--Filmes-->
     <div class="movies">
         <div class="movies_all">
-            {% for movie in movies %}
-            {% if movie.favorited %}
+            {% for movie in favorite_movies %}
                 <div name="{{ movie.slug }}" class="movie" onmouseenter="modalDisplayRecent(this)"><a href="{{ movie.slug }}"><img src="{{ movie.poster.url }}"></a></div>
-            {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -59,8 +57,8 @@ Favoritos
 </section>
 
     <!-- info banner -->
-    {% for movie in movies %}
-    {% if movie.favorited %}
+    {% for movie in favorite_movies %}
+    {% if movie.title_img %}
         <div class="url_banner" hidden>play/{{ movie.slug }}</div>
         <div class="url_info" hidden>{{ movie.slug }}</div>
         <div class="img_banner" hidden>{{ movie.banner.url }}</div>

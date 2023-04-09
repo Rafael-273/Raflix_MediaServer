@@ -92,23 +92,11 @@ Home
                     play_arrow
                 </span></a>
             </button>
-            <form method="POST" action="{% url 'update_favorite' %}">
-                {% csrf_token %}
-                <input type="hidden" name="slug" value="{{ movie.slug }}">
-                {% if movie.favorited %}
-                <button  type="submit" class="favorite-button favorited" data-movie-slug="{{ movie.slug }}" id="favorite-{{ movie.slug }}">
-                    <span class="material-symbols-outlined">
-                        favorite
-                    </span>
-                </button>
-                {% else %}
-                <button  type="submit" class="favorite-button favorite" data-movie-slug="{{ movie.slug }}" id="favorite-{{ movie.slug }}">
-                    <span class="material-symbols-outlined">
-                        favorite
-                    </span>
-                </button>
-                {% endif %}
-            </form>
+            <button type="submit" class="favorite-button {% if movie.favorited %} favorited favoriteMovie{% else %} favorite {% endif %}" data-movie-slug="{{ movie.slug }}" id="favorite-{{ movie.slug }}">
+                <span class="material-symbols-outlined">
+                    favorite
+                </span>
+            </button>
             <button class="info">
                 <a href="{{ movie.slug }}"><span class="material-symbols-outlined">
                     expand_more
@@ -183,7 +171,6 @@ Home
                     modal.css('bottom', y+75);
                 }, 500);
                 if(movie_data.classList.contains('left-4')){
-                    console.log('teste')
                     setTimeout(function(){
                     all_modal.removeClass('open')
                     modal.removeClass('closed')
@@ -193,7 +180,6 @@ Home
                     }, 1000);
                 }
                 else if(movie_data.classList.contains('right-4')){
-                    console.log('teste2')
                     setTimeout(function(){
                     all_modal.removeClass('open')
                     modal.removeClass('closed')
@@ -206,7 +192,6 @@ Home
         }
 
         function modalDisplayRecent(movie){
-            console.log(window.innerWidth)
             if (window.innerWidth >= 1025 && window.innerWidth <= 3000) {
                 var position = $(movie).offset();
                 var x = position.left - 140
@@ -353,29 +338,33 @@ Home
             }
         }, 15000)
 
-        $(document).on('submit', 'form', function(e) {
-            e.preventDefault();
-            const movieSlug = $(this).find('input[name="slug"]').val();
-            const formData = new FormData(this);
-            $.ajax({
-                type: "POST",
-                url: "{% url 'update_favorite' %}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    const favoriteButton = $('.favorite-button');
-                    if (response.favorited) {
-                        favoriteButton.removeClass('favorite')
-                        favoriteButton.addClass('favorited')
-                    } else {
-                        favoriteButton.removeClass('favorited')
-                        favoriteButton.addClass('favorite')
+        $(document).ready(function () {
+            $(".favorite-button").click(function (event) {
+                event.preventDefault();
+                const button = $(this);
+                button.toggleClass('favoriteMovie');
+                const is_favorited = button.hasClass('favoriteMovie');
+                const slug = button.data("movie-slug");
+                $.ajax({
+                    url: "{% url 'favorite_movie' %}",
+                    type: "POST",
+                    data: {
+                        slug: slug,
+                        is_favorited: is_favorited
+                    },
+                    success: function (response) {
+                        if(button.is('.favorite')){
+                            button.removeClass('favorite')
+                            button.addClass('favorited');
+                        } else {
+                            button.removeClass('favorited')
+                            button.addClass('favorite')
+                        }
+                    },
+                    error: function (response) {
+                        alert("An error occurred");
                     }
-                },
-                error: function(xhr, status, error) {
-                console.log(error);
-                }
+                });
             });
         });
 

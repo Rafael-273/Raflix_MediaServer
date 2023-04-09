@@ -15,7 +15,7 @@
         <li>
             <a href="{% url 'favorites' %}">Favoritos</a>
         </li>
-        <div class="icon_user" onclick="modalAccount(this)">
+        <div class="icon_user" id="icon" onclick="modalAccount(this)">
             {% for user in request.my_data %}
                 <div class="profile-picture">
                     <img src="{{ user.photo.url }}" alt="{{ user.name }}">
@@ -34,16 +34,18 @@
 
 <!-- Modal -->
 
-<div id="modal" style="display: none" onclick="closedModal(this)">
+<div id="modal" style="display: none" onclick="closedModalMenu()">
     <div>
-        <h5 class="title">Sua Conta</h5>
+        <h5 class="title_modal">Sua Conta</h5>
     </div>
-    <div><a href=""><h5>Configurações</h5></a></div>
-    <div>
-        <a href="{% url 'logout' %}"><span class="material-symbols-outlined logout">
+    <a href="{% url 'config' %}"><button>Configurações</button></a>
+    <a href="{% url 'logout' %}" class="logout">
+        <button>
+            <span class="material-symbols-outlined logout">
             logout
-        </span></a>
-    </div>
+            </span>
+        </button>
+    </a>
 </div>
 
 <script>
@@ -66,10 +68,11 @@
         icon.style.cssText = "display: none;"
     }
 
-    function closedModal(modal){
-        const icon = document.getElementsByClassName('icon_user')
+    function closedModalMenu(){
+        const icon = document.querySelector('#icon')
+        const modal = document.querySelector('#modal')
         modal.style.cssText = "display: none;"
-        icon[0].style.display = 'flex';
+        icon.style.cssText = "display: block;"
     }
 
 

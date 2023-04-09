@@ -32,17 +32,18 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
-    'media',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'embed_video',
-    'debug_toolbar',
-]
+INSTALLED_APPS = [    
+    'media',    
+    'django.contrib.admin',    
+    'django.contrib.auth',    
+    'django.contrib.contenttypes',    
+    'django.contrib.sessions',    
+    'django.contrib.messages',    
+    'django.contrib.staticfiles',    
+    'embed_video',    
+    'debug_toolbar',    
+    'Raflix',]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,8 +85,12 @@ WSGI_APPLICATION = 'Raflix.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'raflix_database',
+        'USER': 'rafael',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -114,6 +119,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.AllowAllUsersRemoteUserBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
     ]
+
+AUTH_USER_MODEL = 'media.CustomUser'
 
 
 # Internationalization

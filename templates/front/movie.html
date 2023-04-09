@@ -50,10 +50,10 @@
                 <a href="trailer/{{ movie.slug }}" class="trailer-button"><i class="fa fa-plus" aria-hidden = "true"></i>Trailer</a>
                 <form method="POST">
                     {% csrf_token %}
-                    {% if movie.favorited %}
-                        <a class="favorite-button no_favorite_color" data-media-id="{{ movie.id }}"><i class="fa fa-plus" aria-hidden = "true">Remover dos favoritos</i>
+                    {% if favorited %}
+                        <a class="favorite-button no_favorite_color favoriteMovie" data-media-id="{{ movie.id }}" data-movie-slug="{{ movie.slug }}"><i class="fa fa-plus" aria-hidden = "true">Remover dos favoritos</i>
                     {% else%}
-                        <a class="favorite-button favorite_color" data-media-id="{{ movie.id }}"><i class="fa fa-plus" aria-hidden = "true">Add aos Favoritos</i>   
+                        <a class="favorite-button favorite_color" data-media-id="{{ movie.id }}" data-movie-slug="{{ movie.slug }}"><i class="fa fa-plus" aria-hidden = "true">Add aos Favoritos</i>   
                     {% endif%}
                     </a>
                 </form>
@@ -86,31 +86,37 @@
         }
         $(window).bind('scroll', setTopo);
 
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-
-        const favoriteButton = document.querySelector('.favorite-button')
-        favoriteButton.addEventListener('click', async () => {
-            const mediaId = favoriteButton.dataset.mediaId
-            const response = await fetch('/toggle_favorite/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrftoken
-                },
-                body: `media_id=${mediaId}`
-            })
-            const data = await response.json()
-            if (data.favorited) {
-                favoriteButton.textContent = 'Remover dos favoritos'
-                favoriteButton.classList.remove('favorite_color')
-                favoriteButton.classList.add('no_favorite_color')
-            } else {
-                favoriteButton.textContent = 'Add aos Favoritos'
-                favoriteButton.classList.remove('no_favorite_color')
-                favoriteButton.classList.add('favorite_color')
-            }
-        })
+        $(document).ready(function () {
+            $(".favorite-button").click(function (event) {
+                event.preventDefault();
+                const button = $(this);
+                button.toggleClass('favoriteMovie');
+                const is_favorited = button.hasClass('favoriteMovie');
+                const slug = button.data("movie-slug");
+                $.ajax({
+                    url: "{% url 'favorite_movie' %}",
+                    type: "POST",
+                    data: {
+                        slug: slug,
+                        is_favorited: is_favorited
+                    },
+                    success: function (response) {
+                        if(button.is('.favoriteMovie')){
+                            button.removeClass('favorite_color')
+                            button.addClass('no_favorite_color');
+                            button[0].innerHTML = 'Remover dos Favoritos'
+                        } else {
+                            button.removeClass('no_favorite_color')
+                            button.addClass('favorite_color')
+                            button[0].innerHTML = 'Add aos Favoritos'
+                        }
+                    },
+                    error: function (response) {
+                        alert("An error occurred");
+                    }
+                });
+            });
+        });
     </script>
 
 {% endblock %}

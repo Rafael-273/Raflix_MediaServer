@@ -125,43 +125,73 @@
     transition: 0.5s;
 }
 
+/* Modal */
+
 #modal {
     position: absolute;
-    right: 17%;
-    width: 13%;
-    height: 150px;
+    right: 18%;
+    top: 2.5%;
+    height: 180px;
     border-radius: 10%;
-    background-color: rgba(31, 31, 31, 0.5);
+    background-color: rgba(15, 15, 15, 1);
     z-index: 999999 !important;
     display: grid;
-    grid-template-rows: 0.5fr 1fr 1fr;
+    grid-template-rows: 2fr 1fr 1fr;
     cursor: pointer;
+    place-items: center;
+    align-items: center; /* centraliza no eixo y */
 }
 
-.title {
+.title_modal {
     font-weight: bold !important;
-    font-size: 20px !important;
-    margin-top: 3%;
+    font-size: 20px !important; 
+    position: relative;
+    top: 50%;
 }
 
 #modal h5 {
     text-align: center;
-    padding: 10px;
     color: white;
     font-weight: normal;
     font-size: 16px;
 }
 
-#modal div:not(:first-child) {
-    text-align: center;
+#modal a button {
+    border: 0;
+    width: 100%;
+    background-color: rgba(31, 31, 31, 0.5);
+    margin: 0;
+    padding: 20px 40px;
+    cursor: pointer;
     color: white;
+    transition: 0.5s;
+}
+
+#modal a button:hover {
+    background-color: rgba(61, 59, 59, 0.5);
     cursor: pointer;
     transition: 0.5s;
 }
 
-#modal div:not(:first-child):hover {
-    scale: 1.2;
+.logout button{
+    border: 0;
+    width: 100%;
+    background-color: rgba(31, 31, 31, 0.5);
+    margin: 0;
+    padding: 10px 40px;
+    cursor: pointer;
+    color: white;
+    border-radius: 0 0 15px 15px;
+}
+
+.logout button:hover {
+    background-color: rgba(61, 59, 59, 0.5);
+    cursor: pointer;
     transition: 0.5s;
+}
+
+.logout button span {
+    padding: 0 31px;
 }
 
 a {

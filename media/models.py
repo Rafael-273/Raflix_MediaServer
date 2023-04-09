@@ -7,14 +7,11 @@ from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser, Group, Permission
+ 
 
-class User(AbstractUser):
-    name = models.CharField(max_length=55, blank=False)
-    photo = models.ImageField(upload_to='static/media/user', default='img' ,blank=False, null=False)
-    telephone = models.IntegerField(blank=True)
-    groups = models.ManyToManyField(Group, related_name='user_group_set')
-    user_permissions = models.ManyToManyField(Permission, related_name='user_permission_set')
-
+class CustomUser(AbstractUser):
+    photo = models.ImageField(upload_to='users', null=True, blank=True)
+    telephone = models.CharField(max_length=20, null=True, blank=True)
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -49,11 +46,11 @@ class User(AbstractUser):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
+
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
     slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
-    favorited = models.BooleanField(default=False)
     poster = models.ImageField(upload_to='static/media/poster', blank=True)
     banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
     title_img = models.ImageField(upload_to='static/media/title', blank=True)
@@ -134,6 +131,7 @@ class Media(models.Model):
             genres = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
             return genres
 
+
 class Movie(models.Model):
     description = models.TextField()
     short_description = models.TextField(max_length=255, null=True, blank=True)
@@ -149,11 +147,13 @@ class Movie(models.Model):
     def __str__(self):
         return '{0}'.format(self.media)
 
+
 class Serie(models.Model):
     description = models.TextField()
     class Meta:
         verbose_name = 'Serie'
         verbose_name_plural = 'Series'
+
 
 class Season(models.Model):
     number = models.IntegerField()
@@ -166,6 +166,7 @@ class Season(models.Model):
     class Meta:
         verbose_name = 'Season'
         verbose_name_plural = 'Seasons'
+
 
 class Episode(models.Model):
     number = models.IntegerField()
@@ -198,6 +199,7 @@ genre_choices = (('N', 'Não Definido'),
             ('MA', 'Marvel'),
             ('LA', 'Lançamento'))
 
+
 class Genre(models.Model):
     category = models.CharField(
         default='N',
@@ -217,14 +219,24 @@ class Genre(models.Model):
         verbose_name = 'Genre'
         verbose_name_plural = 'Genres'
 
+
 class Movie_has_genre(models.Model):
     genre = models.ForeignKey(
         'Genre', related_name='genre_has_movie', on_delete=models.CASCADE)
     movie = models.ForeignKey(
         'Movie', related_name='movie_has_genre', on_delete=models.CASCADE)
 
+
 class Serie_has_genre(models.Model):
     genre = models.ForeignKey(
         'Genre', related_name='genre_has_serie', on_delete=models.CASCADE)
     serie = models.ForeignKey(
         'Serie', related_name='serie_has_genre', on_delete=models.CASCADE)
+
+
+# class Favorite(models.Model):
+#     user  = models.ForeignKey(
+#         'User', related_name='user_has_media', on_delete=models.CASCADE)
+#     media = models.ForeignKey(
+#         'Media', related_name='media_has_user', on_delete=models.CASCADE)
+#     favorited = models.BooleanField(default=False)

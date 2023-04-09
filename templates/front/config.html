@@ -1,0 +1,123 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Home
+
+{% endblock %}
+
+{% block head %}
+
+    <!-- Home -->
+    <link rel="stylesheet" href="{% static 'css/config.css' %}">
+    <script src="" defer></script>
+
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="background"></div>
+
+<div class="Modalcontent" id="contentModal">
+    <div class="menuConfig">
+        <div class="title"><h2>Configurações</h2><h2><b>Raflix</b></h2></div>
+        <button onclick="openModal(this)">Cadastrar</button>
+        <button onclick="openModal(this)">Editar</button>
+        <button onclick="openModal(this)">Remover</button>
+    </div>
+</div>
+
+<div class="Modalcontent closedModal" id="addModal">
+    <div class="menuConfigModal">
+        <div class="titleModal">
+            <h2>Cadastro</h2><h2><b>Raflix</b></h2>
+            <h5 onclick="closedModal(this)">x</h5>
+        </div>
+        <button>Filmes</button>
+        <button>Séries</button>
+        <button>Temporada</button>
+        <button>Episódio</button>
+        <button>Categorias</button>
+        <button>Usuários</button>
+    </div>
+</div>
+
+<div class="Modalcontent closedModal" id="editModal">
+    <div class="menuConfigModal">
+        <div class="titleModal">
+            <h2>Edição</h2><h2><b>Raflix</b></h2>
+            <h5 onclick="closedModal(this)">x</h5>
+        </div>
+        <button>Filmes</button>
+        <button>Séries</button>
+        <button>Temporada</button>
+        <button>Episódio</button>
+        <button>Categorias</button>
+        <button>Usuários</button>
+    </div>
+</div>
+
+<div class="Modalcontent closedModal" id="removeModal">
+    <div class="menuConfigModal">
+        <div class="titleModal">
+            <h2>Remover</h2><h2><b>Raflix</b></h2>
+            <h5 onclick="closedModal(this)">x</h5>
+        </div>
+        <button>Filmes</button>
+        <button>Séries</button>
+        <button>Temporada</button>
+        <button>Episódio</button>
+        <button>Categorias</button>
+        <button>Usuários</button>
+    </div>
+</div>
+
+
+<script>
+     function setTopo(){
+            $(window).scrollTop(0);
+        }
+        $(window).bind('scroll', setTopo);
+
+        const modals = document.getElementsByClassName('Modalcontent')
+        const rodape = document.querySelector('#myFooter')
+
+        function openModal(button){
+            let i;
+            for(i = 0; i < modals.length; i++){
+                modals[i].classList.remove('openModal')
+                console.log(modals[i])
+                modals[i].classList.add('closedModal')
+            }
+            if(button.textContent == 'Cadastrar'){
+                modals[1].classList.remove('closedModal')
+                modals[1].classList.add('openModal')
+                rodape.style.cssText = 'position: relative; top: 29vw;'  
+            }
+            else if(button.textContent == 'Editar'){
+                modals[2].classList.remove('closedModal')
+                modals[2].classList.add('openModal')
+                rodape.style.cssText = 'position: relative; top: 29vw;'  
+            }
+            else if(button.textContent == 'Remover'){
+                modals[3].classList.remove('closedModal')
+                modals[3].classList.add('openModal')
+                rodape.style.cssText = 'position: relative; top: 29vw;'  
+            }
+        }
+
+        function closedModal(button){
+            const divTitle = button.parentElement;
+            const divButtons = divTitle.parentElement;
+            const modalThis = divButtons.parentElement;
+
+            modalThis.classList.remove('openModal')
+            modalThis.classList.add('closedModal')
+            const modals = document.getElementsByClassName('Modalcontent')[0]
+            modals.classList.remove('closedModal')
+            modals.classList.add('openModal')
+            modals.style.cssText = 'position: relative; top: 1.5vw;'  
+        }
+</script>
+{% endblock %}

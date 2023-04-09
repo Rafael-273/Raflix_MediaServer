@@ -12,33 +12,50 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .forms import LoginForm
+# from .forms import LoginForm
 from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.fields import BooleanField
+from django.db.models import Q, Case, When, BooleanField, Exists, Subquery, OuterRef
+from django.contrib.auth import login
+from django.http import HttpResponseRedirect
+from django import forms
+from .forms import CreateMovieForm
+from django.views.generic.edit import CreateView
+from django.views.generic import FormView
 
-class CustomLoginView(LoginView):
+class CustomLoginView(FormView):
     template_name = 'front/login.html'
-    authentication_form = LoginForm
     success_url = reverse_lazy('home')
+    
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remember_me = request.POST.get('remember_me')
 
-    def form_valid(self, form):
-        print('remembado')
-        remember_me = form.cleaned_data.get('remember_me')
-        if remember_me:
-            self.request.session.set_expiry(1209600) # 2 weeks
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            
+            if remember_me:
+                request.session.set_expiry(1209600) # 2 weeks
+            else:
+                request.session.set_expiry(0) # expire at browser close
+            
+            return HttpResponseRedirect(self.get_success_url())
         else:
-            self.request.session.set_expiry(0) # expire at browser close
-        return super().form_valid(form)
-
+            return self.form_invalid(None)
+    
     def get_success_url(self):
         if 'next' in self.request.GET:
-            print('passou aqui??')
             next_url = self.request.GET['next']
         else:
-            print('passou aqui')
             next_url = reverse_lazy('home')
         return next_url
-    
+
 
 class LogoutView(View):
     def get(self, request):
@@ -49,6 +66,24 @@ class Home(ListView):
     model = models.Media
     template_name = 'front/home.html'
     context_object_name = 'movies'
+
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        
+        # Subquery para obter os favoritos do usuário
+        favorites_subquery = models.Favorite.objects.filter(
+            user_id=user_id,
+            media_id=OuterRef('pk'),
+        ).values('favorited')[:1]
+        
+        # Annotation para adicionar a coluna `favorited`
+        queryset = self.model.objects.annotate(
+            favorited=Subquery(favorites_subquery),
+        )
+        
+        return queryset
+    
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
@@ -74,9 +109,19 @@ class Media(DetailView):
     template_name = 'front/movie.html'
     context_object_name = 'movie'
     slug_url_kwarg = 'slug'
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     user_id = self.request.user.id
+    #     user = get_object_or_404(models.User, id=user_id)
+    #     media = context['movie']
+    #     favorite = models.Favorite.objects.filter(user=user, media=media, favorited=True).first()
+    #     context['favorited'] = favorite is not None
+    #     return context
 
 class Play(DetailView):
     model = models.Media
@@ -96,18 +141,37 @@ class Trailer(DetailView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
-class Favorites(ListView):
-    model = models.Media
-    template_name = 'front/favorites.html'
-    context_object_name = 'movies' 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+# @method_decorator(csrf_exempt, name='dispatch')
+# class Favorites(ListView):
+#     model = models.Media
+#     template_name = 'front/favorites.html'
+#     context_object_name = 'movies'
 
-class User(ListView):
-    model = models.User
-    template_name = 'front/user.html'
-    context_object_name = 'users'
+#     def get_queryset(self):
+#         if self.request.user.is_authenticated:
+#             user_id = self.request.user.id
+#             user = get_object_or_404(models.User, id=user_id)
+#             favorites = models.Favorite.objects.filter(user=user)
+#             self.favorite_slugs = [favorite.media.slug for favorite in favorites]   
+#             queryset = models.Media.objects.filter(slug__in=self.favorite_slugs, media_has_user__favorited=True)
+#             return queryset
+#         else:
+#             return models.Media.objects.none()
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         favorite_movies = models.Media.objects.filter(slug__in=self.favorite_slugs, media_has_user__favorited=True)
+#         context['favorite_movies'] = favorite_movies
+#         return context
+
+#     @method_decorator(login_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super().dispatch(*args, **kwargs)
+
+# class User(ListView):
+#     model = models.User
+#     template_name = 'front/user.html'
+#     context_object_name = 'users'
 
 class Menu(TemplateView):
     template_name = 'parciais/menu.html'
@@ -125,14 +189,6 @@ class ToggleFavorite(View):
         media.save()
         return JsonResponse({'favorited': media.favorited})
 
-class UpdateFavoriteView(View):
-    def post(self, request, *args, **kwargs):
-        movie_slug = request.POST.get('slug')
-        movie = get_object_or_404(models.Media, slug=movie_slug)
-        movie.favorited = not movie.favorited
-        movie.save()
-        return JsonResponse({'favorited': movie.favorited})
-
 class SearchView(View):
     def get(self, request, *args, **kwargs):
         query = request.GET.get('q')
@@ -142,3 +198,56 @@ class SearchView(View):
             return render(request, 'front/search_results.html', {'movies': movies})
         else:
             return render(request, 'front/home.html')
+            
+
+# @method_decorator(csrf_exempt, name='dispatch')
+# class FavoriteMovieView(View):
+#     def post(self, request):
+#         if request.method == "POST":
+#             user_id = request.user.id
+#             slug = request.POST.get("slug")
+#             is_favorited = request.POST.get("is_favorited")
+#             movie = get_object_or_404(models.Media, slug=slug)
+#             user = get_object_or_404(models.User, id=user_id)
+#             favorite, created = models.Favorite.objects.get_or_create(user=user, media=movie)
+#             if not created:
+#                 favorite.favorited = not favorite.favorited
+#                 favorite.save()
+#                 return JsonResponse({"success": True, "favorited": favorite.favorited})
+#             else:
+#                 favorite.favorited = True
+#                 favorite.save()
+#                 return JsonResponse({"success": False, "favorited": True})
+            
+    
+#     @method_decorator(login_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super().dispatch(*args, **kwargs)
+
+class ConfigAll(ListView):
+    model = models.Media
+    template_name = 'front/config.html'
+    context_object_name = 'movies'
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+class CreateMovieView(View):
+    def get(self, request):
+        form = CreateMovieForm()
+        return render(request, 'create/create_movie.html', {'form': form})
+
+    def post(self, request):
+        form = CreateMovieForm(request.POST, request.FILES)
+        if form.is_valid():
+            media = form.save(commit=False)
+            media.save()
+            movie = models.Movie.objects.create(
+                media=media,
+                description=form.cleaned_data['description'],
+                short_description=form.cleaned_data['short_description'],
+                duration=form.cleaned_data['duration'],
+                classification=form.cleaned_data['classification']
+            )
+            return redirect('success')
+        return render(request, 'create/create_movie.html', {'form': form})

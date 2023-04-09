@@ -1,0 +1,44 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Create Movie
+
+{% endblock %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/cadastro.css">
+
+{% endblock %}
+
+{% block conteudo %}
+
+    <div class="div_create">
+        <h1>Create Movie</h1>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="{{ form.description.id_for_label }}">Description:</label>
+          {{ form.description }}
+          <br>
+          <label for="{{ form.short_description.id_for_label }}">Short Description:</label>
+          {{ form.short_description }}
+          <br>
+          <label for="{{ form.duration.id_for_label }}">Duration:</label>
+          {{ form.duration }}
+          <br>
+          <label for="{{ form.classification.id_for_label }}">Classification:</label>
+          {{ form.classification }}
+          <br>
+          <label for="{{ form.media.id_for_label }}">Media:</label>
+          {{ form.media }}
+          <br>
+          <label for="{{ form.trailer.id_for_label }}">Trailer:</label>
+          {{ form.trailer }}
+          <br>
+          <button type="submit">Save</button>
+        </form>
+    </div>
+  
+{% endblock %}

@@ -1,0 +1,37 @@
+.div_create {
+    width: 100%;
+    height: 41vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    color: white;
+}
+
+textarea {
+    border: 0;
+    background-color: rgba(248, 248, 248, 0.8);
+    border-radius: 6px;
+    height: 100px;
+    min-width: 100%;
+    resize: none;
+}
+
+.input_text {
+    border: 0;
+    background-color: rgba(248, 248, 248, 0.8);
+    border-radius: 6px;
+    height: 50px;
+    min-width: 100%;
+}
+
+.input_button {
+    border: 0;
+    width: 100%;
+    padding: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: rgba(248, 248, 248, 0.8);
+}
