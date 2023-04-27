@@ -174,8 +174,10 @@ INTERNAL_IPS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'two_factor:login'
 
 LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 LOGIN_URL = 'two_factor:login'
+
+TWO_FACTOR_PATCH_ADMIN = True
