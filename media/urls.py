@@ -2,10 +2,12 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
+    path('', include(tf_urls)),
     path('', views.Home.as_view(), name='home'),
-    path('login', views.CustomLoginView.as_view(), name='login'),
+    # path('login', views.CustomLoginView.as_view(), name='login'),
     path('logout', views.LogoutView.as_view(), name='logout'),
     path('movies', views.Movies.as_view(), name='movies'),
     path('series', views.Series.as_view(), name='series'),
