@@ -18,28 +18,29 @@ from django.views.generic import TemplateView
 from .forms import CreateMovieForm
 
 
-class CustomLoginView(LoginView):
-    template_name = 'front/login.html'
-    authentication_form = LoginForm
-    success_url = reverse_lazy('home')
 
-    def form_valid(self, form):
-        print('remembado')
-        remember_me = form.cleaned_data.get('remember_me')
-        if remember_me:
-            self.request.session.set_expiry(1209600)
-        else:
-            self.request.session.set_expiry(0)
-        return super().form_valid(form)
+# class CustomLoginView(LoginView):
+#     template_name = 'front/login.html'
+#     authentication_form = LoginForm
+#     success_url = reverse_lazy('home')
 
-    def get_success_url(self):
-        if 'next' in self.request.GET:
-            print('passou aqui??')
-            next_url = self.request.GET['next']
-        else:
-            print('passou aqui')
-            next_url = reverse_lazy('home')
-        return next_url
+#     def form_valid(self, form):
+#         print('remembado')
+#         remember_me = form.cleaned_data.get('remember_me')
+#         if remember_me:
+#             self.request.session.set_expiry(1209600)
+#         else:
+#             self.request.session.set_expiry(0)
+#         return super().form_valid(form)
+
+#     def get_success_url(self):
+#         if 'next' in self.request.GET:
+#             print('passou aqui??')
+#             next_url = self.request.GET['next']
+#         else:
+#             print('passou aqui')
+#             next_url = reverse_lazy('home')
+#         return next_url
     
 
 class LogoutView(View):
