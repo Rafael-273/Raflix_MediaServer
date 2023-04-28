@@ -81,9 +81,9 @@ body::before {
     
 }
 
-.login_body h1 {
+.login_body h2 {
     font-size: 32px;
-    color: white !important;
+    color: red !important;
     margin-top: 0;
     z-index: 9999;
 }
