@@ -11,6 +11,7 @@ body {
 
 }
 
+
 @media (max-width: 600px) {
     .logo img{
         margin-left: 80px;
@@ -80,10 +81,11 @@ body::before {
     
 }
 
-.login_body h2 {
+.login_body h1 {
     font-size: 32px;
-    color: white;
+    color: white !important;
     margin-top: 0;
+    z-index: 9999;
 }
 
 .login_body input {

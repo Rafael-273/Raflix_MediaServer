@@ -1,12 +1,14 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic.base import RedirectView
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
-    path('home', views.Home.as_view(), name='home'),
-    path('login', include(tf_urls)),
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),#correção bug favicon
+    path('', views.Home.as_view(), name='home'),
+    path('', include(tf_urls)),
     # path('login', views.CustomLoginView.as_view(), name='login'),
     path('logout', views.LogoutView.as_view(), name='logout'),
     path('movies', views.Movies.as_view(), name='movies'),
@@ -22,3 +24,6 @@ urlpatterns = [
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
+
+# Adicione esta linha se você quiser servir arquivos estáticos durante o desenvolvimento
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
