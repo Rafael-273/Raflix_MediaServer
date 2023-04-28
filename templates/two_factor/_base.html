@@ -16,7 +16,8 @@
             </a>
         </div>
     </div>
-    <div class="login_body">
+    {% block content %}{% endblock %}
+    <!-- <div class="login_body">
         <div class="login_box">
             <h2>Entrar</h2>
             <form method="POST" action="{% url 'two_factor:login' %}">
@@ -50,7 +51,7 @@
 
         </div>
 
-    </div>
+    </div> -->
 
 
 
