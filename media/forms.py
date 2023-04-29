@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Movie
 from django.db.models import Q
 from django.core.validators import FileExtensionValidator
+from django_otp.forms import OTPAuthenticationFormMixin
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
@@ -58,3 +59,10 @@ class CreateMovieForm(forms.ModelForm):
     class Meta:
         model = Movie
         fields = ('description', 'short_description', 'duration', 'classification', 'media', 'trailer')
+
+
+class CustomAuthenticationForm(AuthenticationForm, OTPAuthenticationFormMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control'})

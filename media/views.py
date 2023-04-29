@@ -15,8 +15,8 @@ from django.contrib.auth import logout
 from .forms import LoginForm
 # from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
-from .forms import CreateMovieForm
-
+from .forms import CreateMovieForm, CustomAuthenticationForm
+from django_otp import login as otp_login
 
 
 # class CustomLoginView(LoginView):
@@ -47,7 +47,22 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
+    
 
+class CustomLoginView(LoginView):
+    form_class = CustomAuthenticationForm
+    template_name = 'two_factor/core/login.html'
+    success_url = reverse_lazy('home')
+    
+    def form_valid(self, form):
+        """
+        Security check complete. Log the user in.
+        """
+        # Ensure the user-originating redirection url is safe.
+        self.check_and_update_redirect_url()
+        # Redirect to the success URL.
+        return otp_login(self.request, form.get_user())
+    
 
 class Home(ListView):
     model = models.Media

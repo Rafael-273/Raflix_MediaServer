@@ -13,7 +13,7 @@ body {
 
 
 @media (max-width: 600px) {
-    .logo img{
+    .logo img {
         margin-left: 80px;
         height: 81px;
         width: 270px;
@@ -149,7 +149,7 @@ body::before {
 .remember span {
     margin-right: 5px;
     height: 25px;
-
+    color: white;
 }
 
 /* PÁGINA HOME */
