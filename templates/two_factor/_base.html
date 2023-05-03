@@ -17,43 +17,5 @@
         </div>
     </div>
     {% block content %}{% endblock %}
-    <!-- <div class="login_body">
-        <div class="login_box">
-            <h2>Entrar</h2>
-            <form method="POST" action="{% url 'two_factor:login' %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ next }}">
-                <div class="input_box">
-                    <input type="email" name="email" placeholder="Digite seu Email">
-                </div>
-                <div class="input_box">
-                    <input type="password" name="password" placeholder="Digite sua Senha">
-                </div>
-                <div>
-                    <button type="submit" class="submit">Entrar</button>
-                </div>        
-
-                <div class="support">
-                    <div class="remember">
-                        <span><input checked type="checkbox" name="remember_me" style="margin: 0; padding: 0; height: 13px;"></span>
-                        <span>Lembre-se de mim</span>
-                        </div>
-
-                        <div class="login_footer">
-
-                            <div class="sign_up">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>  
-
-        </div>
-
-    </div> -->
-
-
-
 </body>
 </html>

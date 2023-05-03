@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'two_factor.plugins.phonenumber'
 ]
 
+AUTH_USER_MODEL = 'media.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -91,9 +93,9 @@ WSGI_APPLICATION = 'Raflix.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'raflix_database',
-        'USER': 'rafael',
-        'PASSWORD': '123',
+        'NAME': 'raflix',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }

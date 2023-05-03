@@ -9,12 +9,12 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
 class User(AbstractUser):
-    name = models.CharField(max_length=55, blank=False)
-    photo = models.ImageField(upload_to='static/media/user', default='img' ,blank=False, null=False)
-    telephone = models.IntegerField(blank=True)
-    groups = models.ManyToManyField(Group, related_name='user_group_set')
-    user_permissions = models.ManyToManyField(Permission, related_name='user_permission_set')
+    photo = models.ImageField(upload_to='static/media/user', blank=True, null=True)
+    telephone = models.IntegerField(blank=False, null=True)
+    groups = models.ManyToManyField(Group, related_name='user_group_set', null=True)
 
+    def __str__(self):
+        return self.username
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -35,6 +35,7 @@ class User(AbstractUser):
         )
 
     def save(self, *args, **kwargs):
+        self.set_password(self.password)
         super().save(*args, **kwargs)
 
         max_image_size = 800
@@ -42,12 +43,10 @@ class User(AbstractUser):
         if self.photo:
             self.resize_image(self.photo, max_image_size)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+        db_table = 'auth_user'
 
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
