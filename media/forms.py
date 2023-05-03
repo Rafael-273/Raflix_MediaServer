@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from .models import Movie
 from django.db.models import Q
 from django.core.validators import FileExtensionValidator
@@ -61,8 +61,18 @@ class CreateMovieForm(forms.ModelForm):
         fields = ('description', 'short_description', 'duration', 'classification', 'media', 'trailer')
 
 
-class CustomAuthenticationForm(AuthenticationForm, OTPAuthenticationFormMixin):
+class CustomAuthenticationForm(AuthenticationForm):
+    username = UsernameField(
+        label='',
+        widget=forms.TextInput(attrs={"autofocus": True, 'class': 'input_login', 'placeholder': 'Digite seu username'}),
+    )
+    password = forms.CharField(
+        label='',
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", 'placeholder': 'Digite sua senha'}),
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({'class': 'form-control'})
-        self.fields['password'].widget.attrs.update({'class': 'form-control'})
+        self.fields['username'].widget.attrs.update({'class': 'custom-class-1', 'placeholder': 'Digite o nome de usuário'})
+        self.fields['password'].widget.attrs.update({'class': 'custom-class-2', 'placeholder': 'Digite a senha'})
