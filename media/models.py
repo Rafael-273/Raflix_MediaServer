@@ -8,13 +8,16 @@ from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
+
 class User(AbstractUser):
-    name = models.CharField(max_length=55, blank=False)
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=8)
     photo = models.ImageField(upload_to='static/media/user', default='img' ,blank=False, null=False)
     telephone = models.IntegerField(blank=True)
     groups = models.ManyToManyField(Group, related_name='user_group_set')
     user_permissions = models.ManyToManyField(Permission, related_name='user_permission_set')
 
+    USERNAME_FIELD = 'username'
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -42,12 +45,10 @@ class User(AbstractUser):
         if self.photo:
             self.resize_image(self.photo, max_image_size)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+        
 
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)

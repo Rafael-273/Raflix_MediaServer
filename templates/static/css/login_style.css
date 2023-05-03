@@ -66,18 +66,17 @@ body::before {
 }
 
 .login_body {
-    top: 15%;
+    top: 14%;
     padding: 60px;
     z-index: 90;
     position: relative;
     max-width: 425px;
-    height: 420px;
+    min-height: 420px;
     margin-left: 50%;
     background-color: rgba(0,0,0,0.6);
     border-radius: 10px;
     box-sizing: border-box;
     transform: translateX(-50%);
-    
 }
 
 .login_body h2 {

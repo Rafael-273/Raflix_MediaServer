@@ -6,62 +6,16 @@ from . import models
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-# from django.contrib.humanize.templatetags import humanize
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .forms import LoginForm
-# from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
-from .forms import CreateMovieForm, CustomAuthenticationForm
-from django_otp import login as otp_login
 
-
-# class CustomLoginView(LoginView):
-#     template_name = 'front/login.html'
-#     authentication_form = LoginForm
-#     success_url = reverse_lazy('home')
-
-#     def form_valid(self, form):
-#         print('remembado')
-#         remember_me = form.cleaned_data.get('remember_me')
-#         if remember_me:
-#             self.request.session.set_expiry(1209600)
-#         else:
-#             self.request.session.set_expiry(0)
-#         return super().form_valid(form)
-
-#     def get_success_url(self):
-#         if 'next' in self.request.GET:
-#             print('passou aqui??')
-#             next_url = self.request.GET['next']
-#         else:
-#             print('passou aqui')
-#             next_url = reverse_lazy('home')
-#         return next_url
-    
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
-    
-
-class CustomLoginView(LoginView):
-    form_class = CustomAuthenticationForm
-    template_name = 'two_factor/core/login.html'
-    success_url = reverse_lazy('home')
-    
-    def form_valid(self, form):
-        """
-        Security check complete. Log the user in.
-        """
-        # Ensure the user-originating redirection url is safe.
-        self.check_and_update_redirect_url()
-        # Redirect to the success URL.
-        return otp_login(self.request, form.get_user())
     
 
 class Home(ListView):

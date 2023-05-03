@@ -29,11 +29,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    'media',
+    'media.apps.MediaConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,8 +45,10 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
-    'two_factor.plugins.phonenumber'
+    'two_factor.plugins.phonenumber',
 ]
+
+# AUTH_USER_MODEL = 'media.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
