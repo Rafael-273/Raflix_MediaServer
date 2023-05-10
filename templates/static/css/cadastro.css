@@ -105,4 +105,10 @@ textarea {
     background-color: #f1232d;
     color: #fff;
   }
-  
+
+  .error-message{
+    color: white;
+    background-color: #d1000a;
+    padding: 10px;
+    margin: 10px 0;
+  }

@@ -9,6 +9,9 @@ from django.conf import settings
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User
+from django.core.validators import RegexValidator
+from django.utils.translation import gettext_lazy as _
+import re
 
 
 class LoginForm(AuthenticationForm):
@@ -136,14 +139,60 @@ class CreateMovieForm(forms.ModelForm):
         return movie
 
 
+class TelephoneInput(forms.widgets.TextInput):
+    def __init__(self, attrs=None):
+        super().__init__(attrs)
+
+        # Definição da expressão regular para o formato de telefone
+        self.regex = re.compile(r'^\(?([0-9]{2})\)?[-. ]?([0-9]{4,5})[-. ]?([0-9]{4})$')
+
+    def format_value(self, value):
+        # Formata o valor do campo de acordo com a expressão regular
+        match = self.regex.search(value)
+        if match:
+            return '({}){}-{}'.format(match.group(1), match.group(2), match.group(3))
+        return value
+
+    def get_validator(self):
+        # Retorna um validador para o formato de telefone
+        return RegexValidator(self.regex, _('Entre com um telefone válido.'))
+
+
 class CreateUserForm(UserCreationForm):
-    photo = forms.ImageField(required=False)
-    telephone = forms.IntegerField()
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'input_text'})
+    )
+    telephone = forms.CharField(
+        label=_('Telefone'),
+        max_length=14,
+        required=True,
+        validators=[TelephoneInput().get_validator()],
+        widget=TelephoneInput(attrs={'class': 'input_text'})
+    )
+    password1 = forms.CharField(
+        label="Senha",
+        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+    )
+    password2 = forms.CharField(
+        label="Confirmação de senha",
+        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+    )
+    photo = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_text-file', 'hidden': 'hidden'})
+    )
 
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo']
-
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = UsernameField(

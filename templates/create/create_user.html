@@ -3,7 +3,7 @@
 
 {% block title %}
 
-Create Movie
+Create User
 
 {% endblock %}
 
@@ -17,11 +17,24 @@ Create Movie
 
     <div class="div_create">
         <div class="create_body">
-            <h1>Create Movie</h1>
+            <h1>Create User</h1>
             <div class="scrool_info">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    {% for field in form %}
+                    
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+
+                        {% if "Photo" in field.label %}
+                        <label class="input-file-trigger input-photo" for="{{ form.photo.id_for_label }}">Selecione a Foto</label>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+
+                    {% endfor %}
             </div>
             <br>
             <button type="submit">Save</button>
@@ -30,59 +43,15 @@ Create Movie
     </div>
 
     <script>
-        var fileInputTrailer = document.getElementById("id_trailer");
-        var fileInputMedia = document.getElementById("input_media");
-        var fileInputPoster = document.getElementById("input_poster");
-        var fileInputTitle = document.getElementById("input_title");
-        var fileInputBanner = document.getElementById("input_banner");
-        var label_trailer = document.querySelector(".input-trailer");
-        var label_media = document.querySelector(".input-media");
-        var label_poster = document.querySelector(".input-poster");
-        var label_title = document.querySelector(".input-title");
-        var label_banner = document.querySelector(".input-banner");
+        var fileInputPhoto = document.getElementById("id_photo");
+        var label_media = document.querySelector(".input-photo");
 
-        fileInputTrailer.addEventListener("change", function() {
-        if (fileInputTrailer.value) {
-            var fileName = fileInputTrailer.value.split("\\").pop();
-            label_trailer.innerHTML = fileName;
-        } else {
-            label_trailer.innerHTML = "Selecione um Trailer";
-        }
-        });
-
-        fileInputPoster.addEventListener("change", function() {
-        if (fileInputPoster.value) {
-            var fileName = fileInputPoster.value.split("\\").pop();
-            label_poster.innerHTML = fileName;
-        } else {
-            label_poster.innerHTML = "Selecione um Poster";
-        }
-        });
-
-        fileInputTitle.addEventListener("change", function() {
-        if (fileInputTitle.value) {
-            var fileName = fileInputTitle.value.split("\\").pop();
-            label_title.innerHTML = fileName;
-        } else {
-            label_title.innerHTML = "Selecione um Title";
-        }
-        });
-
-        fileInputMedia.addEventListener("change", function() {
-        if (fileInputMedia.value) {
-            var fileName = fileInputMedia.value.split("\\").pop();
+        fileInputPhoto.addEventListener("change", function() {
+        if (fileInputPhoto.value) {
+            var fileName = fileInputPhoto.value.split("\\").pop();
             label_media.innerHTML = fileName;
         } else {
             label_media.innerHTML = "Selecione um Filme";
-        }
-        });
-
-        fileInputBanner.addEventListener("change", function() {
-        if (fileInputBanner.value) {
-            var fileName = fileInputBanner.value.split("\\").pop();
-            label_banner.innerHTML = fileName;
-        } else {
-            label_banner.innerHTML = "Selecione um Banner";
         }
         });
         

@@ -7,11 +7,13 @@ from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.validators import RegexValidator
 
 class User(AbstractUser):
     photo = models.ImageField(upload_to='static/media/user', blank=True, null=True)
-    telephone = models.IntegerField(blank=False, null=True)
     groups = models.ManyToManyField(Group, related_name='user_group_set', null=True)
+
+    telephone = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):
         return self.username
