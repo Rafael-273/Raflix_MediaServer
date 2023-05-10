@@ -1,9 +1,15 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from .models import Movie
+from .models import Movie, Media
 from django.db.models import Q
 from django.core.validators import FileExtensionValidator
 from django_otp.forms import OTPAuthenticationFormMixin
+import os
+from django.conf import settings
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import User
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
@@ -39,26 +45,104 @@ class CreateMovieForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'input_text'})
     )
 
-    classification = forms.CharField(
+    CLASSIFICATION_CHOICES = (
+        ('L', 'Livre'),
+        ('10', 'Não recomendado para menores de 10 anos'),
+        ('12', 'Não recomendado para menores de 12 anos'),
+        ('14', 'Não recomendado para menores de 14 anos'),
+        ('16', 'Não recomendado para menores de 16 anos'),
+        ('18', 'Não recomendado para menores de 18 anos'),
+    )
+
+    classification = forms.ChoiceField(
+        choices=CLASSIFICATION_CHOICES,
+        widget=forms.Select(attrs={'class': 'input_text'})
+    )
+
+
+    title = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'input_text'})
     )
 
-    media = forms.FileField(
-        validators=[
-            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv','h264'])
-        ], 
-        widget=forms.TextInput(attrs={'type': 'file', 'class': 'input_button'})
+    release_year = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'input_text'})
     )
+
+    poster = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_poster', 'hidden': 'hidden'})
+    )
+
+    banner = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'})
+    )
+
+    title_img = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'})
+    )
+
+    media_file = forms.FileField(
+        validators=[
+            FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
+        ],
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_media', 'hidden': 'hidden'})
+    )
+
     trailer = forms.FileField(
         validators=[
-            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv','h264'])
-        ], 
-        widget=forms.TextInput(attrs={'type': 'file', 'class': 'input_button'})
+            FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
+        ],
+        widget=forms.ClearableFileInput(attrs={'class': 'input_trailer', 'hidden': 'hidden'})
     )
-    
+
     class Meta:
         model = Movie
-        fields = ('description', 'short_description', 'duration', 'classification', 'media', 'trailer')
+        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification',  'poster', 'banner', 'title_img', 'media_file', 'trailer')
+
+    def save(self, commit=True):
+        media = Media(
+            title=self.cleaned_data['title'],
+            release_year=self.cleaned_data['release_year'],
+            poster=self.cleaned_data['poster'],
+            banner=self.cleaned_data['banner'],
+            title_img=self.cleaned_data['title_img'],
+            media_file=self.cleaned_data['media'],
+            trailer=self.cleaned_data['trailer'],
+        )
+        media.save()
+
+        movie = super(CreateMovieForm, self).save(commit=False)
+        movie.media = media
+
+        if commit:
+            movie.save()
+
+        if 'media_file' in self.files:
+            media_file = self.files['media_file']
+            movie.media_path = os.path.join(settings.MEDIA_ROOT, 'static/media/video', media_file.name)
+            with open(movie.media_path, 'wb') as media_dest:
+                for chunk in media_file.chunks():
+                    media_dest.write(chunk)
+
+        if 'trailer_file' in self.files:
+            trailer_file = self.files['trailer_file']
+            movie.trailer_path = os.path.join(settings.MEDIA_ROOT, 'static/media/trailer', trailer_file.name)
+            with open(movie.trailer_path, 'wb') as trailer_dest:
+                for chunk in trailer_file.chunks():
+                    trailer_dest.write(chunk)
+
+        if commit:
+            movie.save()
+
+        return movie
+
+
+class CreateUserForm(UserCreationForm):
+    photo = forms.ImageField(required=False)
+    telephone = forms.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo']
 
 
 class CustomAuthenticationForm(AuthenticationForm):

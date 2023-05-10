@@ -123,7 +123,3 @@
     background-color: rgb(32, 32, 32);
     transition: 0.3s;
 }
-
-.menuConfigModal button:last-child {
-    border-radius: 0 0 20px 20px;
-}
