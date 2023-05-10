@@ -17,31 +17,8 @@ from .forms import LoginForm
 from django.views.generic import TemplateView
 from .forms import CreateMovieForm, CustomAuthenticationForm
 from django_otp import login as otp_login
-
-
-# class CustomLoginView(LoginView):
-#     template_name = 'front/login.html'
-#     authentication_form = LoginForm
-#     success_url = reverse_lazy('home')
-
-#     def form_valid(self, form):
-#         print('remembado')
-#         remember_me = form.cleaned_data.get('remember_me')
-#         if remember_me:
-#             self.request.session.set_expiry(1209600)
-#         else:
-#             self.request.session.set_expiry(0)
-#         return super().form_valid(form)
-
-#     def get_success_url(self):
-#         if 'next' in self.request.GET:
-#             print('passou aqui??')
-#             next_url = self.request.GET['next']
-#         else:
-#             print('passou aqui')
-#             next_url = reverse_lazy('home')
-#         return next_url
-    
+from .forms import CreateUserForm
+from django.contrib.auth import login
 
 class LogoutView(View):
     def get(self, request):
@@ -170,17 +147,46 @@ class CreateMovieView(View):
     def post(self, request):
         form = CreateMovieForm(request.POST, request.FILES)
         if form.is_valid():
-            media = form.save(commit=False)
+
+            media = models.Media(
+                media_file = form.cleaned_data['media_file'],
+                trailer = form.cleaned_data['trailer'], 
+                title = form.cleaned_data['title'],
+                release_year = form.cleaned_data['release_year'],
+                poster = form.cleaned_data['poster'],
+                banner = form.cleaned_data['banner'],
+                title_img = form.cleaned_data['title_img'],
+            )
             media.save()
-            movie = models.Movie.objects.create(
-                media=media,
+
+            movie = models.Movie(
                 description=form.cleaned_data['description'],
                 short_description=form.cleaned_data['short_description'],
                 duration=form.cleaned_data['duration'],
-                classification=form.cleaned_data['classification']
+                classification=form.cleaned_data['classification'],
+                media=media,
             )
-            return redirect('success')
+            movie.save()
+
+            return redirect(reverse_lazy('home'))
         return render(request, 'create/create_movie.html', {'form': form})
+
+
+class CreateUserView(View):
+    def get(self, request):
+        form = CreateUserForm()
+        return render(request, 'create/create_user.html', {'form': form})
+
+    def post(self, request):
+        form = CreateUserForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.telephone = form.cleaned_data.get('telephone')
+            user.photo = form.cleaned_data.get('photo')
+            user.save()
+            login(request, user)
+            return redirect('home')
+        return render(request, 'create/create_user.html', {'form': form})
 
 
 class ToggleFavorite(View):

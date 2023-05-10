@@ -9,7 +9,6 @@ urlpatterns = [
     re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),#correção bug favicon
     path('', views.Home.as_view(), name='home'),
     path('', include(tf_urls)),
-    # path('login', views.CustomLoginView.as_view(), name='login'),
     path('logout', views.LogoutView.as_view(), name='logout'),
     path('movies', views.Movies.as_view(), name='movies'),
     path('series', views.Series.as_view(), name='series'),
@@ -22,6 +21,7 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search'),
     path('config', views.ConfigAll.as_view(), name='config'),
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
+    path('create_user', views.CreateUserView.as_view(), name='create_user'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
 
