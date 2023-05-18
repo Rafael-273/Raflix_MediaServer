@@ -184,7 +184,8 @@ class Episode(models.Model):
         verbose_name = 'Episode'
         verbose_name_plural = 'Episodes'
 
-genre_choices = (('N', 'Não Definido'),
+genre_choices = (
+            ('N', 'Não Definido'),
             ('A', 'Ação'),
             ('AN', 'Animação'),
             ('AV', 'Aventura'),
@@ -197,7 +198,8 @@ genre_choices = (('N', 'Não Definido'),
             ('R', 'Romance'),
             ('T', 'Terror'),
             ('MA', 'Marvel'),
-            ('LA', 'Lançamento'))
+            ('LA', 'Lançamento')
+        )
 
 class Genre(models.Model):
     category = models.CharField(

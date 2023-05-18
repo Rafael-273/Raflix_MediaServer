@@ -12,7 +12,6 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .forms import LoginForm
 # from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from .forms import CreateMovieForm, CustomAuthenticationForm
@@ -159,6 +158,11 @@ class CreateMovieView(View):
             )
             media.save()
 
+            genre = models.Genre(
+                category = form.cleaned_data['category']
+            )
+            genre.save()
+
             movie = models.Movie(
                 description=form.cleaned_data['description'],
                 short_description=form.cleaned_data['short_description'],
@@ -167,6 +171,12 @@ class CreateMovieView(View):
                 media=media,
             )
             movie.save()
+
+            movie_has_genre = models.Movie_has_genre(
+                genre=genre,
+                movie=movie
+            )
+            movie_has_genre.save()
 
             return redirect(reverse_lazy('home'))
         return render(request, 'create/create_movie.html', {'form': form})
@@ -180,11 +190,8 @@ class CreateUserView(View):
     def post(self, request):
         form = CreateUserForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.telephone = form.cleaned_data.get('telephone')
-            user.photo = form.cleaned_data.get('photo')
-            user.save()
-            login(request, user)
+            user = form.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         return render(request, 'create/create_user.html', {'form': form})
 

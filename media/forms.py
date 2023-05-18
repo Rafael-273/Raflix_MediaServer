@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from .models import Movie, Media
+from .models import Movie, Media, User, genre_choices, Genre
 from django.db.models import Q
 from django.core.validators import FileExtensionValidator
 from django_otp.forms import OTPAuthenticationFormMixin
@@ -8,7 +8,6 @@ import os
 from django.conf import settings
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 import re
@@ -62,6 +61,10 @@ class CreateMovieForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'input_text'})
     )
 
+    category = forms.ChoiceField(
+        choices=genre_choices,
+        widget=forms.Select(attrs={'class': 'input_text'})
+    )
 
     title = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'input_text'})
@@ -99,7 +102,7 @@ class CreateMovieForm(forms.ModelForm):
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification',  'poster', 'banner', 'title_img', 'media_file', 'trailer')
+        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
 
     def save(self, commit=True):
         media = Media(
@@ -147,7 +150,8 @@ class TelephoneInput(forms.widgets.TextInput):
         self.regex = re.compile(r'^\(?([0-9]{2})\)?[-. ]?([0-9]{4,5})[-. ]?([0-9]{4})$')
 
     def format_value(self, value):
-        # Formata o valor do campo de acordo com a expressão regular
+        if value is None:
+            return ''  # retorna uma string vazia se o valor for nulo
         match = self.regex.search(value)
         if match:
             return '({}){}-{}'.format(match.group(1), match.group(2), match.group(3))
@@ -190,9 +194,34 @@ class CreateUserForm(UserCreationForm):
         widget=forms.ClearableFileInput(attrs={'class': 'input_text-file', 'hidden': 'hidden'})
     )
 
+    is_superuser = forms.BooleanField(
+        required=False, widget=forms.CheckboxInput()
+    )
+
+    def save(self, commit=True):
+        username = self.cleaned_data['username']
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        email = self.cleaned_data['email']
+        telephone = self.cleaned_data['telephone']
+        password = self.cleaned_data['password1']
+        photo = self.cleaned_data['photo']
+
+        user = User.objects.create(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            telephone=telephone,
+            password=password,
+            photo=photo
+        )
+
+        return user
+
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo']
+        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo', 'is_superuser']
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = UsernameField(
