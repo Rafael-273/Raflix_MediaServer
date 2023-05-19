@@ -190,13 +190,26 @@ class EditMovieView(View):
         return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
 
     def post(self, request, slug):
-        movie = models.Media.objects.get(slug=slug)
-        form = EditMovieForm(request.POST, instance=movie)
+        media = get_object_or_404(models.Media, slug=slug)
+        movie = media.media_has_movie.first()
+        form = EditMovieForm(request.POST, request.FILES, instance=movie)
         if form.is_valid():
-            form.save()
-            return redirect('home')
-        return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
+            if movie:
+                movie = form.save()
 
+                genre = models.Genre(
+                    category = form.cleaned_data['category']
+                )
+                genre.save()
+
+                movie_has_genre = models.Movie_has_genre(
+                    genre=genre,
+                    movie=movie
+                )
+                movie_has_genre.save()
+
+                return redirect(reverse_lazy('home'))
+        return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
 
 class CreateUserView(View):
     def get(self, request):

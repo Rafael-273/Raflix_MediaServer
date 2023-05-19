@@ -111,7 +111,7 @@ class CreateMovieForm(forms.ModelForm):
             poster=self.cleaned_data['poster'],
             banner=self.cleaned_data['banner'],
             title_img=self.cleaned_data['title_img'],
-            media_file=self.cleaned_data['media'],
+            media_file=self.cleaned_data['media_file'],
             trailer=self.cleaned_data['trailer'],
         )
         media.save()
@@ -216,6 +216,51 @@ class EditMovieForm(forms.ModelForm):
     class Meta:
         model = Movie
         fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
+
+    def save(self, commit=True):
+        movie = super(EditMovieForm, self).save(commit=False)
+
+        media = movie.media
+        media.title = self.cleaned_data['title']
+        media.release_year = self.cleaned_data['release_year']
+        media.poster = self.cleaned_data['poster']
+        media.banner = self.cleaned_data['banner']
+        media.title_img = self.cleaned_data['title_img']
+        media.media_file = self.cleaned_data['media_file']
+        media.trailer = self.cleaned_data['trailer']
+        media.save()
+
+        if commit:
+            movie.save()
+
+        if 'media_file' in self.files:
+            media_file = self.files['media_file']
+            movie.media_path = os.path.join(settings.MEDIA_ROOT, 'static/media/video', media_file.name)
+            with open(movie.media_path, 'wb') as media_dest:
+                for chunk in media_file.chunks():
+                    media_dest.write(chunk)
+
+        if 'trailer_file' in self.files:
+            trailer_file = self.files['trailer_file']
+            movie.trailer_path = os.path.join(settings.MEDIA_ROOT, 'static/media/trailer', trailer_file.name)
+            with open(movie.trailer_path, 'wb') as trailer_dest:
+                for chunk in trailer_file.chunks():
+                    trailer_dest.write(chunk)
+
+        if commit:
+            movie.save()
+
+        selected_genres = self.cleaned_data['category']
+        movie.movie_has_genre.all().delete()
+
+        for genre_initial in selected_genres:
+            try:
+                genre = Genre.objects.get(category__startswith=genre_initial)
+                movie.movie_has_genre.create(genre=genre)
+            except Genre.DoesNotExist:
+                pass
+
+        return movie
 
 
 class TelephoneInput(forms.widgets.TextInput):
