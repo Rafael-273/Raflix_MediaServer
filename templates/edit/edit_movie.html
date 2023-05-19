@@ -1,0 +1,124 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Edit Movie
+
+{% endblock %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/cadastro.css">
+
+{% endblock %}
+
+{% block conteudo %}
+
+    <div class="div_create">
+        <div class="create_body">
+            <h1>Edit Movie</h1>
+            <div class="scrool_info">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+
+                        {% if "Trailer" in field.label %}
+                        <label class="input-file-trigger input-trailer" for="{{ form.trailer.id_for_label }}">Selecione o Trailer</label>
+                        {% endif %}
+
+                        {% if "Media file" in field.label %}
+                        <!-- <input type="button" value="Limpar" onclick="document.getElementById('{{ form.media_file.id_for_label }}').value = null;"> -->
+                        <label class="input-file-trigger input-media" for="{{ form.media_file.id_for_label }}">Selecione o Filme</label>
+                        {% endif %}
+
+                        {% if "Title img" in field.label %}
+                        <label class="input-file-trigger input-title" for="{{ form.title_img.id_for_label }}">Selecione o Título</label>
+                        {% endif %}
+
+                        {% if "Banner" in field.label %}
+                        <label class="input-file-trigger input-banner" for="{{ form.banner.id_for_label }}">Selecione o Banner</label>
+                        {% endif %}
+
+                        {% if "Poster" in field.label %}
+                        <!-- <div class="help_icon">
+                            <i onclick="toggleHelp(this)" style="color: white; margin-top: 10px; cursor: pointer;"><span style="font-size: 15px; font-variation-settings:
+                                'FILL' 1" class="material-symbols-outlined">
+                                info
+                                </span>
+                            </i>
+                            <span id="help-text" class="span_help" style="display:none; color: rgb(255, 209, 209);">Esse campo se refere a miniatura da capa do filme</span>    
+                        </div>                     -->
+                        <label class="input-file-trigger input-poster" for="{{ form.poster.id_for_label }}">Selecione o Poster</label>
+                        {% endif %}
+                    {% endfor %}
+
+            </div>
+            <br>
+            <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var fileInputTrailer = document.getElementById("id_trailer");
+        var fileInputMedia = document.getElementById("input_media");
+        var fileInputPoster = document.getElementById("input_poster");
+        var fileInputTitle = document.getElementById("input_title");
+        var fileInputBanner = document.getElementById("input_banner");
+        var label_trailer = document.querySelector(".input-trailer");
+        var label_media = document.querySelector(".input-media");
+        var label_poster = document.querySelector(".input-poster");
+        var label_title = document.querySelector(".input-title");
+        var label_banner = document.querySelector(".input-banner");
+
+        fileInputTrailer.addEventListener("change", function() {
+        if (fileInputTrailer.value) {
+            var fileName = fileInputTrailer.value.split("\\").pop();
+            label_trailer.innerHTML = fileName;
+        } else {
+            label_trailer.innerHTML = "Selecione um Trailer";
+        }
+        });
+
+        fileInputPoster.addEventListener("change", function() {
+        if (fileInputPoster.value) {
+            var fileName = fileInputPoster.value.split("\\").pop();
+            label_poster.innerHTML = fileName;
+        } else {
+            label_poster.innerHTML = "Selecione um Poster";
+        }
+        });
+
+        fileInputTitle.addEventListener("change", function() {
+        if (fileInputTitle.value) {
+            var fileName = fileInputTitle.value.split("\\").pop();
+            label_title.innerHTML = fileName;
+        } else {
+            label_title.innerHTML = "Selecione um Title";
+        }
+        });
+
+        fileInputMedia.addEventListener("change", function() {
+        if (fileInputMedia.value) {
+            var fileName = fileInputMedia.value.split("\\").pop();
+            label_media.innerHTML = fileName;
+        } else {
+            label_media.innerHTML = "Selecione um Filme";
+        }
+        });
+
+        fileInputBanner.addEventListener("change", function() {
+        if (fileInputBanner.value) {
+            var fileName = fileInputBanner.value.split("\\").pop();
+            label_banner.innerHTML = fileName;
+        } else {
+            label_banner.innerHTML = "Selecione um Banner";
+        }
+        });
+        
+    </script>   
+  
+{% endblock %}
