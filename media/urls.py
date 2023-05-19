@@ -22,6 +22,7 @@ urlpatterns = [
     path('config', views.ConfigAll.as_view(), name='config'),
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
     path('create_user', views.CreateUserView.as_view(), name='create_user'),
+    path('edit_movie/<slug>', views.EditMovieView.as_view(), name='edit_movie'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
 

@@ -142,6 +142,82 @@ class CreateMovieForm(forms.ModelForm):
         return movie
 
 
+class EditMovieForm(forms.ModelForm):
+    duration = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+
+    CLASSIFICATION_CHOICES = (
+        ('L', 'Livre'),
+        ('10', 'Não recomendado para menores de 10 anos'),
+        ('12', 'Não recomendado para menores de 12 anos'),
+        ('14', 'Não recomendado para menores de 14 anos'),
+        ('16', 'Não recomendado para menores de 16 anos'),
+        ('18', 'Não recomendado para menores de 18 anos'),
+    )
+
+    classification = forms.ChoiceField(
+        choices=CLASSIFICATION_CHOICES,
+        widget=forms.Select(attrs={'class': 'input_text'})
+    )
+
+    category = forms.ChoiceField(
+        choices=genre_choices,
+        widget=forms.Select(attrs={'class': 'input_text'})
+    )
+
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+
+    release_year = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'input_text'})
+    )
+
+    poster = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_poster', 'hidden': 'hidden'})
+    )
+
+    banner = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'})
+    )
+
+    title_img = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'})
+    )
+
+    media_file = forms.FileField(
+        validators=[
+            FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
+        ],
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_media', 'hidden': 'hidden'})
+    )
+
+    trailer = forms.FileField(
+        validators=[
+            FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
+        ],
+        widget=forms.ClearableFileInput(attrs={'class': 'input_trailer', 'hidden': 'hidden'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].initial = self.instance.media.title
+        self.fields['release_year'].initial = self.instance.media.release_year
+        self.fields['poster'].initial = self.instance.media.poster
+        self.fields['banner'].initial = self.instance.media.banner
+        self.fields['title_img'].initial = self.instance.media.title_img
+        self.fields['media_file'].initial = self.instance.media.media_file
+        self.fields['trailer'].initial = self.instance.media.trailer
+        self.fields['category'].choices = genre_choices
+        category_value = self.instance.media.getCategory()
+        self.fields['category'].initial = category_value
+
+    class Meta:
+        model = Movie
+        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
+
+
 class TelephoneInput(forms.widgets.TextInput):
     def __init__(self, attrs=None):
         super().__init__(attrs)

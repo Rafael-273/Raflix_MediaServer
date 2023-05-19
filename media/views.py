@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 # from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
-from .forms import CreateMovieForm, CustomAuthenticationForm
+from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm
 from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
@@ -180,6 +180,22 @@ class CreateMovieView(View):
 
             return redirect(reverse_lazy('home'))
         return render(request, 'create/create_movie.html', {'form': form})
+
+
+class EditMovieView(View):
+    def get(self, request, slug):
+        media = models.Media.objects.get(slug=slug)
+        movie = media.media_has_movie.first()
+        form = EditMovieForm(instance=movie)
+        return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
+
+    def post(self, request, slug):
+        movie = models.Media.objects.get(slug=slug)
+        form = EditMovieForm(request.POST, instance=movie)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
 
 
 class CreateUserView(View):
