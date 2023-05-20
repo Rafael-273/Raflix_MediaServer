@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 import re
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class LoginForm(AuthenticationForm):
@@ -343,6 +344,102 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo', 'is_superuser']
+
+
+class EditUserForm(forms.ModelForm):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input_text'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'input_text'})
+    )
+    telephone = forms.CharField(
+        label=_('Telefone'),
+        max_length=14,
+        required=True,
+        validators=[TelephoneInput().get_validator()],
+        widget=TelephoneInput(attrs={'class': 'input_text'})
+    )
+    old_password = forms.CharField(
+        label="Senha Atual",
+        required=False,
+        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+    )
+    new_password1 = forms.CharField(
+        label="Nova Senha",
+        required=False,
+        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+    )
+    new_password2 = forms.CharField(
+        label="Confirme a Nova Senha",
+        required=False,
+        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+    )
+    photo = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'class': 'input_text-file', 'hidden': 'hidden'})
+    )
+
+    is_superuser = forms.BooleanField(
+        required=False, widget=forms.CheckboxInput()
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].initial = self.instance.username
+        self.fields['first_name'].initial = self.instance.first_name
+        self.fields['last_name'].initial = self.instance.last_name
+        self.fields['email'].initial = self.instance.email
+        self.fields['telephone'].initial = self.instance.telephone
+        self.fields['photo'].choices = self.instance.photo
+        self.fields['is_superuser'].initial = self.instance.is_superuser
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'photo', 'is_superuser']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        username = self.cleaned_data['username']
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        email = self.cleaned_data['email']
+        telephone = self.cleaned_data['telephone']
+        photo = self.cleaned_data['photo']
+
+        if self.cleaned_data.get('new_password1') and self.cleaned_data.get('new_password2'):
+            old_password = self.cleaned_data.get('old_password')
+            new_password1 = self.cleaned_data['new_password1']
+            new_password2 = self.cleaned_data['new_password2']
+
+            if not user.check_password(old_password):
+                self.add_error('old_password', 'A senha atual está incorreta.')
+
+            if new_password1 != new_password2:
+                self.add_error('new_password2', 'As novas senhas não correspondem.')
+
+            if not self.errors:
+                if new_password1:
+                    user.set_password(new_password1)
+
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.telephone = telephone
+        user.photo = photo
+
+        if commit:
+            user.save()
+
+        return user
+
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = UsernameField(

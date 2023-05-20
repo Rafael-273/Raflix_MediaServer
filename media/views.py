@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 # from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
-from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm
+from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm, EditUserForm
 from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
@@ -223,6 +223,28 @@ class CreateUserView(View):
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         return render(request, 'create/create_user.html', {'form': form})
+
+
+class EditUserView(View):
+    def get(self, request, id):
+        user = models.User.objects.get(id=id)
+        form = EditUserForm(instance=user)
+        return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
+        # if models.User.objects.filter(id=id).exists():
+        #     user = models.User.objects.get(id=id)
+        #     form = EditUserForm(instance=user)
+        #     return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
+        # else:
+        #     pass
+    def post(self, request, id):
+        user = get_object_or_404(models.User, id=id)
+        form = EditUserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            if user:
+                user = form.save()
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect(reverse_lazy('home'))
+        return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
 
 
 class ToggleFavorite(View):
