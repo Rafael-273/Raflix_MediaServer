@@ -52,7 +52,7 @@ Home
     <!-- Recents Row -->
 
     <article class="c-carousel">
-        <h1 class="title_row">Recentes</h1>
+        <h1 class="title_row">Lançamentos</h1>
         <div class="c-carousel__slides js-carousel--responsive">
             {% for movie in movies %}
             <a href="{{ movie.slug }}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplayRecent(this)"><img src="{{ movie.poster.url }}"></div></a>

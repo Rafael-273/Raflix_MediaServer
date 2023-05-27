@@ -12,6 +12,9 @@ from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 import re
 from django.contrib.auth.forms import PasswordChangeForm
+from PIL import Image
+import tempfile
+from io import BytesIO
 
 
 class LoginForm(AuthenticationForm):
@@ -45,7 +48,8 @@ class LoginForm(AuthenticationForm):
 
 class CreateMovieForm(forms.ModelForm):
     duration = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        label="Duração",
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira a duração do filme'})
     )
 
     CLASSIFICATION_CHOICES = (
@@ -58,36 +62,50 @@ class CreateMovieForm(forms.ModelForm):
     )
 
     classification = forms.ChoiceField(
+        label="Classificação Indicativa",
         choices=CLASSIFICATION_CHOICES,
         widget=forms.Select(attrs={'class': 'input_text'})
     )
 
     category = forms.ChoiceField(
+        label="Categoria",
         choices=genre_choices,
         widget=forms.Select(attrs={'class': 'input_text'})
     )
 
     title = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        label="Título",
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o título do filme'})
     )
 
     release_year = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'input_text'})
+        label="Ano de Lançamento",
+        widget=forms.NumberInput(attrs={'class': 'input_text', 'placeholder': 'Insira o ano de lançamento'})
     )
 
     poster = forms.ImageField(
+        label="Capa",
         widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_poster', 'hidden': 'hidden'})
     )
 
+    short_description = forms.CharField(
+        label="Descrição Resumida",
+        max_length=255,
+        widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira uma descrição resumida do filme'})
+    )
+
     banner = forms.ImageField(
+        label="Banner",
         widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'})
     )
 
     title_img = forms.ImageField(
+        label="Logo PNG",
         widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'})
     )
 
     media_file = forms.FileField(
+        label="Filme",
         validators=[
             FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
         ],
@@ -95,6 +113,7 @@ class CreateMovieForm(forms.ModelForm):
     )
 
     trailer = forms.FileField(
+        label="Trailer",
         validators=[
             FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
         ],
@@ -104,6 +123,29 @@ class CreateMovieForm(forms.ModelForm):
     class Meta:
         model = Movie
         fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
+    
+    def clean_poster(self):
+        poster = self.cleaned_data['poster']
+        if poster:
+            # Abrir a imagem usando o Pillow
+            image = Image.open(poster)
+
+            # Redimensionar a imagem para o tamanho desejado
+            resized_image = image.resize((182, 277), Image.ANTIALIAS)
+
+            # Salvar a imagem redimensionada em um buffer de memória
+            output_buffer = BytesIO()
+            resized_image.save(output_buffer, format='JPEG')
+
+            # Crie um arquivo temporário
+            temporary_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+            temporary_file.write(output_buffer.getvalue())
+            temporary_file.flush()
+
+            # Atribua o arquivo temporário ao campo de arquivo
+            poster.file = temporary_file
+
+        return poster
 
     def save(self, commit=True):
         media = Media(
@@ -218,6 +260,29 @@ class EditMovieForm(forms.ModelForm):
         model = Movie
         fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
 
+    def clean_poster(self):
+        poster = self.cleaned_data['poster']
+        if poster:
+            # Abrir a imagem usando o Pillow
+            image = Image.open(poster)
+
+            # Redimensionar a imagem para o tamanho desejado
+            resized_image = image.resize((182, 277), Image.ANTIALIAS)
+
+            # Salvar a imagem redimensionada em um buffer de memória
+            output_buffer = BytesIO()
+            resized_image.save(output_buffer, format='JPEG')
+
+            # Crie um arquivo temporário
+            temporary_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+            temporary_file.write(output_buffer.getvalue())
+            temporary_file.flush()
+
+            # Atribua o arquivo temporário ao campo de arquivo
+            poster.file = temporary_file
+
+        return poster
+
     def save(self, commit=True):
         movie = super(EditMovieForm, self).save(commit=False)
 
@@ -255,11 +320,9 @@ class EditMovieForm(forms.ModelForm):
         movie.movie_has_genre.all().delete()
 
         for genre_initial in selected_genres:
-            try:
-                genre = Genre.objects.get(category__startswith=genre_initial)
+            genres = Genre.objects.filter(category__startswith=genre_initial)
+            for genre in genres:
                 movie.movie_has_genre.create(genre=genre)
-            except Genre.DoesNotExist:
-                pass
 
         return movie
 
@@ -286,39 +349,51 @@ class TelephoneInput(forms.widgets.TextInput):
 
 class CreateUserForm(UserCreationForm):
     username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o username'})
     )
     first_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o primeiro nome'})
     )
     last_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o último nome'})
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'input_text'})
+        widget=forms.EmailInput(attrs={'class': 'input_text', 'placeholder': 'Insira seu email'})
     )
     telephone = forms.CharField(
         label=_('Telefone'),
         max_length=14,
         required=True,
         validators=[TelephoneInput().get_validator()],
-        widget=TelephoneInput(attrs={'class': 'input_text'})
+        widget=TelephoneInput(attrs={'class': 'input_text', 'placeholder': 'Insira seu telefone'})
     )
     password1 = forms.CharField(
-        label="Senha",
-        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+        label="Sua Senha",
+        widget=forms.PasswordInput(attrs={'class': 'input_text', 'id': 'id_password', 'class': 'input_text', 'name': 'password'})
     )
     password2 = forms.CharField(
-        label="Confirmação de senha",
-        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+        label="Confirmação de Senha",
+        widget=forms.PasswordInput(attrs={'class': 'input_text', 'id': 'id_password2', 'class': 'input_text', 'name': 'password'})
     )
     photo = forms.ImageField(
         widget=forms.ClearableFileInput(attrs={'class': 'input_text-file', 'hidden': 'hidden'})
     )
 
-    is_superuser = forms.BooleanField(
-        required=False, widget=forms.CheckboxInput()
+    admin_choice = forms.ChoiceField(
+        label="É um administrador",
+        choices=[('yes', 'Sim'), ('no', 'Não')],
+        widget=forms.RadioSelect(
+            attrs={
+                'class': 'input_radio',
+                'data-custom-attribute': 'value',
+                'data-another-attribute': 'another value',
+                'style' : 'cursor: pointer'
+            }
+        ),
+        initial='no',
+        required=True
     )
+
 
     def save(self, commit=True):
         username = self.cleaned_data['username']
@@ -328,6 +403,15 @@ class CreateUserForm(UserCreationForm):
         telephone = self.cleaned_data['telephone']
         password = self.cleaned_data['password1']
         photo = self.cleaned_data['photo']
+        admin_choice = self.cleaned_data['admin_choice']
+
+        if admin_choice == 'yes':
+            is_superuser = True
+            is_staff = True
+        else:
+            is_superuser = False
+            is_staff = False
+
 
         user = User.objects.create(
             username=username,
@@ -336,57 +420,69 @@ class CreateUserForm(UserCreationForm):
             email=email,
             telephone=telephone,
             password=password,
-            photo=photo
+            photo=photo,
+            is_superuser = is_superuser,
+            is_staff = is_staff
         )
 
         return user
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo', 'is_superuser']
+        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'password1', 'password2', 'photo', 'admin_choice']
 
 
 class EditUserForm(forms.ModelForm):
     username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o username'})
     )
     first_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o primeiro nome'})
     )
     last_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input_text'})
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o último nome'})
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'input_text'})
+        widget=forms.EmailInput(attrs={'class': 'input_text', 'placeholder': 'Insira seu email'})
     )
     telephone = forms.CharField(
         label=_('Telefone'),
         max_length=14,
         required=True,
         validators=[TelephoneInput().get_validator()],
-        widget=TelephoneInput(attrs={'class': 'input_text'})
+        widget=TelephoneInput(attrs={'class': 'input_text', 'placeholder': 'Insira seu telefone'})
     )
     old_password = forms.CharField(
         label="Senha Atual",
         required=False,
-        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+        widget=forms.PasswordInput(attrs={'class': 'input_text', 'id': 'id_old_password'})
     )
     new_password1 = forms.CharField(
         label="Nova Senha",
         required=False,
-        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+        widget=forms.PasswordInput(attrs={'class': 'input_text', 'id': 'id_password', 'class': 'input_text', 'name': 'password', 'placeholder': 'Insira sua nova senha'})
     )
     new_password2 = forms.CharField(
-        label="Confirme a Nova Senha",
+        label="Confirme sua Senha",
         required=False,
-        widget=forms.PasswordInput(attrs={'class': 'input_text'})
+        widget=forms.PasswordInput(attrs={'class': 'input_text', 'id': 'id_password2', 'class': 'input_text', 'name': 'password', 'placeholder': 'Confirme sua nova senha'})
     )
     photo = forms.ImageField(
         widget=forms.ClearableFileInput(attrs={'class': 'input_text-file', 'hidden': 'hidden'})
     )
 
-    is_superuser = forms.BooleanField(
-        required=False, widget=forms.CheckboxInput()
+    admin_choice = forms.ChoiceField(
+        label="É um administrador",
+        choices=[('yes', 'Sim'), ('no', 'Não')],
+        widget=forms.RadioSelect(
+            attrs={
+                'class': 'input_radio',
+                'data-custom-attribute': 'value',
+                'data-another-attribute': 'another value',
+                'style' : 'cursor: pointer'
+            }
+        ),
+        required=True
     )
 
     def __init__(self, *args, **kwargs):
@@ -395,13 +491,11 @@ class EditUserForm(forms.ModelForm):
         self.fields['first_name'].initial = self.instance.first_name
         self.fields['last_name'].initial = self.instance.last_name
         self.fields['email'].initial = self.instance.email
-        self.fields['telephone'].initial = self.instance.telephone
-        self.fields['photo'].choices = self.instance.photo
-        self.fields['is_superuser'].initial = self.instance.is_superuser
+
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'photo', 'is_superuser']
+        fields = ['username', 'first_name', 'last_name', 'email', 'telephone', 'photo', 'old_password', 'new_password1', 'new_password2', 'admin_choice']
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -412,14 +506,19 @@ class EditUserForm(forms.ModelForm):
         email = self.cleaned_data['email']
         telephone = self.cleaned_data['telephone']
         photo = self.cleaned_data['photo']
+        admin_choice = self.cleaned_data['admin_choice']
+
+        if admin_choice == 'yes':
+            is_superuser = True
+            is_staff = True
+        else:
+            is_superuser = False
+            is_staff = False
+
 
         if self.cleaned_data.get('new_password1') and self.cleaned_data.get('new_password2'):
-            old_password = self.cleaned_data.get('old_password')
             new_password1 = self.cleaned_data['new_password1']
             new_password2 = self.cleaned_data['new_password2']
-
-            if not user.check_password(old_password):
-                self.add_error('old_password', 'A senha atual está incorreta.')
 
             if new_password1 != new_password2:
                 self.add_error('new_password2', 'As novas senhas não correspondem.')
@@ -427,6 +526,7 @@ class EditUserForm(forms.ModelForm):
             if not self.errors:
                 if new_password1:
                     user.set_password(new_password1)
+                    user.password = new_password1
 
         user.username = username
         user.first_name = first_name
@@ -434,6 +534,8 @@ class EditUserForm(forms.ModelForm):
         user.email = email
         user.telephone = telephone
         user.photo = photo
+        user.is_superuser = is_superuser
+        user.is_staff = is_staff
 
         if commit:
             user.save()

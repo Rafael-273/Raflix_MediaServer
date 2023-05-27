@@ -179,6 +179,12 @@ class CreateMovieView(View):
             movie_has_genre.save()
 
             return redirect(reverse_lazy('home'))
+        
+        else:
+            print(form.errors)
+            # Se o formulário não for válido, exiba os erros
+            return render(request, 'create/create_movie.html', {'form': form, 'errors': form.errors})
+
         return render(request, 'create/create_movie.html', {'form': form})
 
 
@@ -230,12 +236,6 @@ class EditUserView(View):
         user = models.User.objects.get(id=id)
         form = EditUserForm(instance=user)
         return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
-        # if models.User.objects.filter(id=id).exists():
-        #     user = models.User.objects.get(id=id)
-        #     form = EditUserForm(instance=user)
-        #     return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
-        # else:
-        #     pass
     def post(self, request, id):
         user = get_object_or_404(models.User, id=id)
         form = EditUserForm(request.POST, request.FILES, instance=user)

@@ -25,16 +25,20 @@ Create Movie
                         <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
                         {{ field }}
 
+                        {% if "Título" in field.label %}
+                        <button type="button" id="searchMovieButton">Pesquisar Filme</button>
+                        {% endif %}
+
                         {% if "Trailer" in field.label %}
                         <label class="input-file-trigger input-trailer" for="{{ form.trailer.id_for_label }}">Selecione o Trailer</label>
                         {% endif %}
 
-                        {% if "Media file" in field.label %}
+                        {% if "Filme" in field.label %}
                         <!-- <input type="button" value="Limpar" onclick="document.getElementById('{{ form.media_file.id_for_label }}').value = null;"> -->
                         <label class="input-file-trigger input-media" for="{{ form.media_file.id_for_label }}">Selecione o Filme</label>
                         {% endif %}
 
-                        {% if "Title img" in field.label %}
+                        {% if "Logo PNG" in field.label %}
                         <label class="input-file-trigger input-title" for="{{ form.title_img.id_for_label }}">Selecione o Título</label>
                         {% endif %}
 
@@ -42,15 +46,7 @@ Create Movie
                         <label class="input-file-trigger input-banner" for="{{ form.banner.id_for_label }}">Selecione o Banner</label>
                         {% endif %}
 
-                        {% if "Poster" in field.label %}
-                        <!-- <div class="help_icon">
-                            <i onclick="toggleHelp(this)" style="color: white; margin-top: 10px; cursor: pointer;"><span style="font-size: 15px; font-variation-settings:
-                                'FILL' 1" class="material-symbols-outlined">
-                                info
-                                </span>
-                            </i>
-                            <span id="help-text" class="span_help" style="display:none; color: rgb(255, 209, 209);">Esse campo se refere a miniatura da capa do filme</span>    
-                        </div>                     -->
+                        {% if "Capa" in field.label %}            
                         <label class="input-file-trigger input-poster" for="{{ form.poster.id_for_label }}">Selecione o Poster</label>
                         {% endif %}
                     {% endfor %}
@@ -118,17 +114,98 @@ Create Movie
             label_banner.innerHTML = "Selecione um Banner";
         }
         });
-        
-        // function toggleHelp(icon) {
-        //     div_section = icon.parentElement
-        //     span = div_section.querySelector('.span_help')
-        //     console.log(span)
-        //     if (span.style.display === "none") {
-        //         span.style.display = "block";
-        //     } else {
-        //         span.style.display = "none";
-        //     }
-        // }
     </script>   
+
+<script>
+    // Função para buscar os nomes dos gêneros
+    function getGenreNames(genreIds) {
+        const apiKey = 'c3ed7390e52d4dddf37320bd22ea8a64';
+        const language = 'pt-BR';
+        const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=${language}`;
+
+        // Fazer a chamada à API
+        return fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const genres = data.genres;
+
+                // Mapear os nomes dos gêneros correspondentes aos IDs
+                const genreNames = genreIds.map(genreId => {
+                    const genre = genres.find(genre => genre.id === genreId);
+                    return genre ? genre.name : '';
+                });
+
+                // Retornar os nomes dos gêneros
+                return genreNames;
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro ao buscar os gêneros:', error);
+                return [];
+            });
+    }
+
+
+    // Função para buscar os metadados do filme usando a API do TMDb
+    function searchMovie(title) {
+      // Aqui você deve fazer a requisição à API do TMDb e obter os dados do filme
+      // Utilize a chave de API que você obteve anteriormente
+  
+      // Exemplo de código usando a função fetch:
+      fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
+        .then(response => response.json())
+        .then(data => {
+          // Verifique se a resposta possui algum resultado
+          if (data.results.length > 0) {
+            const movie = data.results[0]; // Considere apenas o primeiro resultado por enquanto
+
+            // Preencha os campos do formulário com os dados obtidos
+            document.getElementById("id_description").value = movie.overview;
+            document.getElementById("id_short_description").value = movie.overview;
+            const releaseDate = movie.release_date.substring(0, 4);
+            document.getElementById("id_release_year").value = releaseDate;
+            document.getElementById("id_duration").value = movie.runtime;
+
+            getGenreNames(movie.genre_ids)
+            .then(genreNames => {
+                const categorySelect = document.getElementById("id_category");
+                // Percorrer as opções de categoria 
+                for (let i = 0; i < categorySelect.options.length; i++) {
+                const option = categorySelect.options[i];
+                if (genreNames[0].includes(option.value)) {
+                    option.selected = true; // Selecionar a opção correspondente
+                    break;
+                }
+                }
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro ao buscar os nomes dos gêneros:', error);
+            });
+            
+            // ... preencha os demais campos conforme necessário
+          } else {
+            // Caso não encontre resultados, você pode exibir uma mensagem ou limpar os campos
+            alert("Nenhum resultado encontrado para o filme informado.");
+          }
+        })
+        .catch(error => {
+          console.error("Ocorreu um erro ao buscar os metadados do filme:", error);
+          alert("Ocorreu um erro ao buscar os metadados do filme.");
+        });
+    }
+  
+    // Evento de clique no botão "Pesquisar Filme"
+    document.getElementById("searchMovieButton").addEventListener("click", function() {
+      // Obtenha o valor digitado no campo de título do filme
+      const title = document.getElementById("id_title").value;
+  
+      // Verifique se o campo de título está preenchido antes de fazer a busca
+      if (title) {
+        searchMovie(title);
+      } else {
+        alert("Por favor, digite o título do filme.");
+      }
+    });
+  </script>
+  
   
 {% endblock %}

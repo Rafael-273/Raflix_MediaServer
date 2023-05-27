@@ -26,6 +26,18 @@ Edit User
                         <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
                         {{ field }}
 
+                        {% if "Senha Atual" in field.label %}
+                        <button type="button" id="togglePassword3">Mostrar Senha</button>
+                        {% endif %}
+
+                        {% if "Nova Senha" in field.label %}
+                        <button type="button" id="togglePassword">Mostrar Senha</button>
+                        {% endif %}
+
+                        {% if "Confirme sua Senha" in field.label %}
+                        <button type="button" id="togglePassword2">Mostrar Senha</button>
+                        {% endif %}
+
                         {% if "Photo" in field.label %}
                         <label class="input-file-trigger input-photo" for="{{ form.photo.id_for_label }}">Selecione a Foto</label>
                         {% endif %}
@@ -54,6 +66,46 @@ Edit User
             label_media.innerHTML = "Selecione um Filme";
         }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var oldPasswordField = document.getElementById('id_old_password');
+            var passwordField = document.getElementById('id_password');
+            var passwordField2 = document.getElementById('id_password2');
+            var toggleButton = document.getElementById('togglePassword');
+            var toggleButton2 = document.getElementById('togglePassword2');
+            var toggleButton3 = document.getElementById('togglePassword3');
+
+            toggleButton.addEventListener('click', function() {
+                if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = 'Ocultar Senha';
+                } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = 'Mostrar Senha';
+                }
+            });
+
+            toggleButton2.addEventListener('click', function() {
+                if (passwordField2.type === 'password') {
+                passwordField2.type = 'text';
+                toggleButton2.textContent = 'Ocultar Senha';
+                } else {
+                passwordField2.type = 'password';
+                toggleButton2.textContent = 'Mostrar Senha';
+                }
+            });
+
+            toggleButton3.addEventListener('click', function() {
+                if (oldPasswordField.type === 'password') {
+                oldPasswordField.type = 'text';
+                toggleButton3.textContent = 'Ocultar Senha';
+                } else {
+                oldPasswordField.type = 'password';
+                toggleButton3.textContent = 'Mostrar Senha';
+                }
+            });
+        });
+
         
     </script>   
   

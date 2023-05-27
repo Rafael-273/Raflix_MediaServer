@@ -198,6 +198,7 @@ genre_choices = (
             ('R', 'Romance'),
             ('T', 'Terror'),
             ('MA', 'Marvel'),
+            ('C', 'Crime'),
             ('LA', 'Lançamento')
         )
 
