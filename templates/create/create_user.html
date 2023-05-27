@@ -30,6 +30,14 @@ Create User
                         <label class="input-file-trigger input-photo" for="{{ form.photo.id_for_label }}">Selecione a Foto</label>
                         {% endif %}
 
+                        {% if "Sua Senha" in field.label %}
+                        <button type="button" id="togglePassword">Mostrar Senha</button>
+                        {% endif %}
+
+                        {% if "Confirmação de Senha" in field.label %}
+                        <button type="button" id="togglePassword2">Mostrar Senha</button>
+                        {% endif %}
+
                         {% for error in field.errors %}
                             <div class="error-message">{{ error }}</div>
                         {% endfor %}
@@ -53,6 +61,33 @@ Create User
         } else {
             label_media.innerHTML = "Selecione um Filme";
         }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var passwordField = document.getElementById('id_password');
+            var passwordField2 = document.getElementById('id_password2');
+            var toggleButton = document.getElementById('togglePassword');
+            var toggleButton2 = document.getElementById('togglePassword2');
+            
+            toggleButton.addEventListener('click', function() {
+                if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = 'Ocultar Senha';
+                } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = 'Mostrar Senha';
+                }
+            });
+
+            toggleButton2.addEventListener('click', function() {
+                if (passwordField2.type === 'password') {
+                passwordField2.type = 'text';
+                toggleButton2.textContent = 'Ocultar Senha';
+                } else {
+                passwordField2.type = 'password';
+                toggleButton2.textContent = 'Mostrar Senha';
+                }
+            });
         });
         
     </script>   

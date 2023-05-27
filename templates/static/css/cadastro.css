@@ -112,7 +112,3 @@ textarea {
     padding: 10px;
     margin: 10px 0;
   }
-
-  #id_is_superuser {
-    cursor: pointer;
-  }
