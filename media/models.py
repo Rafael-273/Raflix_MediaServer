@@ -139,7 +139,7 @@ class Movie(models.Model):
     description = models.TextField()
     short_description = models.TextField(max_length=255, null=True, blank=True)
     duration = models.CharField(max_length=10)
-    classification = models.IntegerField(default=12)
+    classification = models.CharField(max_length=12)
     media = models.ForeignKey(
         'Media', related_name='media_has_movie', on_delete=models.CASCADE)
 

@@ -185,7 +185,11 @@ class CreateMovieView(View):
             # Se o formulário não for válido, exiba os erros
             return render(request, 'create/create_movie.html', {'form': form, 'errors': form.errors})
 
-        return render(request, 'create/create_movie.html', {'form': form})
+
+class ListMoviesView(View):
+    def get(self, request):
+        movies = models.Media.objects.all()
+        return render(request, 'edit/list_movies.html', {'movies': movies})
 
 
 class EditMovieView(View):
