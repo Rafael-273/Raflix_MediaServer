@@ -88,10 +88,15 @@ class CreateMovieForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_poster', 'hidden': 'hidden'})
     )
 
+    description = forms.CharField(
+        label="Descrição",
+        widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira a descrição do filme'})
+    )
+
     short_description = forms.CharField(
         label="Descrição Resumida",
         max_length=255,
-        widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira uma descrição resumida do filme'})
+        widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira a descrição resumida do filme'})
     )
 
     banner = forms.ImageField(

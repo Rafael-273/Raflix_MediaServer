@@ -33,6 +33,10 @@ Create Movie
                         <label class="input-file-trigger input-trailer" for="{{ form.trailer.id_for_label }}">Selecione o Trailer</label>
                         {% endif %}
 
+                        {% if "Capa" in field.label %}
+                        <a href="{{ link_da_imagem }}" id='cap_image' target="_blank">Capa recomendada</a>
+                        {% endif %}
+
                         {% if "Filme" in field.label %}
                         <!-- <input type="button" value="Limpar" onclick="document.getElementById('{{ form.media_file.id_for_label }}').value = null;"> -->
                         <label class="input-file-trigger input-media" for="{{ form.media_file.id_for_label }}">Selecione o Filme</label>
@@ -201,10 +205,29 @@ Create Movie
       // Verifique se o campo de título está preenchido antes de fazer a busca
       if (title) {
         searchMovie(title);
+        fetchAndDisplayImage(title)
       } else {
         alert("Por favor, digite o título do filme.");
       }
     });
+
+    function fetchAndDisplayImage(title) {
+        // Faz uma requisição à API para obter a URL da imagem
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var imageUrl = data.results[0].poster_path
+                base_url = 'https://image.tmdb.org/t/p/'
+                var imagePreview = document.getElementById('cap_image');
+                imagePreview.href = base_url + 'w500' + imageUrl;
+            })
+            .catch(function(error) {
+                console.error('Erro:', error);
+            });
+    }
+
   </script>
   
   

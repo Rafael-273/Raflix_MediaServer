@@ -23,6 +23,7 @@ urlpatterns = [
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
     path('create_user', views.CreateUserView.as_view(), name='create_user'),
     path('edit_movie/<slug>', views.EditMovieView.as_view(), name='edit_movie'),
+    path('list_movies', views.ListMoviesView.as_view(), name='list_movies'),
     path('edit_user/<int:id>', views.EditUserView.as_view(), name='edit_user'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
