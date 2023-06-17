@@ -192,6 +192,24 @@ class ListMoviesView(View):
         return render(request, 'edit/list_movies.html', {'movies': movies})
 
 
+class ListUsersView(View):
+    def get(self, request):
+        users = models.User.objects.all()
+        return render(request, 'edit/list_users.html', {'users': users})
+
+
+class ListMoviesDeleteView(View):
+    def get(self, request):
+        movies = models.Media.objects.all()
+        return render(request, 'remove/list_movies_delete.html', {'movies': movies})
+
+
+class ListUsersDeleteView(View):
+    def get(self, request):
+        users = models.User.objects.all()
+        return render(request, 'remove/list_users_delete.html', {'users': users})
+    
+
 class EditMovieView(View):
     def get(self, request, slug):
         media = models.Media.objects.get(slug=slug)
@@ -249,6 +267,28 @@ class EditUserView(View):
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect(reverse_lazy('home'))
         return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
+
+
+class DeleteMovieView(View):
+    def get(self, request, slug):
+        movie = get_object_or_404(models.Media, slug=slug)
+        return render(request, 'remove/remove_movies.html', {'movie': movie})
+
+    def post(self, request, slug):
+        movie = get_object_or_404(models.Media, slug=slug)
+        movie.delete()
+        return redirect('home')
+    
+
+class DeleteUserView(View):
+    def get(self, request, id):
+        user = get_object_or_404(models.User, id=id)
+        return render(request, 'remove/remove_users.html', {'user': user})
+
+    def post(self, request, id):
+        user = get_object_or_404(models.User, id=id)
+        user.delete()
+        return redirect('home')
 
 
 class ToggleFavorite(View):

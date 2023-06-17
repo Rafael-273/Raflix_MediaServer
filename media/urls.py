@@ -23,8 +23,13 @@ urlpatterns = [
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
     path('create_user', views.CreateUserView.as_view(), name='create_user'),
     path('edit_movie/<slug>', views.EditMovieView.as_view(), name='edit_movie'),
-    path('list_movies', views.ListMoviesView.as_view(), name='list_movies'),
     path('edit_user/<int:id>', views.EditUserView.as_view(), name='edit_user'),
+    path('list_movies', views.ListMoviesView.as_view(), name='list_movies'),
+    path('list_users', views.ListUsersView.as_view(), name='list_users'),
+    path('list_movies_delete', views.ListMoviesDeleteView.as_view(), name='list_movies_delete'),
+    path('list_users_delete', views.ListUsersDeleteView.as_view(), name='list_users_delete'),
+    path('remove_movies/<slug:slug>/', views.DeleteMovieView.as_view(), name='remove_movies'),
+    path('remove_user/<int:id>/', views.DeleteUserView.as_view(), name='remove_user'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
 

@@ -17,7 +17,7 @@ List Movies
 
     <div class="Modalcontent" id="contentModal">
         <div class="menuConfig">
-            <div class="title"><h2>Escolha o</h2><h2><b>Filme</b></h2></div>
+            <div class="title"><h2>Escolha o Filme</h2><h2><b>para editar</b></h2></div>
             <div class="scrool_info">
                 {% for movie in movies %}
                     <a href="{% url 'edit_movie' movie.slug %}">
