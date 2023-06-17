@@ -1,0 +1,95 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Create User
+
+{% endblock %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/cadastro.css">
+
+{% endblock %}
+
+{% block conteudo %}
+
+    <div class="div_create">
+        <div class="create_body">
+            <h1>Create User</h1>
+            <div class="scrool_info">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+
+                        {% if "Photo" in field.label %}
+                        <label class="input-file-trigger input-photo" for="{{ form.photo.id_for_label }}">Selecione a Foto</label>
+                        {% endif %}
+
+                        {% if "Sua Senha" in field.label %}
+                        <button type="button" id="togglePassword">Mostrar Senha</button>
+                        {% endif %}
+
+                        {% if "Confirmação de Senha" in field.label %}
+                        <button type="button" id="togglePassword2">Mostrar Senha</button>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+
+                    {% endfor %}
+            </div>
+            <br>
+            <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var fileInputPhoto = document.getElementById("id_photo");
+        var label_media = document.querySelector(".input-photo");
+
+        fileInputPhoto.addEventListener("change", function() {
+        if (fileInputPhoto.value) {
+            var fileName = fileInputPhoto.value.split("\\").pop();
+            label_media.innerHTML = fileName;
+        } else {
+            label_media.innerHTML = "Selecione um Filme";
+        }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var passwordField = document.getElementById('id_password');
+            var passwordField2 = document.getElementById('id_password2');
+            var toggleButton = document.getElementById('togglePassword');
+            var toggleButton2 = document.getElementById('togglePassword2');
+            
+            toggleButton.addEventListener('click', function() {
+                if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = 'Ocultar Senha';
+                } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = 'Mostrar Senha';
+                }
+            });
+
+            toggleButton2.addEventListener('click', function() {
+                if (passwordField2.type === 'password') {
+                passwordField2.type = 'text';
+                toggleButton2.textContent = 'Ocultar Senha';
+                } else {
+                passwordField2.type = 'password';
+                toggleButton2.textContent = 'Mostrar Senha';
+                }
+            });
+        });
+        
+    </script>   
+  
+{% endblock %}

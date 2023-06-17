@@ -1,3 +1,4 @@
+
 .div_create {
     width: 100%;
     height: 41vw;
@@ -6,22 +7,67 @@
     align-items: center;
 }
 
+.scrool_info {
+    max-height: 400px;
+    overflow: auto;
+}
+
+.create_body {
+    background-color: rgb(27, 27, 27);
+    padding: 40px;
+    border-radius: 20px;
+    width: 30%;
+}
+
+.create_body h1 {
+    text-align: center;
+    font-size: 40px;
+    color: aliceblue;
+    font-weight: bold;
+}
+
+.create_body button {
+    height: 50px;
+    width: 100%;
+    color: white;
+    background-color: #e50914;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    transition: 0.5s;   
+    cursor: pointer;
+}
+
+.create_body button:hover {
+    background-color: #fc1722;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
 label {
     color: white;
+    margin: 30px 0;
 }
 
 textarea {
     border: 0;
-    background-color: rgba(248, 248, 248, 0.8);
+    padding: 10px 0 0 10px;
+    background-color: white;
     border-radius: 6px;
     height: 100px;
+    margin: 5px 0;
     min-width: 100%;
     resize: none;
 }
 
 .input_text {
     border: 0;
-    background-color: rgba(248, 248, 248, 0.8);
+    padding-left: 10px;
+    margin: 5px 0;
+    background-color: white;
     border-radius: 6px;
     height: 50px;
     min-width: 100%;
@@ -29,9 +75,39 @@ textarea {
 
 .input_button {
     border: 0;
+    margin: 0;
+    cursor: pointer;
     width: 100%;
     padding: 15px;
     border-radius: 6px;
     cursor: pointer;
-    background-color: rgba(248, 248, 248, 0.8);
+    color: aliceblue;
 }
+
+  .input-file-trigger {
+    display: block;
+    padding: 14px 20px 10px 20px;
+    min-height: 50px;
+    width: 100%;
+    background-color: #d1000a;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    margin: 10px 0;
+  }
+  
+  .input-file-trigger:hover {
+    background-color: #f1232d;
+    color: #fff;
+  }
+
+  .error-message{
+    color: white;
+    background-color: #d1000a;
+    padding: 10px;
+    margin: 10px 0;
+  }

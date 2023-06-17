@@ -6,6 +6,15 @@
     margin-top: 200px;
 }
 
+.h1_title_banner {
+    font-size: 55px;
+    font-weight: 900;
+    font-family: "Bebas Neue", sans-serif !important;
+    word-break: break-all;
+    width: 32%; /* Defina o tamanho desejado aqui */
+    line-height: 1; /* Defina o espaçamento desejado aqui */
+}
+
 .container1 {
     display: flex;
     justify-content: center;
@@ -254,6 +263,7 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 .movie a img {
     max-width: 200px;
     border-radius: 1rem;
+    transition: 0.5s;
 }
 
 .movie a img:hover{

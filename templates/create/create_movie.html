@@ -16,29 +16,230 @@ Create Movie
 {% block conteudo %}
 
     <div class="div_create">
-        <h1>Create Movie</h1>
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          <label for="{{ form.description.id_for_label }}">Description:</label>
-          {{ form.description }}
-          <br>
-          <label for="{{ form.short_description.id_for_label }}">Short Description:</label>
-          {{ form.short_description }}
-          <br>
-          <label for="{{ form.duration.id_for_label }}">Duration:</label>
-          {{ form.duration }}
-          <br>
-          <label for="{{ form.classification.id_for_label }}">Classification:</label>
-          {{ form.classification }}
-          <br>
-          <label for="{{ form.media.id_for_label }}">Media:</label>
-          {{ form.media }}
-          <br>
-          <label for="{{ form.trailer.id_for_label }}">Trailer:</label>
-          {{ form.trailer }}
-          <br>
-          <button type="submit">Save</button>
-        </form>
+        <div class="create_body">
+            <h1>Create Movie</h1>
+            <div class="scrool_info">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+
+                        {% if "Título" in field.label %}
+                        <button type="button" id="searchMovieButton">Pesquisar Filme</button>
+                        {% endif %}
+
+                        {% if "Trailer" in field.label %}
+                        <label class="input-file-trigger input-trailer" for="{{ form.trailer.id_for_label }}">Selecione o Trailer</label>
+                        {% endif %}
+
+                        {% if "Capa" in field.label %}
+                        <a href="{{ link_da_imagem }}" id='cap_image' target="_blank">Capa recomendada</a>
+                        {% endif %}
+
+                        {% if "Filme" in field.label %}
+                        <!-- <input type="button" value="Limpar" onclick="document.getElementById('{{ form.media_file.id_for_label }}').value = null;"> -->
+                        <label class="input-file-trigger input-media" for="{{ form.media_file.id_for_label }}">Selecione o Filme</label>
+                        {% endif %}
+
+                        {% if "Logo PNG" in field.label %}
+                        <label class="input-file-trigger input-title" for="{{ form.title_img.id_for_label }}">Selecione o Título</label>
+                        {% endif %}
+
+                        {% if "Banner" in field.label %}
+                        <label class="input-file-trigger input-banner" for="{{ form.banner.id_for_label }}">Selecione o Banner</label>
+                        {% endif %}
+
+                        {% if "Capa" in field.label %}            
+                        <label class="input-file-trigger input-poster" for="{{ form.poster.id_for_label }}">Selecione o Poster</label>
+                        {% endif %}
+                    {% endfor %}
+
+            </div>
+            <br>
+            <button type="submit">Save</button>
+            </form>
+        </div>
     </div>
+
+    <script>
+        var fileInputTrailer = document.getElementById("id_trailer");
+        var fileInputMedia = document.getElementById("input_media");
+        var fileInputPoster = document.getElementById("input_poster");
+        var fileInputTitle = document.getElementById("input_title");
+        var fileInputBanner = document.getElementById("input_banner");
+        var label_trailer = document.querySelector(".input-trailer");
+        var label_media = document.querySelector(".input-media");
+        var label_poster = document.querySelector(".input-poster");
+        var label_title = document.querySelector(".input-title");
+        var label_banner = document.querySelector(".input-banner");
+
+        fileInputTrailer.addEventListener("change", function() {
+        if (fileInputTrailer.value) {
+            var fileName = fileInputTrailer.value.split("\\").pop();
+            label_trailer.innerHTML = fileName;
+        } else {
+            label_trailer.innerHTML = "Selecione um Trailer";
+        }
+        });
+
+        fileInputPoster.addEventListener("change", function() {
+        if (fileInputPoster.value) {
+            var fileName = fileInputPoster.value.split("\\").pop();
+            label_poster.innerHTML = fileName;
+        } else {
+            label_poster.innerHTML = "Selecione um Poster";
+        }
+        });
+
+        fileInputTitle.addEventListener("change", function() {
+        if (fileInputTitle.value) {
+            var fileName = fileInputTitle.value.split("\\").pop();
+            label_title.innerHTML = fileName;
+        } else {
+            label_title.innerHTML = "Selecione um Title";
+        }
+        });
+
+        fileInputMedia.addEventListener("change", function() {
+        if (fileInputMedia.value) {
+            var fileName = fileInputMedia.value.split("\\").pop();
+            label_media.innerHTML = fileName;
+        } else {
+            label_media.innerHTML = "Selecione um Filme";
+        }
+        });
+
+        fileInputBanner.addEventListener("change", function() {
+        if (fileInputBanner.value) {
+            var fileName = fileInputBanner.value.split("\\").pop();
+            label_banner.innerHTML = fileName;
+        } else {
+            label_banner.innerHTML = "Selecione um Banner";
+        }
+        });
+    </script>   
+
+<script>
+    // Função para buscar os nomes dos gêneros
+    function getGenreNames(genreIds) {
+        const apiKey = 'c3ed7390e52d4dddf37320bd22ea8a64';
+        const language = 'pt-BR';
+        const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=${language}`;
+
+        // Fazer a chamada à API
+        return fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const genres = data.genres;
+
+                // Mapear os nomes dos gêneros correspondentes aos IDs
+                const genreNames = genreIds.map(genreId => {
+                    const genre = genres.find(genre => genre.id === genreId);
+                    return genre ? genre.name : '';
+                });
+
+                // Retornar os nomes dos gêneros
+                return genreNames;
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro ao buscar os gêneros:', error);
+                return [];
+            });
+    }
+
+
+    // Função para buscar os metadados do filme usando a API do TMDb
+    function searchMovie(title) {
+      // Aqui você deve fazer a requisição à API do TMDb e obter os dados do filme
+      // Utilize a chave de API que você obteve anteriormente
+  
+      // Exemplo de código usando a função fetch:
+      fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
+        .then(response => response.json())
+        .then(data => {
+          // Verifique se a resposta possui algum resultado
+          if (data.results.length > 0) {
+            const movie = data.results[0]; // Considere apenas o primeiro resultado por enquanto
+
+            // Preencha os campos do formulário com os dados obtidos
+            document.getElementById("id_description").value = movie.overview;
+            document.getElementById("id_short_description").value = movie.overview;
+            const releaseDate = movie.release_date.substring(0, 4);
+            document.getElementById("id_release_year").value = releaseDate;
+            document.getElementById("id_duration").value = movie.runtime;
+
+            getGenreNames(movie.genre_ids)
+            .then(genreNames => {
+                const categorySelect = document.getElementById("id_category");
+                // Percorrer as opções de categoria 
+                for (let i = 0; i < categorySelect.options.length; i++) {
+                const option = categorySelect.options[i];
+                if (genreNames[0].includes(option.value)) {
+                    option.selected = true; // Selecionar a opção correspondente
+                    break;
+                }
+                }
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro ao buscar os nomes dos gêneros:', error);
+            });
+            
+            // ... preencha os demais campos conforme necessário
+          } else {
+            // Caso não encontre resultados, você pode exibir uma mensagem ou limpar os campos
+            alert("Nenhum resultado encontrado para o filme informado.");
+          }
+        })
+        .catch(error => {
+          console.error("Ocorreu um erro ao buscar os metadados do filme:", error);
+          alert("Ocorreu um erro ao buscar os metadados do filme.");
+        });
+    }
+  
+    // Evento de clique no botão "Pesquisar Filme"
+    document.getElementById("searchMovieButton").addEventListener("click", function() {
+      // Obtenha o valor digitado no campo de título do filme
+      const title = document.getElementById("id_title").value;
+  
+      // Verifique se o campo de título está preenchido antes de fazer a busca
+      if (title) {
+        searchMovie(title);
+        fetchAndDisplayImage(title)
+      } else {
+        alert("Por favor, digite o título do filme.");
+      }
+    });
+
+    function fetchAndDisplayImage(title) {
+        // Faz uma requisição à API para obter a URL da imagem
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var imageUrl = data.results[0].poster_path
+                base_url = 'https://image.tmdb.org/t/p/'
+                var imagePreview = document.getElementById('cap_image');
+                imagePreview.href = base_url + 'w500' + imageUrl;
+            })
+            .catch(function(error) {
+                console.error('Erro:', error);
+            });
+    }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var textarea = document.getElementById('id_short_description');
+        
+        textarea.addEventListener('input', function() {
+            if (textarea.value.length > 500) {
+            textarea.value = textarea.value.slice(0, 255);
+            }
+        });
+    });
+  </script>
+  
   
 {% endblock %}

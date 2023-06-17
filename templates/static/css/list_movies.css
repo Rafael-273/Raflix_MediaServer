@@ -1,0 +1,132 @@
+.content {
+    width: 100%;
+    height: 42vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.menuConfig {
+    background-color: rgba(71, 71, 71, 0.3);
+    border-radius: 20px;
+    width: 40%;
+    height: 30vw;
+    display: grid;
+    grid-template-rows: 0.33fr 1fr;
+    padding: 0 0 10px 0;
+}
+
+.menuConfig h2 {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+}
+
+.title {
+    justify-content: center;
+    margin-top: 33px;
+}
+
+.menuConfig button {
+    width: 100%;
+    padding: 55px 40px 65px 40px;
+    font-size: 14px;
+    background-color: rgb(27, 27, 27);
+    border: 0;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+    height: 40px;
+}
+
+.scrool_info {
+    max-height: 400px;
+    overflow: auto;
+}
+
+.menuConfig button:hover {
+    background-color: rgb(32, 32, 32);
+    transition: 0.3s;
+}
+
+/* .menuConfig button:last-child {
+    border-radius: 0 0 20px 20px;
+} */
+
+/* Modal */
+
+.Modalcontent {
+    position: relative;
+    bottom: 20%;
+    width: 100%;
+    height: 42vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.Modalcontent.closedModal {
+    display: none;
+}
+
+.content.closedModal {
+    display: none;
+}
+
+.Modalcontent.openModal {
+    display: flex;
+    position: relative;
+    bottom: 95px;
+}
+
+.menuConfigModal {
+    background-color: rgb(20, 19, 19);
+    border-radius: 20px;
+    width: 40%;
+    height: 25vw;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.menuConfigModal h2 {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+}
+
+.titleModal {
+    justify-content: center;
+    margin: 33px 0;
+}
+
+.titleModal h5{
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 22px;
+    position: relative;
+    left: 90%;
+    bottom: 10px;
+    margin-top: -30px;
+    cursor: pointer;
+}
+
+.menuConfigModal button {
+    width: 100%;
+    padding: 40px;
+    font-size: 14px;
+    background-color: rgb(27, 27, 27);
+    border: 0;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+}
+
+.menuConfigModal button:hover {
+    background-color: rgb(32, 32, 32);
+    transition: 0.3s;
+}
