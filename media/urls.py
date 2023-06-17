@@ -1,11 +1,14 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic.base import RedirectView
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),#correção bug favicon
     path('', views.Home.as_view(), name='home'),
-    path('login', views.CustomLoginView.as_view(), name='login'),
+    path('', include(tf_urls)),
     path('logout', views.LogoutView.as_view(), name='logout'),
     path('movies', views.Movies.as_view(), name='movies'),
     path('series', views.Series.as_view(), name='series'),
@@ -18,5 +21,17 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search'),
     path('config', views.ConfigAll.as_view(), name='config'),
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
+    path('create_user', views.CreateUserView.as_view(), name='create_user'),
+    path('edit_movie/<slug>', views.EditMovieView.as_view(), name='edit_movie'),
+    path('edit_user/<int:id>', views.EditUserView.as_view(), name='edit_user'),
+    path('list_movies', views.ListMoviesView.as_view(), name='list_movies'),
+    path('list_users', views.ListUsersView.as_view(), name='list_users'),
+    path('list_movies_delete', views.ListMoviesDeleteView.as_view(), name='list_movies_delete'),
+    path('list_users_delete', views.ListUsersDeleteView.as_view(), name='list_users_delete'),
+    path('remove_movies/<slug:slug>/', views.DeleteMovieView.as_view(), name='remove_movies'),
+    path('remove_user/<int:id>/', views.DeleteUserView.as_view(), name='remove_user'),
     path('<slug>', views.Media.as_view(), name='media'),
 ]
+
+# Adicione esta linha se você quiser servir arquivos estáticos durante o desenvolvimento
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

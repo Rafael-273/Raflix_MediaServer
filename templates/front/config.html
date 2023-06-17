@@ -34,12 +34,9 @@ Home
             <h2>Cadastro</h2><h2><b>Raflix</b></h2>
             <h5 onclick="closedModal(this)">x</h5>
         </div>
-        <button>Filmes</button>
+        <a href="{% url 'create_movie' %}"><button>Filmes</button></a>
         <button>Séries</button>
-        <button>Temporada</button>
-        <button>Episódio</button>
-        <button>Categorias</button>
-        <button>Usuários</button>
+        <a href="{% url 'create_user' %}"><button style="border-radius: 0 0 20px 20px;">Usuários</button></a>
     </div>
 </div>
 
@@ -49,12 +46,9 @@ Home
             <h2>Edição</h2><h2><b>Raflix</b></h2>
             <h5 onclick="closedModal(this)">x</h5>
         </div>
-        <button>Filmes</button>
+        <a href="{% url 'list_movies' %}"><button>Filmes</button></a>
         <button>Séries</button>
-        <button>Temporada</button>
-        <button>Episódio</button>
-        <button>Categorias</button>
-        <button>Usuários</button>
+        <a href="{% url 'list_users' %}"><button style="border-radius: 0 0 20px 20px;">Usuários</button></a>
     </div>
 </div>
 
@@ -64,12 +58,9 @@ Home
             <h2>Remover</h2><h2><b>Raflix</b></h2>
             <h5 onclick="closedModal(this)">x</h5>
         </div>
-        <button>Filmes</button>
+        <a href="{% url 'list_movies_delete' %}"><button>Filmes</button></a>
         <button>Séries</button>
-        <button>Temporada</button>
-        <button>Episódio</button>
-        <button>Categorias</button>
-        <button>Usuários</button>
+        <a href="{% url 'list_users_delete' %}"><button style="border-radius: 0 0 20px 20px;">Usuários</button></a>
     </div>
 </div>
 

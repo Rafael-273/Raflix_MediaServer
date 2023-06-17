@@ -7,14 +7,16 @@ from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.validators import RegexValidator
 
 class User(AbstractUser):
-    name = models.CharField(max_length=55, blank=False)
-    photo = models.ImageField(upload_to='static/media/user', default='img' ,blank=False, null=False)
-    telephone = models.IntegerField(blank=True)
-    groups = models.ManyToManyField(Group, related_name='user_group_set')
-    user_permissions = models.ManyToManyField(Permission, related_name='user_permission_set')
+    photo = models.ImageField(upload_to='static/media/user', blank=True, null=True)
+    groups = models.ManyToManyField(Group, related_name='user_group_set', null=True)
 
+    telephone = models.CharField(max_length=15, blank=True, null=True)
+
+    def __str__(self):
+        return self.username
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -35,6 +37,7 @@ class User(AbstractUser):
         )
 
     def save(self, *args, **kwargs):
+        self.set_password(self.password)
         super().save(*args, **kwargs)
 
         max_image_size = 800
@@ -42,22 +45,20 @@ class User(AbstractUser):
         if self.photo:
             self.resize_image(self.photo, max_image_size)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+        db_table = 'auth_user'
 
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
     slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
     favorited = models.BooleanField(default=False)
-    poster = models.ImageField(upload_to='static/media/poster', blank=True)
+    poster = models.ImageField(upload_to='static/media/poster', blank=True, null=False)
     banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
-    title_img = models.ImageField(upload_to='static/media/title', blank=True)
-    media = models.FileField(
+    title_img = models.ImageField(upload_to='static/media/title', blank=True, null=True)
+    media_file = models.FileField(
         null=False,
         blank=False,
         upload_to='static/media/video',
@@ -136,9 +137,9 @@ class Media(models.Model):
 
 class Movie(models.Model):
     description = models.TextField()
-    short_description = models.TextField(max_length=255, null=True, blank=True)
+    short_description = models.TextField(max_length=500, null=True, blank=True)
     duration = models.CharField(max_length=10)
-    classification = models.IntegerField(default=12)
+    classification = models.CharField(max_length=12)
     media = models.ForeignKey(
         'Media', related_name='media_has_movie', on_delete=models.CASCADE)
 
@@ -183,7 +184,8 @@ class Episode(models.Model):
         verbose_name = 'Episode'
         verbose_name_plural = 'Episodes'
 
-genre_choices = (('N', 'Não Definido'),
+genre_choices = (
+            ('N', 'Não Definido'),
             ('A', 'Ação'),
             ('AN', 'Animação'),
             ('AV', 'Aventura'),
@@ -196,7 +198,9 @@ genre_choices = (('N', 'Não Definido'),
             ('R', 'Romance'),
             ('T', 'Terror'),
             ('MA', 'Marvel'),
-            ('LA', 'Lançamento'))
+            ('C', 'Crime'),
+            ('LA', 'Lançamento')
+        )
 
 class Genre(models.Model):
     category = models.CharField(

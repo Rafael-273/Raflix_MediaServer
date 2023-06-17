@@ -71,7 +71,7 @@ body::before {
     z-index: 90;
     position: relative;
     max-width: 425px;
-    height: 420px;
+    min-height: 420px;
     margin-left: 50%;
     background-color: rgba(0,0,0,0.6);
     border-radius: 10px;
@@ -80,10 +80,48 @@ body::before {
     
 }
 
+.token_body {
+    top: -8%;
+    padding: 60px;
+    z-index: 90;
+    position: relative;
+    min-width: 425px;
+    min-height: 420px;
+    margin-left: 50%;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 10px;
+    box-sizing: border-box;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.token_body h2 {
+    font-size: 32px;
+    color: white;
+    margin-top: 0;
+}
+
+.token_body h1 {
+    color: rgb(212, 208, 208);
+}
+
+.token_body p {
+    color: rgb(155, 153, 153);
+}
+
+
 .login_body h2 {
     font-size: 32px;
     color: white;
     margin-top: 0;
+}
+
+.login_body h1 {
+    color: rgb(212, 208, 208);
+}
+
+.login_body p {
+    color: rgb(155, 153, 153);
 }
 
 .login_body input {
@@ -98,7 +136,27 @@ body::before {
     outline: none;
 }
 
+.token_body input {
+    height: 50px;
+    width: 100%;
+    color: white;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.token_body label {
+    display: none;
+}
+
 .login_body input:hover {
+    background-color: #444;
+}
+
+.token_body input:hover {
     background-color: #444;
 }
 
@@ -121,6 +179,24 @@ body::before {
 }
 
 .login_body button:hover {
+    background-color: #fc1722;
+    cursor: pointer;
+}
+
+.token_body button{
+    height: 50px;
+    width: 100%;
+    color: white;
+    background-color: #e50914;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.token_body button:hover {
     background-color: #fc1722;
     cursor: pointer;
 }

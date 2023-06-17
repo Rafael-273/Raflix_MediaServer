@@ -15,13 +15,6 @@
         <li>
             <a href="{% url 'favorites' %}">Favoritos</a>
         </li>
-        <div class="icon_user" id="icon" onclick="modalAccount(this)">
-            {% for user in request.my_data %}
-                <div class="profile-picture">
-                    <img src="{{ user.photo.url }}" alt="{{ user.name }}">
-                </div>
-            {% endfor %}
-        </div>
         <form id="search-form" method="GET" action="{% url 'search' %}">
             {% csrf_token %}
             <div class="search">

@@ -9,8 +9,6 @@ Favoritos
 
 {% block head %}
 
-    <!-- Movies -->
-    <title>Movies</title>
     <link rel="stylesheet" href="{% static 'css/series_style.css' %}">
     <script src="{% static 'js/scripts_home.js' %}" defer></script>
 
@@ -64,7 +62,11 @@ Favoritos
         <div class="url_banner" hidden>play/{{ movie.slug }}</div>
         <div class="url_info" hidden>{{ movie.slug }}</div>
         <div class="img_banner" hidden>{{ movie.banner.url }}</div>
-        <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
+        {% if movie.title_img %}
+            <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
+        {% else %}
+            <div class="title_movie_banner" hidden>{{ movie.title }}</div>
+        {% endif %}
         <div class="year_banner" hidden>{{ movie.release_year }}</div>
         <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
         <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
@@ -85,6 +87,7 @@ Favoritos
         const url_info = document.querySelectorAll('.url_info')
         const img_banner = document.querySelectorAll('.img_banner')
         const title = document.querySelectorAll('.title_banner')
+        const title_movie = document.querySelectorAll('.title_movie_banner')
         const year = document.querySelectorAll('.year_banner')
         const classification = document.querySelectorAll('.classification_banner')
         const duration = document.querySelectorAll('.duration_banner')
@@ -102,24 +105,38 @@ Favoritos
         
         var index = 0
 
-        if(index == 0){
-            imgBanner[0].setAttribute('src', img_banner[index].innerText)
-            titleBanner[0].setAttribute('src', title[index].innerText)
-            yearBanner[0].textContent = year[index].innerText
-            classificationBanner[0].innerHTML = classification[index].innerText + "+"
-            durationBanner[0].textContent = duration[index].innerText + "H"
-            categoryBanner[0].textContent = category[index].innerText
-            descriptionBanner[0].textContent = description[index].innerText
-            urlBanner[0].href = url[index].innerText
-            infoBanner[0].href = url_info[index].innerText
-            let index_value = index
-            if(title[index_value += 1].innerText){
-                    index += 1
+        if (index == 0) {
+            imgBanner[0].setAttribute('src', img_banner[index].innerText);
+            if (titleBanner[0].childNodes.length > 0) {
+                console.log('teste')
+                var existingH1 = document.querySelector('.h1_title_banner');
+                if (existingH1) {
+                existingH1.parentNode.removeChild(existingH1);
+                }
+                titleBanner[0].setAttribute('src', title[index].innerText);
+            } else {
+                console.log('teste1')
+                var h1Element = document.createElement('h1');
+                h1Element.className = 'h1_title_banner';
+                h1Element.textContent = title_movie[index].innerText;
+                titleBanner[0].parentNode.replaceChild(h1Element, titleBanner[0]);
             }
-            else {
-                index = 0
+            yearBanner[0].textContent = year[index].innerText;
+            classificationBanner[0].innerHTML = classification[index].innerText + "+";
+            durationBanner[0].textContent = duration[index].innerText + "H";
+            categoryBanner[0].textContent = category[index].innerText;
+            descriptionBanner[0].textContent = description[index].innerText;
+            urlBanner[0].href = url[index].innerText;
+            infoBanner[0].href = url_info[index].innerText;
+
+            let index_value = index;
+            if (title[index_value + 1].innerText) {
+                index += 1;
+            } else {
+                index = 0;
             }
         }
+
 
         setInterval(function(){
             if(index == 0){

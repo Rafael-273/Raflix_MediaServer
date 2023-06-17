@@ -12,41 +12,33 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .forms import LoginForm
 # from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
-from .forms import CreateMovieForm
-
-
-class CustomLoginView(LoginView):
-    template_name = 'front/login.html'
-    authentication_form = LoginForm
-    success_url = reverse_lazy('home')
-
-    def form_valid(self, form):
-        print('remembado')
-        remember_me = form.cleaned_data.get('remember_me')
-        if remember_me:
-            self.request.session.set_expiry(1209600)
-        else:
-            self.request.session.set_expiry(0)
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        if 'next' in self.request.GET:
-            print('passou aqui??')
-            next_url = self.request.GET['next']
-        else:
-            print('passou aqui')
-            next_url = reverse_lazy('home')
-        return next_url
-    
+from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm, EditUserForm
+from django_otp import login as otp_login
+from .forms import CreateUserForm
+from django.contrib.auth import login
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
+    
 
+class CustomLoginView(LoginView):
+    form_class = CustomAuthenticationForm
+    template_name = 'two_factor/core/login.html'
+    success_url = reverse_lazy('home')
+    
+    def form_valid(self, form):
+        """
+        Security check complete. Log the user in.
+        """
+        # Ensure the user-originating redirection url is safe.
+        self.check_and_update_redirect_url()
+        # Redirect to the success URL.
+        return otp_login(self.request, form.get_user())
+    
 
 class Home(ListView):
     model = models.Media
@@ -154,17 +146,149 @@ class CreateMovieView(View):
     def post(self, request):
         form = CreateMovieForm(request.POST, request.FILES)
         if form.is_valid():
-            media = form.save(commit=False)
+
+            media = models.Media(
+                media_file = form.cleaned_data['media_file'],
+                trailer = form.cleaned_data['trailer'], 
+                title = form.cleaned_data['title'],
+                release_year = form.cleaned_data['release_year'],
+                poster = form.cleaned_data['poster'],
+                banner = form.cleaned_data['banner'],
+                title_img = form.cleaned_data['title_img'],
+            )
             media.save()
-            movie = models.Movie.objects.create(
-                media=media,
+
+            genre = models.Genre(
+                category = form.cleaned_data['category']
+            )
+            genre.save()
+
+            movie = models.Movie(
                 description=form.cleaned_data['description'],
                 short_description=form.cleaned_data['short_description'],
                 duration=form.cleaned_data['duration'],
-                classification=form.cleaned_data['classification']
+                classification=form.cleaned_data['classification'],
+                media=media,
             )
-            return redirect('success')
-        return render(request, 'create/create_movie.html', {'form': form})
+            movie.save()
+
+            movie_has_genre = models.Movie_has_genre(
+                genre=genre,
+                movie=movie
+            )
+            movie_has_genre.save()
+
+            return redirect(reverse_lazy('home'))
+        
+        else:
+            print(form.errors)
+            # Se o formulário não for válido, exiba os erros
+            return render(request, 'create/create_movie.html', {'form': form, 'errors': form.errors})
+
+
+class ListMoviesView(View):
+    def get(self, request):
+        movies = models.Media.objects.all()
+        return render(request, 'edit/list_movies.html', {'movies': movies})
+
+
+class ListUsersView(View):
+    def get(self, request):
+        users = models.User.objects.all()
+        return render(request, 'edit/list_users.html', {'users': users})
+
+
+class ListMoviesDeleteView(View):
+    def get(self, request):
+        movies = models.Media.objects.all()
+        return render(request, 'remove/list_movies_delete.html', {'movies': movies})
+
+
+class ListUsersDeleteView(View):
+    def get(self, request):
+        users = models.User.objects.all()
+        return render(request, 'remove/list_users_delete.html', {'users': users})
+    
+
+class EditMovieView(View):
+    def get(self, request, slug):
+        media = models.Media.objects.get(slug=slug)
+        movie = media.media_has_movie.first()
+        form = EditMovieForm(instance=movie)
+        return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
+
+    def post(self, request, slug):
+        media = get_object_or_404(models.Media, slug=slug)
+        movie = media.media_has_movie.first()
+        form = EditMovieForm(request.POST, request.FILES, instance=movie)
+        if form.is_valid():
+            if movie:
+                movie = form.save()
+
+                genre = models.Genre(
+                    category = form.cleaned_data['category']
+                )
+                genre.save()
+
+                movie_has_genre = models.Movie_has_genre(
+                    genre=genre,
+                    movie=movie
+                )
+                movie_has_genre.save()
+
+                return redirect(reverse_lazy('home'))
+        return render(request, 'edit/edit_movie.html', {'form': form, 'movie': movie})
+
+class CreateUserView(View):
+    def get(self, request):
+        form = CreateUserForm()
+        return render(request, 'create/create_user.html', {'form': form})
+
+    def post(self, request):
+        form = CreateUserForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('home')
+        return render(request, 'create/create_user.html', {'form': form})
+
+
+class EditUserView(View):
+    def get(self, request, id):
+        user = models.User.objects.get(id=id)
+        form = EditUserForm(instance=user)
+        return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
+    def post(self, request, id):
+        user = get_object_or_404(models.User, id=id)
+        form = EditUserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            if user:
+                user = form.save()
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect(reverse_lazy('home'))
+        return render(request, 'edit/edit_user.html', {'form': form, 'user': user})
+
+
+class DeleteMovieView(View):
+    def get(self, request, slug):
+        movie = get_object_or_404(models.Media, slug=slug)
+        return render(request, 'remove/remove_movies.html', {'movie': movie})
+
+    def post(self, request, slug):
+        movie = get_object_or_404(models.Media, slug=slug)
+        movie.delete()
+        return redirect('home')
+    
+
+class DeleteUserView(View):
+    def get(self, request, id):
+        user = get_object_or_404(models.User, id=id)
+        return render(request, 'remove/remove_users.html', {'user': user})
+
+    def post(self, request, id):
+        user = get_object_or_404(models.User, id=id)
+        user.delete()
+        return redirect('home')
 
 
 class ToggleFavorite(View):

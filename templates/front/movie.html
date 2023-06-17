@@ -20,7 +20,11 @@
     <!-- Header -->
     <div class="banner">
         <div class="content">
+            {% if movie.title_img %}
             <img src="{{ movie.title_img.url }}" class="movieTitle">
+            {% else %}
+            <h1 class="h1_title_banner">{{ movie.title }}</h1>
+            {% endif %}
             <h4>
                 <span>{{ movie.release_year}}</span>
                 {% if movie.getClassification == 12 %}
