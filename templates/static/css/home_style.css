@@ -13,6 +13,17 @@
     mask-image: none;
 }
 
+.h1_title_banner {
+    font-size: 55px;
+    font-weight: 900;
+    font-family: "Bebas Neue", sans-serif !important;
+    word-break: break-all;
+    width: 32%; /* Defina o tamanho desejado aqui */
+    line-height: 1; /* Defina o espaçamento desejado aqui */
+    color: aliceblue;
+    margin-bottom: 10px;
+}
+
 .banner--fadeLeft {
     position: relative;
     width: 100%;
@@ -27,7 +38,7 @@
     box-shadow: 0 -80px 50px 70px rgba(0, 0, 0, 1);
     width: 100%;
     padding: 0;
-    height: 2vw;
+    height: 2.35vw;
     z-index: 9;
     position: absolute;
     left: 20px;

@@ -234,7 +234,7 @@ Create Movie
         var textarea = document.getElementById('id_short_description');
         
         textarea.addEventListener('input', function() {
-            if (textarea.value.length > 255) {
+            if (textarea.value.length > 500) {
             textarea.value = textarea.value.slice(0, 255);
             }
         });
