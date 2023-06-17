@@ -55,7 +55,7 @@
     position: relative;
     bottom: 20%;
     width: 100%;
-    height: 42vw;
+    height: 40vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -72,17 +72,15 @@
 
 .Modalcontent.openModal {
     display: flex;
-    position: relative;
-    bottom: 95px;
 }
 
 .menuConfigModal {
     background-color: rgb(20, 19, 19);
     border-radius: 20px;
     width: 40%;
-    height: 25vw;
+    height: 21vw;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
 }
 
 .menuConfigModal h2 {

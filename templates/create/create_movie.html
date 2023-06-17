@@ -227,7 +227,18 @@ Create Movie
                 console.error('Erro:', error);
             });
     }
+  </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var textarea = document.getElementById('id_short_description');
+        
+        textarea.addEventListener('input', function() {
+            if (textarea.value.length > 255) {
+            textarea.value = textarea.value.slice(0, 255);
+            }
+        });
+    });
   </script>
   
   

@@ -1,0 +1,31 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Delete Users
+
+{% endblock %}
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/list_movies.css">
+
+{% endblock %}
+
+{% block conteudo %}
+
+    <div class="Modalcontent" id="contentModal">
+        <div class="menuConfig">
+            <div class="title"><h2>Escolha o Usuário</h2><h2><b>para remover</b></h2></div>
+            <div class="scrool_info">
+                {% for user in users %}
+                    <a href="{% url 'remove_user' user.id %}">
+                        <button>{{ user.username }}</button>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+  
+{% endblock %}

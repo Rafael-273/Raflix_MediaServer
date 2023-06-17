@@ -11,9 +11,10 @@
     background-color: rgba(71, 71, 71, 0.3);
     border-radius: 20px;
     width: 40%;
-    height: 25vw;
+    height: 30vw;
     display: grid;
     grid-template-rows: 0.33fr 1fr;
+    padding: 0 0 10px 0;
 }
 
 .menuConfig h2 {
