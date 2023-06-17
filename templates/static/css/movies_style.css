@@ -244,6 +244,8 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 
 .movies_all {
     display: grid;
+    justify-content: center;
+    align-content: center;
     grid-template-columns: auto auto auto auto auto auto auto auto auto;
     grid-row-gap: 1%;
     grid-column-gap: 5px;
@@ -252,6 +254,7 @@ video::-webkit-media-controls { /* Works only on Chrome-based browsers */
 .movie a img {
     max-width: 200px;
     border-radius: 1rem;
+    transition: 0.5s;
 }
 
 .movie a img:hover{

@@ -55,9 +55,9 @@ class Media(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
     release_year = models.IntegerField(blank=True)
     favorited = models.BooleanField(default=False)
-    poster = models.ImageField(upload_to='static/media/poster', blank=True)
+    poster = models.ImageField(upload_to='static/media/poster', blank=True, null=False)
     banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
-    title_img = models.ImageField(upload_to='static/media/title', blank=True)
+    title_img = models.ImageField(upload_to='static/media/title', blank=True, null=True)
     media_file = models.FileField(
         null=False,
         blank=False,
@@ -137,7 +137,7 @@ class Media(models.Model):
 
 class Movie(models.Model):
     description = models.TextField()
-    short_description = models.TextField(max_length=255, null=True, blank=True)
+    short_description = models.TextField(max_length=500, null=True, blank=True)
     duration = models.CharField(max_length=10)
     classification = models.CharField(max_length=12)
     media = models.ForeignKey(

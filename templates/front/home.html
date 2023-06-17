@@ -133,13 +133,16 @@ Home
     {%  endfor %}
 
     <!-- info banner -->
-    {% for movie in movies %}
-    {% if movie.getCategory|last == 'Lançamento' %}
+    {% for movie in movies|slice:"-3:" %}
 
     <div class="url_info" hidden>{{ movie.slug }}</div>
     <div class="url_banner" hidden>play/{{ movie.slug }}</div>
     <div class="trailer_banner" hidden>{{ movie.trailer.url }}</div>
-    <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
+    {% if movie.title_img %}
+            <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
+        {% else %}
+            <div class="title_movie_banner" hidden>{{ movie.title }}</div>
+    {% endif %}
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
     <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
     <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
@@ -152,7 +155,6 @@ Home
     </div>
     <div class="description_banner" hidden>{{ movie.getDescription }}</div>
 
-    {% endif %}
     {% endfor %}
 
 
@@ -281,6 +283,7 @@ Home
         const url = document.querySelectorAll('.url_banner')
         const trailer = document.querySelectorAll('.trailer_banner')
         const title = document.querySelectorAll('.title_banner')
+        const title_movie = document.querySelectorAll('.title_movie_banner')
         const year = document.querySelectorAll('.year_banner')
         const classification = document.querySelectorAll('.classification_banner')
         const duration = document.querySelectorAll('.duration_banner')
@@ -300,7 +303,20 @@ Home
 
         if(index == 0){
             videoBanner[0].setAttribute('src', trailer[index].innerText)
-            titleBanner[0].setAttribute('src', title[index].innerText)
+            if (titleBanner[0].childNodes.length > 0) {
+                    console.log('teste')
+                    var existingH1 = document.querySelector('.h1_title_banner');
+                    if (existingH1) {
+                    existingH1.parentNode.removeChild(existingH1);
+                    }
+                    titleBanner[0].setAttribute('src', title[index].innerText);
+                } else {
+                    console.log('teste1')
+                    var h1Element = document.createElement('h1');
+                    h1Element.className = 'h1_title_banner';
+                    h1Element.textContent = title_movie[index].innerText;
+                    titleBanner[0].parentNode.replaceChild(h1Element, titleBanner[0]);
+            }
             yearBanner[0].textContent = year[index].innerText
             classificationBanner[0].innerHTML = classification[index].innerText + "+"
             durationBanner[0].textContent = duration[index].innerText + "H"
@@ -314,7 +330,20 @@ Home
         setInterval(function(){
             if(index == 0){
                 videoBanner[0].setAttribute('src', trailer[index].innerText)
-                titleBanner[0].setAttribute('src', title[index].innerText)
+                if (titleBanner[0].childNodes.length > 0) {
+                    console.log('teste')
+                    var existingH1 = document.querySelector('.h1_title_banner');
+                    if (existingH1) {
+                    existingH1.parentNode.removeChild(existingH1);
+                    }
+                    titleBanner[0].setAttribute('src', title[index].innerText);
+                } else {
+                    console.log('teste1')
+                    var h1Element = document.createElement('h1');
+                    h1Element.className = 'h1_title_banner';
+                    h1Element.textContent = title_movie[index].innerText;
+                    titleBanner[0].parentNode.replaceChild(h1Element, titleBanner[0]);
+                }
                 yearBanner[0].textContent = year[index].innerText
                 classificationBanner[0].innerHTML = classification[index].innerText + "+"
                 durationBanner[0].textContent = duration[index].innerText + "H"

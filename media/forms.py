@@ -101,12 +101,14 @@ class CreateMovieForm(forms.ModelForm):
 
     banner = forms.ImageField(
         label="Banner",
-        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'})
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'}),
+        required=False
     )
 
     title_img = forms.ImageField(
         label="Logo PNG",
-        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'})
+        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'}),
+        required=False
     )
 
     media_file = forms.FileField(
