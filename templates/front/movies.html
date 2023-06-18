@@ -23,7 +23,7 @@ Movies
         <div class="grid_banner">
             <div></div>
             <div class="content">
-                <img src="" class="movieTitle">
+                <h1 class="movieTitle"></h1>
                 <h4>
                     <span class="year_banner"></span>
                     <span><i class="class_banner"></i></span>
@@ -56,107 +56,67 @@ Movies
 
 </section>
 
-    <!-- info banner -->
-    {% for movie in movies|slice:"-3:" %}
+<!-- info banner -->
+{% for movie in movies|slice:"-3:" %}
 
-    <div class="url_banner" hidden>play/{{ movie.slug }}</div>
-    <div class="url_info" hidden>{{ movie.slug }}</div>
-    <div class="img_banner" hidden>{{ movie.banner.url }}</div>
-    {% if movie.title_img %}
-    <div class="title_banner" hidden>{{ movie.title_img.url }}</div>
-    {% else %}
-        <div class="title_movie_banner" hidden>{{ movie.title }}</div>
-    {% endif %}
-    <div class="year_banner" hidden>{{ movie.release_year }}</div>
-    <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
-    <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
-    <div class="category_banner" hidden>
-        {% for genre in movie.getCategory %}
+<div class="url_info" hidden>{{ movie.slug }}</div>
+<div class="url_banner" hidden>play/{{ movie.slug }}</div>
+<div class="banner_movie" hidden>{{ movie.banner.url }}</div>
+<div class="title_movie_banner" hidden>{{ movie.title }}</div>
+<div class="year_banner" hidden>{{ movie.release_year }}</div>
+<div class="classification_banner" hidden>{{ movie.getClassification }}</div>
+<div class="duration_banner" hidden>{{ movie.getDuration }}</div>
+<div class="category_banner" hidden>
+    {% for genre in movie.getCategory %}
 
-        {{ genre }}
-
-        {% endfor %}
-    </div>
-    <div class="description_banner" hidden>{{ movie.getShortDescription }}</div>
+    {{ genre }}
 
     {% endfor %}
+</div>
+<div class="description_banner" hidden>{{ movie.getDescription }}</div>
+
+{% endfor %}
 
     <script>
-        const banner = document.querySelectorAll('.banner')
-        const url_info = document.querySelectorAll('.url_info')
-        const url = document.querySelectorAll('.url_banner')
-        const img_banner = document.querySelectorAll('.img_banner')
-        const title = document.querySelectorAll('.title_banner')
-        const year = document.querySelectorAll('.year_banner')
-        const classification = document.querySelectorAll('.classification_banner')
-        const duration = document.querySelectorAll('.duration_banner')
-        const category = document.querySelectorAll('.category_banner')
-        const description = document.querySelectorAll('.description_banner')
-        const imgBanner = banner[0].querySelectorAll('.img_url')
-        const infoBanner = document.querySelectorAll('.info_banner')
-        const titleBanner = banner[0].querySelectorAll('.movieTitle')
-        const yearBanner = banner[0].querySelectorAll('.year_banner')
-        const urlBanner = banner[0].querySelectorAll('.play_banner')
-        const classificationBanner = banner[0].querySelectorAll('.class_banner')
-        const durationBanner = banner[0].querySelectorAll('.durationBanner')
-        const categoryBanner = banner[0].querySelectorAll('.categoryBanner')
-        const descriptionBanner = banner[0].querySelectorAll('.descriptionBanner')
-        
-        var index = 0
+        const banner = document.querySelector('.banner');
+        const imageBanner = banner.querySelector('.img_url');
+        const titleBanner = banner.querySelector('.movieTitle');
+        const infoBanner = banner.querySelector('.info_banner');
+        const yearBanner = banner.querySelector('.year_banner');
+        const urlBanner = banner.querySelector('.play_banner');
+        const classificationBanner = banner.querySelector('.class_banner');
+        const durationBanner = banner.querySelector('.durationBanner');
+        const categoryBanner = banner.querySelector('.categoryBanner');
+        const descriptionBanner = banner.querySelector('.descriptionBanner');
+        const url_info = document.querySelectorAll('.url_info');
+        const url = document.querySelectorAll('.url_banner');
+        const banner_movie = document.querySelectorAll('.banner_movie');
+        const title_movie = document.querySelectorAll('.title_movie_banner');
+        const year = document.querySelectorAll('.year_banner');
+        const classification = document.querySelectorAll('.classification_banner');
+        const duration = document.querySelectorAll('.duration_banner');
+        const category = document.querySelectorAll('.category_banner');
+        const description = document.querySelectorAll('.description_banner');
+        const totalMovies = url_info.length;
+        let index = 0;
 
-        if(index == 0){
-            imgBanner[0].setAttribute('src', img_banner[index].innerText)
-            titleBanner[0].setAttribute('src', title[index].innerText)
-            yearBanner[0].textContent = year[index].innerText
-            classificationBanner[0].innerHTML = classification[index].innerText + "+"
-            durationBanner[0].textContent = duration[index].innerText + "H"
-            categoryBanner[0].textContent = category[index].innerText
-            descriptionBanner[0].textContent = description[index].innerText
-            urlBanner[0].href = url[index].innerText
-            infoBanner[0].href = url_info[index].innerText
-            index += 1
+        function updateBanner(index) {
+            imageBanner.setAttribute('src', banner_movie[index].innerText);
+            titleBanner.textContent = title_movie[index].innerText;
+            yearBanner.textContent = year[index].innerText;
+            classificationBanner.innerHTML = classification[index].innerText + "+";
+            durationBanner.textContent = duration[index].innerText + "H";
+            categoryBanner.textContent = category[index].innerText;
+            descriptionBanner.textContent = description[index].innerText;
+            urlBanner.href = url[index].innerText;
+            infoBanner.href = url_info[index].innerText;
         }
 
-        setInterval(function(){
-            if(index == 0){
-                imgBanner[0].setAttribute('src', img_banner[index].innerText)
-                titleBanner[0].setAttribute('src', title[index].innerText)
-                yearBanner[0].textContent = year[index].innerText
-                classificationBanner[0].innerHTML = classification[index].innerText + "+"
-                durationBanner[0].textContent = duration[index].innerText + "H"
-                categoryBanner[0].textContent = category[index].innerText
-                descriptionBanner[0].textContent = description[index].innerText
-                urlBanner[0].href = url[index].innerText
-                infoBanner[0].href = url_info[index].innerText
-                index += 1
-            }
-            else if(index == 1){
-                imgBanner[0].setAttribute('src', img_banner[index].innerText)
-                titleBanner[0].setAttribute('src', title[index].innerText)
-                yearBanner[0].textContent = year[index].innerText
-                classificationBanner[0].innerHTML = classification[index].innerText + "+"
-                durationBanner[0].textContent = duration[index].innerText + "H"
-                categoryBanner[0].textContent = category[index].innerText
-                descriptionBanner[0].textContent = description[index].innerText
-                urlBanner[0].href = url[index].innerText
-                infoBanner[0].href = url_info[index].innerText
-                index += 1
-            }
-            else if(index == 2){
-                imgBanner[0].setAttribute('src', img_banner[index].innerText)
-                titleBanner[0].setAttribute('src', title[index].innerText)
-                yearBanner[0].textContent = year[index].innerText
-                classificationBanner[0].innerHTML = classification[index].innerText + "+"
-                durationBanner[0].textContent = duration[index].innerText + "H"
-                categoryBanner[0].textContent = category[index].innerText
-                descriptionBanner[0].textContent = description[index].innerText
-                urlBanner[0].href = url[index].innerText
-                infoBanner[0].href = url_info[index].innerText
-                index = 0
-            }
-            else {
-                index == 0
-            }
-        }, 5000)
+        updateBanner(index);
+
+        setInterval(() => {
+            index = (index + 1) % totalMovies;
+            updateBanner(index);
+        }, 2000);
     </script>
 {% endblock %}

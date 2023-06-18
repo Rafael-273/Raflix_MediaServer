@@ -57,7 +57,6 @@ class Media(models.Model):
     favorited = models.BooleanField(default=False)
     poster = models.ImageField(upload_to='static/media/poster', blank=True, null=False)
     banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
-    title_img = models.ImageField(upload_to='static/media/title', blank=True, null=True)
     media_file = models.FileField(
         null=False,
         blank=False,
