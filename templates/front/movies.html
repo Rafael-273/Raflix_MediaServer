@@ -20,16 +20,17 @@ Movies
 <section class="grid_section">
     <!-- Header -->
     <div class="banner">
+        <div class="shadow"></div>
         <div class="grid_banner">
             <div></div>
             <div class="content">
                 <h1 class="movieTitle"></h1>
-                <h4>
+                <div>
                     <span class="year_banner"></span>
                     <span><i class="class_banner"></i></span>
                     <span class="durationBanner"></span>
                     <span class="categoryBanner"></span>
-                </h4>
+                </div>
                 <p class="descriptionBanner description">
     
                 </p>
@@ -117,6 +118,6 @@ Movies
         setInterval(() => {
             index = (index + 1) % totalMovies;
             updateBanner(index);
-        }, 2000);
+        }, 15000);
     </script>
 {% endblock %}
