@@ -137,6 +137,8 @@
     display: grid;
     grid-template-rows: 1fr 1fr;
     margin-top: 3%;
+    position: relative;
+    z-index: 999;
 }
 
 .c-carousel {
@@ -474,18 +476,54 @@
 }
 
 
-@media screen  and (min-width: 250px) and (max-width: 900px) {
-    .content {
-        position: relative;
-        z-index: 9999;
-        left: 3%;
-        margin: 0 20px;
+@media (max-width: 1000px) {
+    .description {
+        max-width: 38vh;
     }
 
+    .movieTitle {
+        max-width: 25vh;
+        margin-bottom: 2vh;
+    }
+
+    .content {
+        margin-left: 1vh;
+    }
+
+    .img_url {
+        filter: brightness(0.8);
+    }
+}
+
+@media (max-width: 415px) {
     .content_carousel {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        margin-top: 3%;
-        gap: 100px;
+        grid-row-gap: 8vh;
+    }
+
+    .dots-carousel {
+        position: relative;
+        bottom: 80%;
+    }
+}
+
+@media (max-height: 815px) {
+    .content_carousel {
+        grid-row-gap: 11vh;
+    }
+
+    .dots-carousel {
+        position: relative;
+        bottom: 87%;
+    }
+}
+
+@media (max-height: 745px) {
+    .content_carousel {
+        grid-row-gap: 19vh;
+    }
+
+    .dots-carousel {
+        position: relative;
+        bottom: 92%;
     }
 }
