@@ -36,7 +36,7 @@ body{
 .material-symbols-outlined.seta {
     color: rgba(221, 221, 221, 1);
     font-size: 45px;
-    margin: 8px 15px 0 35px;
+    margin: 0 15px 0 35px;
     align-self: center;
 }
 
@@ -85,7 +85,7 @@ body{
     transform: translateY(180px);
     transition: 0.3s;
     position: absolute;
-    bottom: 9vw;
+    bottom: 20vh;
 }
 
 .display_none {
@@ -386,4 +386,20 @@ body{
 
 .icon.fast-forward.rotate {
     transform: rotate(90deg);
+}
+
+@media (max-width: 1000px) {
+    .section #video_player .controls {
+        bottom: 9vh;
+    }
+
+    .top {
+        position: fixed;
+        display: grid;
+        grid-template-columns: 3fr 0fr 3fr;
+        background-color: rgba(14, 14, 14, 0.8);
+        width: 100%;
+        height: 7vh;
+        z-index: 90;
+    }
 }
