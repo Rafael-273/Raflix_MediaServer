@@ -18,31 +18,37 @@ body{
     grid-template-columns: 1fr 1fr 1fr;
     background-color: rgba(14, 14, 14, 0.8);
     width: 100%;
-    height: 6vw;
+    height: 12vh;
     z-index: 90;
 }
 
 .top_title {
     display: flex;
+    align-self: center;
 }
 
 .top h3 {
-    color: rgba(221, 221, 221, 1);
-    margin-top: 5.5%;
+    color: rgba(221, 221, 221, 1);  
     font-size: 23px;
+    align-self: center;
 }
 
 .material-symbols-outlined.seta {
     color: rgba(221, 221, 221, 1);
     font-size: 45px;
-    margin: 30px 15px 0 35px;
+    margin: 8px 15px 0 35px;
+    align-self: center;
 }
 
 .top img {
     width: 180px;
     position: relative;
-    top: 25px;
     left: 60%;
+}
+
+.top a {
+    display: flex;
+    align-self: center;
 }
 
 .material-symbols-outlined {
@@ -61,18 +67,17 @@ body{
 
 .section{
     width: 100%;
-    height: 56vw;
+    height: 100vh;
 }
-
-/* Estilização do Player de Vídeo */
 
 .section #video_player {
     position: relative;
     width: 100%;
+    height: 100vh;
 }
 
 .section #video_player .controls {
-    height: 60px;
+    height: 7vh;
     width: 100%;
     background: rgb(0 0 0 / 71%);
     box-shadow: 0 0 40px 10px rgb(0 0 0 / 25%);
