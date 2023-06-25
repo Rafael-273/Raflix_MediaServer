@@ -30,15 +30,22 @@ new Glider(responsiveCarousel, {
         {
             breakpoint: 1500,
             settings: {
-                slidesToShow: 7.4,
-                slidesToScroll: 7.4,
+                slidesToShow:8.8,
+                slidesToScroll: 8.8,
             }
         },
         {
             breakpoint: 1410,
             settings: {
-                slidesToShow: 8,
-                slidesToScroll: 8,
+                slidesToShow: 7,
+                slidesToScroll: 7,
+            }
+        },
+        {
+            breakpoint: 1250,
+            settings: {
+                slidesToShow: 6.3,
+                slidesToScroll: 6.3,
             }
         },
         {
@@ -49,19 +56,26 @@ new Glider(responsiveCarousel, {
             }
         },
         {
-            breakpoint: 600,
+            breakpoint: 800,
             settings: {
-                slidesToShow: 4.8,
-                slidesToScroll: 4.8,
+                slidesToShow: 5,
+                slidesToScroll: 5,
             }
         },
         {
-            breakpoint: 375,
+            breakpoint: 600,
             settings: {
-                slidesToShow: 2.1,
-                slidesToScroll: 2.1,
+                slidesToShow: 3.3,
+                slidesToScroll: 3.3,
             }
-        },        
+        },
+        {
+            breakpoint: 360,
+            settings: {
+                slidesToShow: 1.9,
+                slidesToScroll: 1.9,
+            }
+        },      
     ]
 })
 
@@ -95,15 +109,22 @@ new Glider(responsiveCategoryCarousel, {
         {
             breakpoint: 1500,
             settings: {
-                slidesToShow: 7.4,
-                slidesToScroll: 7.4,
+                slidesToShow: 8.8,
+                slidesToScroll: 8.8,
             }
-        },  
+        },
         {
             breakpoint: 1410,
             settings: {
-                slidesToShow: 7.85,
-                slidesToScroll: 7.85,
+                slidesToShow: 7,
+                slidesToScroll: 7,
+            }
+        },
+        {
+            breakpoint: 1250,
+            settings: {
+                slidesToShow: 6.3,
+                slidesToScroll: 6.3,
             }
         },
         {
@@ -114,19 +135,26 @@ new Glider(responsiveCategoryCarousel, {
             }
         },
         {
-            breakpoint: 600,
+            breakpoint: 800,
             settings: {
-                slidesToShow: 4.8,
-                slidesToScroll: 4.8,
+                slidesToShow: 5,
+                slidesToScroll: 5,
             }
         },
         {
-            breakpoint: 375,
+            breakpoint: 600,
             settings: {
-                slidesToShow: 2.1,
-                slidesToScroll: 2.1,
+                slidesToShow: 3.3,
+                slidesToScroll: 3.3,
             }
-        }, 
+        },
+        {
+            breakpoint: 360,
+            settings: {
+                slidesToShow: 1.9,
+                slidesToScroll: 1.9,
+            }
+        },      
     ]
 })
 

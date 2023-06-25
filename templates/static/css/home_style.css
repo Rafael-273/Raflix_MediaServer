@@ -1,36 +1,21 @@
 /* Main Banner */
 
-
 .banner {
-    position: relative;
     width: 100%;
-    min-height: 100vh;
-    display: flex;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     justify-content: flex-start;
     align-items: center;
-    width: 100%;
-	height: 180px;
-    mask-image: none;
-}
-
-.h1_title_banner {
-    font-size: 55px;
-    font-weight: 900;
-    font-family: "Bebas Neue", sans-serif !important;
-    word-break: break-all;
-    width: 32%; /* Defina o tamanho desejado aqui */
-    line-height: 1; /* Defina o espaçamento desejado aqui */
-    color: aliceblue;
-    margin-bottom: 10px;
 }
 
 .banner--fadeLeft {
-    position: relative;
+    position: absolute;
+    top: 0;
     width: 100%;
-    height: 62vw;
-    right: 20vw;
-    top: -50px;
-    background: linear-gradient(270deg, transparent, rgb(0, 0, 0));
+    height: 105vh;
+    background: linear-gradient(270deg, transparent, rgba(0, 0, 0, 0.7));
     z-index: 5 !important;
 }
 
@@ -42,25 +27,22 @@
     z-index: 9;
     position: absolute;
     left: 20px;
-    top: 108%;
+    top: 108vh;
 }
 
 .banner .bg {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     object-fit: cover;
     filter: brightness(80%);
-    transform: scale(1.3);
+    transform: scale(1.1);
 }
 
 .grid_banner {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     width: 100%;
-    height: 47vw;
+    height: 47vh;
     position: absolute;
 }
 
@@ -75,38 +57,43 @@
     margin-left: -0.3%;
 }
 
+.movieTitle {
+    word-break: break-all;
+    width: 65vh;
+    font-size: 55px;
+    font-weight: bold;
+    font-family: "Bebas Neue", sans-serif !important;
+    line-height: 1;
+    color: aliceblue;
+    margin-bottom: 10px;
+}
+
 .description {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    line-height: 16px;     /* fallback */
-    max-height: 170px;      /* fallback */
-    -webkit-line-clamp: 6; /* number of lines to show */
+    line-height: 16px;
+    max-height: 65vh;
+    -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
-    cursor: pointer;
-    max-width: 600px;
+    max-width: 60vh;
 }
 
-.banner .content h4 {
-    color: rgba(253, 253, 253, 0.7);
-    font-weight: 500;
-    margin-top: 14px;
-}
-
-.banner .content h4 span{
+.banner .content div span{
     padding: 0 10px;
     border-right: 1px solid rgba(255, 255, 255, 0.5);
+    color: rgba(253, 253, 253, 0.7);
 }
 
-.banner .content h4 span:first-child {
+.banner .content div span:first-child {
     padding-left: 0;
 }
 
-.banner .content h4 span:last-child {
+.banner .content div span:last-child {
     border-right: none;
 }
 
-.banner .content h4 span i {
+.banner .content div span i {
     background: red;
     color: white;
     padding: 0 8px;
@@ -123,12 +110,7 @@
     margin: 10px 0 15px;
 }
 
-.banner .content .buttons {
-    position: relative;
-}
-
 .banner .content .buttons a {
-    position: relative;
     display: inline-block;
     margin-right: 5px;
     background: red;
@@ -141,10 +123,93 @@
 
 .banner .content .buttons a:nth-child(2) {
     background: rgba(14, 14, 14, 0.8);
+    transition: 0.5s;
 }
 
 .banner .content .buttons a:hover:nth-child(2) {
     background: red;
+    transition: 0.5s;
+}
+
+/* carrossel */
+
+.content_carousel {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    margin-top: 3%;
+    position: relative;
+    z-index: 999;
+}
+
+.c-carousel {
+    width: 100%;
+    padding: 0 30px;
+    height: 39vh;
+}
+
+.c-carousel:first-of-type {
+    margin-top: 80px;
+}
+
+.c-carousel__slides {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+}
+
+.c-carousel__slide img {
+    max-width: 200px;
+    border-radius: 1rem;
+}
+
+.button-carousel__rigth {
+    position: relative;
+    bottom: 305px;
+    left: 95%;
+    padding: 142px 18px 142px 18px;
+    border-radius: 6px;
+    border: 0;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: -8px 0px 10px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    z-index: 999;
+}
+
+.button-carousel__left {
+    position: relative;
+    right: 5px;
+    bottom: 305px;
+    padding: 142px 18px 142px 18px;
+    border-radius: 6px;
+    border: 0;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    z-index: 999;
+}
+
+.dots-carousel {
+    position: relative;
+    bottom: 68%;
+}
+
+.title_row {
+    z-index: 998;
+    position: relative;
+    bottom: 28px;
+    left: 30px;
+    font-size: 33px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* modal */
@@ -355,7 +420,6 @@
   'opsz' 48
 }
 
-
 .first_row .info span {
     margin-top: 5px;
 }
@@ -410,36 +474,55 @@
     z-index: 0;
 }
 
-@media screen  and (min-width: 350px) and (max-width: 700px) {
+
+@media (max-width: 1000px) {
+    .description {
+        max-width: 38vh;
+    }
+
+    .movieTitle {
+        max-width: 25vh;
+        margin-bottom: 2vh;
+    }
+
     .content {
+        margin-left: 1vh;
+    }
+
+    .img_url {
+        filter: brightness(0.8);
+    }
+}
+
+@media (max-width: 415px) {
+    .content_carousel {
+        grid-row-gap: 8vh;
+    }
+
+    .dots-carousel {
         position: relative;
-        z-index: 1;
-        transform: scale(0.75);
-        left: -8%;
-        bottom: 20%;
+        bottom: 80%;
+    }
+}
+
+@media (max-height: 815px) {
+    .content_carousel {
+        grid-row-gap: 11vh;
     }
 
-    .content img {
-        transform: scale(0.87);
-        margin-left: -7%;
+    .dots-carousel {
+        position: relative;
+        bottom: 87%;
+    }
+}
+
+@media (max-height: 745px) {
+    .content_carousel {
+        grid-row-gap: 19vh;
     }
 
-    #background {
-        position: absolute;
-        background-color: transparent;
-        width: 100%;
-        height: 1700px;
-        z-index: 0;
-    }
-
-    .banner .bg {
-        position: absolute;
-        top: -10px;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: brightness(80%);
-        transform: scale(1.3);
+    .dots-carousel {
+        position: relative;
+        bottom: 92%;
     }
 }
