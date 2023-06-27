@@ -91,6 +91,13 @@ class Play(DetailView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        movie = self.get_object()  # Obtém a instância do objeto Media
+        video_path = movie.media_file.url  # Obtém o caminho do vídeo
+        context['video_path'] = video_path  # Adiciona a variável de contexto
+        return context
+
 
 class Trailer(DetailView):
     model = models.Media

@@ -1,11 +1,13 @@
+    //
+    
     var player = videojs('my-video');
     let lastTime = 0;
 
     videojs('my-video', {}, function() {
-    var player = this;
-    player.controlBar.removeChild('PlayToggle');
-    player.controlBar.removeChild('CurrentTimeDisplay');
-    player.controlBar.removeChild
+      var player = this;
+      player.controlBar.removeChild('PlayToggle');
+      player.controlBar.removeChild('CurrentTimeDisplay');
+      player.controlBar.removeChild
     })
 
     //play and pause
@@ -59,10 +61,27 @@
 
     // Avançar em 10 segundos
 
-    document.querySelector('.fast-forward').addEventListener('click', function() {
-        var videoPlayer = videojs('my-video');
-        videoPlayer.currentTime(videoPlayer.currentTime() + 10);
-    });
+    // document.querySelector('.fast-forward').addEventListener('click', function() {
+    //     var videoPlayer = videojs('my-video');
+    //     videoPlayer.currentTime(videoPlayer.currentTime() + 10);
+    // });
+
+    function skipVideo(seconds) {
+      // Faz uma solicitação ao servidor Node.js para avançar o vídeo
+      fetch('/skip-video?seconds=' + seconds)
+        .then(response => {
+          // Verifica se a solicitação foi bem-sucedida
+          if (response.ok) {
+            console.log('Vídeo avançado em ' + seconds + ' segundos');
+          } else {
+            console.error('Falha ao avançar o vídeo');
+          }
+        })
+        .catch(error => {
+          console.error('Erro na solicitação', error);
+        });
+    }
+    
 
     // Volume
 

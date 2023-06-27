@@ -13,6 +13,7 @@
     <link href="{% static 'dist/video-js.min.css' %}" rel="stylesheet">
     <script src="{% static 'dist/video.min.js' %}"></script>
     <script src="{% static 'js/play.js' %}" defer></script>
+    <script src="https://unpkg.com/unfetch" defer></script>
 </head>
 <body>    
     <section class="section">
@@ -28,7 +29,7 @@
   
         <div class="container_video">
           <video id="my-video" class="video-js vjs-default-skin" data-setup='{"controls": false, "autoplay": true, "preload": "auto", "aspectRatio": "16:9"}'>
-            <source src="{{ movie.media_file.url }}" type='video/mp4'>
+            <source src="http://localhost:3000{{ video_path }}" type='video/mp4'>
             <p class="vjs-no-js">
               Para visualizar este vídeo, ative o JavaScript e considere a atualização para um navegador da Web que
               <a href="https://videojs.com/html5-video-support/" target="_blank">suporta vídeo HTML5</a>
@@ -54,7 +55,7 @@
               <span class="icon play_pause">
                 <i class="material-symbols-outlined pause-play">play_arrow</i>
               </span>
-              <span class="icon fast-forward" data-skip="+10">
+              <span class="icon fast-forward" data-skip="+10" onclick="skipVideo(10)">
                 <i class="material-symbols-outlined">forward_10</i>
               </span>
               <span class="icon volume">
@@ -91,7 +92,12 @@
     <script src="{% static 'video.js/dist/video.min.js' %}"></script>
     <script>
  
-
+    document.addEventListener('DOMContentLoaded', function() {
+        var video = document.getElementById('my-video');
+        video.addEventListener('loadedmetadata', function() {
+          video.currentTime = 30;
+        });
+      });
 
 
     </script>
