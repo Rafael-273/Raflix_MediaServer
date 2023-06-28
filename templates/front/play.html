@@ -26,6 +26,8 @@
           <div></div>
           <a href="{% url 'home' %}"><img src="{% static 'assets/logo.png' %}"/></a>
         </div>
+
+        <h1 id="path_video" hidden>http://localhost:3000{{ video_path }}</h1>
   
         <div class="container_video">
           <video id="my-video" class="video-js vjs-default-skin" data-setup='{"controls": false, "autoplay": true, "preload": "auto", "aspectRatio": "16:9"}'>
@@ -55,7 +57,7 @@
               <span class="icon play_pause">
                 <i class="material-symbols-outlined pause-play">play_arrow</i>
               </span>
-              <span class="icon fast-forward" data-skip="+10" onclick="skipVideo(10)">
+              <span class="icon fast-forward" data-skip="+10">
                 <i class="material-symbols-outlined">forward_10</i>
               </span>
               <span class="icon volume">

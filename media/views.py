@@ -161,7 +161,6 @@ class CreateMovieView(View):
                 release_year = form.cleaned_data['release_year'],
                 poster = form.cleaned_data['poster'],
                 banner = form.cleaned_data['banner'],
-                title_img = form.cleaned_data['title_img'],
             )
             media.save()
 

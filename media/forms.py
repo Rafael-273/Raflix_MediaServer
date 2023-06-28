@@ -105,12 +105,6 @@ class CreateMovieForm(forms.ModelForm):
         required=False
     )
 
-    title_img = forms.ImageField(
-        label="Logo PNG",
-        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'}),
-        required=False
-    )
-
     media_file = forms.FileField(
         label="Filme",
         validators=[
@@ -129,7 +123,7 @@ class CreateMovieForm(forms.ModelForm):
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
+        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
     
     def clean_poster(self):
         poster = self.cleaned_data['poster']
@@ -160,7 +154,6 @@ class CreateMovieForm(forms.ModelForm):
             release_year=self.cleaned_data['release_year'],
             poster=self.cleaned_data['poster'],
             banner=self.cleaned_data['banner'],
-            title_img=self.cleaned_data['title_img'],
             media_file=self.cleaned_data['media_file'],
             trailer=self.cleaned_data['trailer'],
         )
