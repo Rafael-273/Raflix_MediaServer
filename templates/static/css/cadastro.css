@@ -1,14 +1,15 @@
 
 .div_create {
-    width: 100%;
-    height: 41vw;
+    width: 100vw;
+    height: 85vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: center;
 }
 
 .scrool_info {
-    max-height: 400px;
+    max-height: 45vh;
     overflow: auto;
 }
 
@@ -16,7 +17,7 @@
     background-color: rgb(27, 27, 27);
     padding: 40px;
     border-radius: 20px;
-    width: 30%;
+    width: 30vw;
 }
 
 .create_body h1 {
@@ -110,4 +111,13 @@ textarea {
     background-color: #d1000a;
     padding: 10px;
     margin: 10px 0;
+  }
+
+  @media (max-width: 1000px) {
+    .create_body {
+        background-color: rgb(27, 27, 27);
+        padding: 40px;
+        border-radius: 20px;
+        width: 70vw;
+    }
   }
