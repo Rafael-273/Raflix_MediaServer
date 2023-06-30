@@ -42,14 +42,6 @@
     cursor: pointer;
 }
 
-.search_button {
-    margin: 7px 0 10px 0 !important;
-}
-
-.research_button {
-    margin: 0px 0 8px 0 !important;
-}
-
 .create_body button:hover {
     background-color: #fc1722;
     cursor: pointer;
