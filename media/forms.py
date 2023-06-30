@@ -225,10 +225,6 @@ class EditMovieForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'})
     )
 
-    title_img = forms.ImageField(
-        widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_title', 'hidden': 'hidden'})
-    )
-
     media_file = forms.FileField(
         validators=[
             FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
@@ -249,7 +245,6 @@ class EditMovieForm(forms.ModelForm):
         self.fields['release_year'].initial = self.instance.media.release_year
         self.fields['poster'].initial = self.instance.media.poster
         self.fields['banner'].initial = self.instance.media.banner
-        self.fields['title_img'].initial = self.instance.media.title_img
         self.fields['media_file'].initial = self.instance.media.media_file
         self.fields['trailer'].initial = self.instance.media.trailer
         self.fields['category'].choices = genre_choices
@@ -258,7 +253,7 @@ class EditMovieForm(forms.ModelForm):
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'title_img', 'media_file', 'trailer')
+        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
 
     def clean_poster(self):
         poster = self.cleaned_data['poster']
@@ -291,7 +286,6 @@ class EditMovieForm(forms.ModelForm):
         media.release_year = self.cleaned_data['release_year']
         media.poster = self.cleaned_data['poster']
         media.banner = self.cleaned_data['banner']
-        media.title_img = self.cleaned_data['title_img']
         media.media_file = self.cleaned_data['media_file']
         media.trailer = self.cleaned_data['trailer']
         media.save()

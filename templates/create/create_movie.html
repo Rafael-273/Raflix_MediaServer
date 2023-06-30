@@ -43,10 +43,6 @@ Create Movie
                         <label class="input-file-trigger input-media" for="{{ form.media_file.id_for_label }}">Selecione o Filme</label>
                         {% endif %}
 
-                        {% if "Logo PNG" in field.label %}
-                        <label class="input-file-trigger input-title" for="{{ form.title_img.id_for_label }}">Selecione o Título</label>
-                        {% endif %}
-
                         {% if "Banner" in field.label %}
                         <label class="input-file-trigger input-banner" for="{{ form.banner.id_for_label }}">Selecione o Banner</label>
                         {% endif %}
