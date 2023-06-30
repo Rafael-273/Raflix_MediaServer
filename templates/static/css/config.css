@@ -20,6 +20,7 @@ body {
     display: flex;
     align-content: center;
     justify-content: center;
+    align-self: center;
 }
 
 .menuConfig h2 {
@@ -76,10 +77,10 @@ body {
 }
 
 .menuConfigModal {
+    width: 40vw;
+    height: 30vh;
     background-color: rgb(20, 19, 19);
     border-radius: 20px;
-    width: 40%;
-    height: 21vw;
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr;
 }
@@ -89,21 +90,45 @@ body {
     font-size: 24px;
     font-weight: 500;
     display: flex;
+    align-content: center;
     justify-content: center;
+    align-self: center;
+}
+
+.menuConfigModalCadastro {
+    width: 40vw;
+    height: 30vh;
+    background-color: rgb(20, 19, 19);
+    border-radius: 20px;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    margin-bottom: 5%;
+}
+
+.menuConfigModalCadastro h2 {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-self: center;
 }
 
 .titleModal {
+    height: 10vh;
+    display: flex;
+    align-content: center;
     justify-content: center;
-    margin: 33px 0;
+    align-self: center;
 }
 
 .titleModal h5{
     color: rgba(255, 255, 255, 0.8);
     font-size: 22px;
     position: relative;
-    left: 90%;
-    bottom: 10px;
-    margin-top: -30px;
+    left: 35%;
+    top: 34%;
     cursor: pointer;
 }
 
@@ -123,12 +148,97 @@ body {
     transition: 0.3s;
 }
 
+.menuConfigModalCadastro button {
+    width: 100%;
+    padding: 40px;
+    font-size: 14px;
+    background-color: rgb(27, 27, 27);
+    border: 0;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+}
+
+.menuConfigModalCadastro button:hover {
+    background-color: rgb(32, 32, 32);
+    transition: 0.3s;
+}
+
 @media (max-width: 1000px) {
     .menuConfig {
         width: 60vw;
     }
 
+    .menuConfigModal {
+        width: 60vw;
+    }
+
+    .menuConfigModal button {
+        height: 7.5vh;
+    }
+
+    .menuConfigModalCadastro {
+        width: 60vw;
+    }
+
+    .menuConfigModalCadastro button {
+        height: 7.5vh;
+    }
+
     .title {
         height: 7vh;
     }
+
+    .titleModal {
+        height: 7vh;
+    }
+
+    .titleModal h5{
+        position: relative;
+        left: 30%;
+        top: 38%;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .menuConfigModal {
+        width: 80vw;
+        height: 60vh;
+    }
+
+    .menuConfigModalCadastro {
+        width: 80vw;
+        height: 60vh;
+    }
+
+    .menuConfig {
+        width: 80vw;
+        height: 60vh;
+    }
+
+    .menuConfigModal button {
+        height: 15vh;
+    }
+
+    .menuConfigModalCadastro button {
+        height: 15vh;
+    }
+
+    .titleModal h5{
+        position: relative;
+        left: 20%;
+        top: 27%;
+    }
+
+}
+
+@media screen  and (min-width: 1000px) and (max-width: 1024px) {
+
+    .titleModal h5{
+        position: relative;
+        left: 25%;
+        top: 33%;
+    }
+
 }

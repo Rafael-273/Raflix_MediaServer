@@ -14,22 +14,24 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 # from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
-from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm, EditUserForm
+from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm, EditUserForm, SmartCreateMovieForm
 from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
+from utils.utils import search_movie_and_download_torrent
+
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
-    
+
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm
     template_name = 'two_factor/core/login.html'
     success_url = reverse_lazy('home')
-    
+
     def form_valid(self, form):
         """
         Security check complete. Log the user in.
@@ -38,7 +40,7 @@ class CustomLoginView(LoginView):
         self.check_and_update_redirect_url()
         # Redirect to the success URL.
         return otp_login(self.request, form.get_user())
-    
+
 
 class Home(ListView):
     model = models.Media
@@ -143,6 +145,28 @@ class ConfigAll(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+
+class SmartCreateMovieView(View):
+    model = models.Media  # Define o modelo a ser utilizado
+    template_name = 'create/smart_create_movie.html'  # Define o template a ser utilizado
+    form_class = SmartCreateMovieForm
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, 'create/smart_create_movie.html', {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            # Chamar a função para buscar o filme e baixar o torrent
+            search_movie_and_download_torrent(title)
+            # Redirecionar para a página de sucesso ou outra página desejada
+            return redirect(reverse_lazy('home'))
+        else:
+            form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
 
 class CreateMovieView(View):

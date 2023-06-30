@@ -20,6 +20,7 @@ urlpatterns = [
     path('update_favorite/', views.UpdateFavoriteView.as_view(), name='update_favorite'),
     path('search/', views.SearchView.as_view(), name='search'),
     path('config', views.ConfigAll.as_view(), name='config'),
+    path('smart_create_movie', views.SmartCreateMovieView.as_view(), name='smart_create_movie'),
     path('create_movie', views.CreateMovieView.as_view(), name='create_movie'),
     path('create_user', views.CreateUserView.as_view(), name='create_user'),
     path('edit_movie/<slug>', views.EditMovieView.as_view(), name='edit_movie'),
