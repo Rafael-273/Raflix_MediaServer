@@ -1,14 +1,14 @@
-
 .div_create {
-    width: 100%;
-    height: 41vw;
+    width: 100vw;
+    height: 85vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: center;
 }
 
 .scrool_info {
-    max-height: 400px;
+    max-height: 45vh;
     overflow: auto;
 }
 
@@ -16,7 +16,7 @@
     background-color: rgb(27, 27, 27);
     padding: 40px;
     border-radius: 20px;
-    width: 30%;
+    width: 30vw;
 }
 
 .create_body h1 {
@@ -39,6 +39,14 @@
     margin-top: 20px;
     transition: 0.5s;   
     cursor: pointer;
+}
+
+.search_button {
+    margin: 7px 0 10px 0 !important;
+}
+
+.research_button {
+    margin: 0px 0 8px 0 !important;
 }
 
 .create_body button:hover {
@@ -110,4 +118,13 @@ textarea {
     background-color: #d1000a;
     padding: 10px;
     margin: 10px 0;
+  }
+
+  @media (max-width: 1000px) {
+    .create_body {
+        background-color: rgb(27, 27, 27);
+        padding: 40px;
+        border-radius: 20px;
+        width: 70vw;
+    }
   }
