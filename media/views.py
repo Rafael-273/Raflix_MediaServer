@@ -160,9 +160,9 @@ class SmartCreateMovieView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             title = form.cleaned_data['title']
-            # Chamar a função para buscar o filme e baixar o torrent
+            
             search_movie_and_download_torrent(title)
-            # Redirecionar para a página de sucesso ou outra página desejada
+
             return redirect(reverse_lazy('home'))
         else:
             form = self.form_class()

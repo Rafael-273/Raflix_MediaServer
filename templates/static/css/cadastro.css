@@ -49,6 +49,20 @@
     margin: 0px 0 8px 0 !important;
 }
 
+.title_smart {
+    margin-bottom: 4%;
+}
+
+.search_smart_button {
+    background-color: #810d0d !important;
+    margin: 7px 0 10px 0 !important;
+}
+
+.research_smart_button {
+    background-color: #810d0d !important;
+    margin: 0px 0 8px 0 !important;
+}
+
 .create_body button:hover {
     background-color: #fc1722;
     cursor: pointer;
@@ -120,7 +134,7 @@ textarea {
     margin: 10px 0;
   }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1090px) {
     .create_body {
         background-color: rgb(27, 27, 27);
         padding: 40px;

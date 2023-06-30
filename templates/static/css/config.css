@@ -164,9 +164,9 @@ body {
     transition: 0.3s;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1090px) {
     .menuConfig {
-        width: 60vw;
+        width: 60vw !important;
     }
 
     .menuConfigModal {
