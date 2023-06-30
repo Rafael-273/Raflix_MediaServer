@@ -31,14 +31,13 @@ Home
 </div>
 
 <div class="Modalcontent closedModal" id="addModal">
-    <div class="menuConfigModalCadastro">
+    <div class="menuConfigModal">
         <div class="titleModal">
-            <h2><b>Cadastro</b></h2>
+            <h2>Cadastro</h2><h2><b>Raflix</b></h2>
             <h5 onclick="closedModal(this)">x</h5>
         </div>
-        <a href="{% url 'smart_create_movie' %}"><button>Raflix Smart</button></a>
         <a href="{% url 'create_movie' %}"><button>Filmes</button></a>
-        <a href=""><button>Séries</button></a>
+        <button>Séries</button>
         <a href="{% url 'create_user' %}"><button style="border-radius: 0 0 20px 20px;">Usuários</button></a>
     </div>
 </div>
@@ -46,7 +45,7 @@ Home
 <div class="Modalcontent closedModal" id="editModal">
     <div class="menuConfigModal">
         <div class="titleModal">
-            <h2><b>Edição</b></h2>
+            <h2>Edição</h2><h2><b>Raflix</b></h2>
             <h5 onclick="closedModal(this)">x</h5>
         </div>
         <a href="{% url 'list_movies' %}"><button>Filmes</button></a>
@@ -58,7 +57,7 @@ Home
 <div class="Modalcontent closedModal" id="removeModal">
     <div class="menuConfigModal">
         <div class="titleModal">
-            <h2><b>Remover</b></h2>
+            <h2>Remover</h2><h2><b>Raflix</b></h2>
             <h5 onclick="closedModal(this)">x</h5>
         </div>
         <a href="{% url 'list_movies_delete' %}"><button>Filmes</button></a>
@@ -87,14 +86,17 @@ Home
             if(button.textContent == 'Cadastrar'){
                 modals[1].classList.remove('closedModal')
                 modals[1].classList.add('openModal')
+                rodape.style.cssText = 'position: relative; top: 29vw;'  
             }
             else if(button.textContent == 'Editar'){
                 modals[2].classList.remove('closedModal')
                 modals[2].classList.add('openModal')
+                rodape.style.cssText = 'position: relative; top: 29vw;'  
             }
             else if(button.textContent == 'Remover'){
                 modals[3].classList.remove('closedModal')
                 modals[3].classList.add('openModal')
+                rodape.style.cssText = 'position: relative; top: 29vw;'  
             }
         }
 
@@ -108,6 +110,7 @@ Home
             const modals = document.getElementsByClassName('Modalcontent')[0]
             modals.classList.remove('closedModal')
             modals.classList.add('openModal')
+            modals.style.cssText = 'position: relative; top: 1.5vw;'  
         }
 </script>
 {% endblock %}
