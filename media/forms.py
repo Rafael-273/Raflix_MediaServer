@@ -46,6 +46,21 @@ class LoginForm(AuthenticationForm):
             raise forms.ValidationError('User account is disabled.')
 
 
+class SmartCreateMovieForm(forms.ModelForm):
+    title = forms.CharField(
+        label="Título",
+        widget=forms.TextInput(attrs={'class': 'input_text', 'placeholder': 'Insira o título do filme'})
+    )
+
+    class Meta:
+        model = Media
+        fields = ('title',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'input_text'})
+
+
 class CreateMovieForm(forms.ModelForm):
     duration = forms.CharField(
         label="Duração",

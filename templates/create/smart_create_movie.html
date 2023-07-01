@@ -1,0 +1,106 @@
+{% extends 'static/base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Create Movie
+
+{% endblock %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/cadastro.css">
+
+{% endblock %}
+
+{% block conteudo %}
+
+    <div class="div_create">
+        <div class="create_body">
+            <h1 class='title_smart'>Raflix Smart</h1>
+            <div class="scrool_info">
+            <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.title }}
+                        <button type="button" id="searchMovieButton" class='search_smart_button'>Pesquisar Filme</button>
+                        <button type="button" id="researchMovieButton" class='research_smart_button'>Não Encontrou?</button>
+            </div>
+            <br>
+            <button type="submit">Baixar Filme</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+
+    let movieResults = [];
+
+    function searchMovie(title) {
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results.length > 0) {
+                    movieResults = data.results; // Armazena todos os resultados da busca
+
+                    const movie = movieResults[0]; // Obtém o primeiro resultado por padrão
+
+                    fetch(`https://api.themoviedb.org/3/movie/${movie.id}?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR`)
+                        .then(response => response.json())
+                        .then(movieDetails => {
+
+                            document.getElementById("id_title").value = movie.title;
+
+                        })
+                        .catch(error => {
+                            console.error("Ocorreu um erro ao buscar os detalhes do filme:", error);
+                            alert("Ocorreu um erro ao buscar os detalhes do filme.");
+                        });
+                } else {
+                    alert("Nenhum resultado encontrado para o filme informado.");
+                }
+            })
+            .catch(error => {
+                console.error("Ocorreu um erro ao buscar os metadados do filme:", error);
+                alert("Ocorreu um erro ao buscar os metadados do filme.");
+            });
+    }
+
+    document.getElementById("researchMovieButton").addEventListener("click", function() {
+        if (movieResults.length > 1) {
+            // Obter o próximo resultado na lista de resultados
+            const currentIndex = movieResults.findIndex(movie => movie.title === document.getElementById("id_title").value);
+            const nextIndex = (currentIndex + 1) % movieResults.length;
+            const nextMovie = movieResults[nextIndex];
+
+            // Atualizar os campos com os dados do próximo filme
+            fetch(`https://api.themoviedb.org/3/movie/${nextMovie.id}?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR`)
+                .then(response => response.json())
+                .then(movieDetails => {
+
+                    document.getElementById("id_title").value = nextMovie.title;
+                   
+                })
+                .catch(error => {
+                    console.error("Ocorreu um erro ao buscar os detalhes do filme:", error);
+                    alert("Ocorreu um erro ao buscar os detalhes do filme.");
+                });
+        } else {
+            alert("Não há outros resultados disponíveis.");
+        }
+    });
+
+    document.getElementById("searchMovieButton").addEventListener("click", function() {
+        const title = document.getElementById("id_title").value;
+
+        if (title) {
+            searchMovie(title);
+            fetchAndDisplayImage(title);
+        } else {
+            alert("Por favor, digite o título do filme.");
+        }
+    });
+
+
+</script>
+  
+{% endblock %}
