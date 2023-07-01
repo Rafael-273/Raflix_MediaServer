@@ -1,112 +1,145 @@
+import qbittorrent
 import requests
-import shutil
+import urllib.parse
 
-def search_movie_and_download_torrent(title):
-    # Realizar a pesquisa do filme via torrent com base no título
-    search_query = f"{title} torrent"
-    search_url = f"https://your-torrent-search-api.com?q={search_query}"
+def search_movie(movie_name, movie_date):
+    sites = [
+        {
+            'name': 'piratebay',
+            'url': 'http://localhost:8090/api/v1/search',
+            'category': 'Movies',
+            'language': 'Portuguese'
+        },
+        {
+            'name': 'yourbittorrent',
+            'url': 'http://localhost:8090/api/v1/search',
+            'category': 'Movies',
+            'language': 'Portuguese'
+        },
+        {
+            'name': 'torrentfunk',
+            'url': 'http://localhost:8090/api/v1/search',
+            'category': 'Movies',
+            'language': 'Portuguese'
+        },
+        {
+            'name': 'bitsearch',
+            'url': 'http://localhost:8090/api/v1/search',
+            'category': 'Movies',
+            'language': 'Portuguese'
+        },
+        {
+            'name': 'torlock',
+            'url': 'http://localhost:8090/api/v1/search',
+            'category': 'Movies',
+            'language': 'Portuguese'
+        }
+    ]
 
-    # Fazer uma solicitação GET para a API de pesquisa de torrent
-    response = requests.get(search_url)
+    # Codifica o nome do filme para substituir espaços por %20
+    encoded_movie_name = urllib.parse.quote(movie_name)
 
-    # Verificar se a solicitação foi bem-sucedida
-    if response.status_code == 200:
-        # Extrair o link do torrent dos resultados da pesquisa
-        torrent_link = extract_torrent_link(response.json())
+    torrent_links_1080p = {}
+    torrent_links_720p = {}
 
-        # Verificar se o link do torrent foi encontrado
-        if torrent_link:
-            # Fazer o download do arquivo torrent
-            download_path = f"downloads/{title}.torrent"
-            download_torrent(torrent_link, download_path)
+    for site in sites:
+        search_url = f"{site['url']}?site={site['name']}&query={encoded_movie_name}&date={movie_date}&category={site['category']}&language={site['language']}"
 
-            # Salvar o arquivo torrent no banco de dados ou realizar outras ações necessárias
+        print(search_url)
 
-            # Retornar uma mensagem de sucesso
-            return f"O filme '{title}' foi encontrado e o torrent foi baixado com sucesso!"
-        else:
-            return f"O filme '{title}' foi encontrado, mas não foi possível encontrar um link de torrent."
+        # Faz a solicitação GET para o endpoint de pesquisa da API
+        response = requests.get(search_url)
+
+        # Verifica se a solicitação foi bem-sucedida (código de status 200)
+        if response.status_code == 200:
+            # Obtém os dados da resposta em formato JSON
+            data = response.json()
+
+            # Verifica se existem resultados
+            if 'data' in data:
+                results = data['data']
+
+                # Limita os resultados aos primeiros 5 itens
+                results = results[:15]
+
+                # Verifica a qualidade dos filmes e armazena os links dos torrents
+                for result in results:
+                    name = result['name'].lower()
+                    seeders = int(result['seeders'])
+                    leechers = int(result['leechers'])
+
+                    if '1080p' in name and seeders >= 10 and leechers >= 10:
+                        torrent_links_1080p[seeders] = result['magnet']
+                    elif '720p' in name and seeders >= 10 and leechers >= 10:
+                        torrent_links_720p[seeders] = result['magnet']
+
+    # Verifica se foram encontrados links de torrent
+    if torrent_links_1080p:
+        max_seeders_1080p = max(torrent_links_1080p.keys())
+        torrent_links_1080p = [torrent_links_1080p[max_seeders_1080p]]
+        print(torrent_links_1080p)
     else:
-        return "Ocorreu um erro ao realizar a pesquisa de torrent."
+        torrent_links_1080p = []
 
-def extract_torrent_link(results):
-    # Implemente a lógica para extrair o link do torrent dos resultados da pesquisa
-    # Retorne o link do torrent encontrado ou None caso não seja encontrado
-    pass
+    if torrent_links_720p:
+        max_seeders_720p = max(torrent_links_720p.keys())
+        torrent_links_720p = [torrent_links_720p[max_seeders_720p]]
+        print(torrent_links_720p)
+    else:
+        torrent_links_720p = []
 
-def download_torrent(url, path):
-    # Fazer o download do arquivo torrent e salvá-lo no caminho especificado
-    response = requests.get(url, stream=True)
-    with open(path, "wb") as file:
-        shutil.copyfileobj(response.raw, file)
-    del response
+    if torrent_links_1080p or torrent_links_720p:
+        return torrent_links_1080p + torrent_links_720p
+    else:
+        print('Não foram encontrados filmes com as qualidades desejadas.')
 
-def search_movie(title):
+def get_date_movie(title):
     api_key = 'c3ed7390e52d4dddf37320bd22ea8a64'
-    base_url = 'https://api.themoviedb.org/3'
+    language = 'pt-BR'
 
-    search_url = f'{base_url}/search/movie'
-    params = {
-        'api_key': api_key,
-        'language': 'pt-BR',
-        'query': title
-    }
-    response = requests.get(search_url, params=params)
+    search_url = f'https://api.themoviedb.org/3/search/movie?api_key={api_key}&language={language}&query={title}'
+    response = requests.get(search_url)
     data = response.json()
 
-    if data['results']:
+    # Verifica se foram encontrados resultados
+    if 'results' in data and len(data['results']) > 0:
         movie = data['results'][0]
-
+        # Obtém o ID do filme para buscar os detalhes
         movie_id = movie['id']
-        details_url = f'{base_url}/movie/{movie_id}'
-        params['language'] = 'pt-BR'  # Atualiza o idioma para a descrição do filme
-        response = requests.get(details_url, params=params)
+
+        # Faz a solicitação GET para buscar os detalhes do filme
+        details_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language={language}'
+        response = requests.get(details_url)
         movie_details = response.json()
 
-        # Extraia as informações relevantes do filme
-        title = movie['title']
-        release_year = movie['release_date'][:4]
+        release_year = movie_details['release_date'][:4]
 
-        # Verifique a disponibilidade do download no torrent
-        torrent_available = check_torrent_availability(title)
-
-        # Retorne as informações do filme e a disponibilidade do torrent
-        return {
-            'title': title,
-            'release_year': release_year,
-            'torrent_available': torrent_available
-        }
+        return release_year
     else:
         return None
 
-def check_torrent_availability(title):
-    # Lógica para verificar a disponibilidade do download no torrent
-    # Você pode usar uma biblioteca como `torrentool` para pesquisar e verificar o download do torrent
-    # Exemplo:
-    # import torrentool
+def search_movie_and_download_torrent(title):
+    date = get_date_movie(title)
+    download_links = search_movie(title, date)
 
-    # Código para pesquisar e verificar o download do torrent
-    # ...
+    if download_links:
+        if download_torrent(download_links[0]):
+            return f"O filme '{title}' foi encontrado e o primeiro torrent foi baixado com sucesso!"
+        else:
+            return f"O filme '{title}' foi encontrado, mas ocorreu um erro ao iniciar o download do torrent."
+    else:
+        return f"O filme '{title}' foi encontrado, mas não foram encontrados dois links de torrent."
 
-    # Retorna True se o download estiver disponível ou False caso contrário
-    return True
+def download_torrent(torrent_link):
+    client = qbittorrent.Client('http://localhost:8080/')
+    client.login('admin', 'adminadmin')
+    response = client.download_from_link(torrent_link)
+    print(response)
 
-# Exemplo de uso da função
-title = 'nome_do_filme'
-movie_data = search_movie(title)
-if movie_data:
-    # Preencha os campos do modelo Media e salve no banco de dados
-    media = Media(
-        title=movie_data['title'],
-        description=movie_data['description'],
-        release_year=movie_data['release_year'],
-        # Preencha os outros campos do modelo conforme necessário
-    )
-    media.save()
-
-    # Verifique a disponibilidade do torrent
-    if movie_data['torrent_available']:
-        # Inicie o download do torrent
-        download_torrent(movie_data['title'])
-else:
-    print(f'Nenhum resultado encontrado para o filme "{title}"')
+    # Verifica se o download foi iniciado com sucesso
+    if response == 'Ok.':
+        client.logout()
+        return True
+    else:
+        client.logout()
+        return False

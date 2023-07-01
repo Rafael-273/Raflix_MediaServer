@@ -19,6 +19,8 @@ from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
 from utils.utils import search_movie_and_download_torrent
+import threading
+import time
 
 
 class LogoutView(View):
@@ -148,8 +150,8 @@ class ConfigAll(ListView):
 
 
 class SmartCreateMovieView(View):
-    model = models.Media  # Define o modelo a ser utilizado
-    template_name = 'create/smart_create_movie.html'  # Define o template a ser utilizado
+    model = models.Media
+    template_name = 'create/smart_create_movie.html'
     form_class = SmartCreateMovieForm
 
     def get(self, request):
@@ -160,7 +162,8 @@ class SmartCreateMovieView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             title = form.cleaned_data['title']
-            
+            print(title)
+
             search_movie_and_download_torrent(title)
 
             return redirect(reverse_lazy('home'))
