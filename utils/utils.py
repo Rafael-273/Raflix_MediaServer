@@ -2,8 +2,9 @@ import qbittorrent
 import requests
 import urllib.parse
 from pytube import YouTube, Search
+from media import models
+from media.forms import CreateMovieForm
 import os
-import subprocess
 
 def search_movie(movie_name, movie_date):
     sites = [
@@ -36,6 +37,12 @@ def search_movie(movie_name, movie_date):
             'url': 'http://localhost:8090/api/v1/search',
             'category': 'Movies',
             'language': 'Portuguese'
+        },
+        {
+            'name': 'torrentproject',
+            'url': 'http://localhost:8090/api/v1/search',
+            'category': 'Movies',
+            'language': 'Portuguese'
         }
     ]
 
@@ -46,6 +53,8 @@ def search_movie(movie_name, movie_date):
 
     for site in sites:
         search_url = f"{site['url']}?site={site['name']}&query={encoded_movie_name}&date={movie_date}&category={site['category']}&language={site['language']}"
+
+        print(search_url)
     
         response = requests.get(search_url)
 
@@ -77,28 +86,6 @@ def get_download_links(torrent_links_1080p, torrent_links_720p):
         return [torrent_links_720p[max_seeders_720p]]
     else:
         return []
-
-def get_date_movie(title):
-    api_key = 'c3ed7390e52d4dddf37320bd22ea8a64'
-    language = 'pt-BR'
-
-    search_url = f'https://api.themoviedb.org/3/search/movie?api_key={api_key}&language={language}&query={title}'
-    response = requests.get(search_url)
-    data = response.json()
-
-    if 'results' in data and len(data['results']) > 0:
-        movie = data['results'][0]
-        movie_id = movie['id']
-
-        details_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language={language}'
-        response = requests.get(details_url)
-        movie_details = response.json()
-
-        release_year = movie_details['release_date'][:4]
-
-        return release_year
-    else:
-        return None
 
 def get_genre_names(genre_ids):
     api_key = 'c3ed7390e52d4dddf37320bd22ea8a64'
@@ -140,31 +127,90 @@ def get_movie_data(title):
         genre_ids = movie['genre_ids']
         category = get_genre_names(genre_ids)
 
-        movie_data = {
-            'description': description,
-            'release_year': release_year,
-            'category': category
-        }
+        duration = None
+        if 'runtime' in movie_details:
+            duration = movie_details['runtime']
 
-        return movie_data
+        return description, release_year, category, duration
+
     else:
-        return None
+        return None, None, None, None
+
+
+def get_movie_poster(title):
+    api_key = 'c3ed7390e52d4dddf37320bd22ea8a64'
+    language = 'pt-BR'
+
+    search_url = f'https://api.themoviedb.org/3/search/movie?api_key={api_key}&language={language}&query={title}'
+    response = requests.get(search_url)
+    data = response.json()
+
+    if 'results' in data and len(data['results']) > 0:
+        movie = data['results'][0]
+        poster_path = movie['poster_path']
+
+        if poster_path:
+            base_url = 'https://image.tmdb.org/t/p/'
+            image_url = f'{base_url}w500{poster_path}'
+
+            # Baixar a imagem do pôster
+            response = requests.get(image_url)
+            if response.status_code == 200:
+                # Salvar a imagem em um diretório local
+                poster_directory = '/home/rafael/Downloads/poster'  # Altere o diretório conforme necessário
+                os.makedirs(poster_directory, exist_ok=True)
+                poster_filename = f'{title}_poster.jpg'
+                poster_path = os.path.join(poster_directory, poster_filename)
+                with open(poster_path, 'wb') as f:
+                    f.write(response.content)
+
+                return poster_path
+
+    return None
 
 def process_movie(title):
-    date = get_date_movie(title)
-    download_links = search_movie(title, date)
+    description, release_year, category, duration = get_movie_data(title)
+    download_links = search_movie(title, release_year)
+    output_poster = get_movie_poster(title)
     output_trailer = f'/home/rafael/Downloads/trailer_{title}'
-    search_and_download_trailer(title, output_trailer)
+    output_movie = f'/home/rafael/Downloads/movie_{title}'
 
     if download_links:
-        download_torrent(download_links[0])
+        movie_torrent = download_torrent(download_links[0], output_movie)
+        trailer_torrent = search_and_download_trailer(title, output_trailer)
+
+        download_torrent(download_links[0], output_movie)
+        search_and_download_trailer(title, output_trailer)
+        
+        if movie_torrent and trailer_torrent:
+            form = CreateMovieForm({
+                'media_file': output_movie,
+                'trailer': output_trailer,
+                'title': title,
+                'release_year': release_year,
+                'description': description,
+                'duration': duration,
+                'classification': '12',
+                'category': category[0],
+                'poster': output_poster,
+            })
+
+            if form.is_valid():
+                create_movie_entry(form)
+                return f"O filme '{title}' foi processado com sucesso e os registros foram criados."
+            else:
+                errors = form.errors
+                print(errors)
+                return "Erro ao preencher o formulário para o filme '{title}'. Erros: {errors}"
+        else:
+            return f"Erro ao baixar torrent ou trailer para o filme '{title}'."
     else:
         return f"O filme '{title}' foi encontrado, mas não foram encontrados dois links de torrent."
 
-def download_torrent(torrent_link):
+def download_torrent(torrent_link, output_movie):
     client = qbittorrent.Client('http://localhost:8080/')
     client.login('admin', 'adminadmin')
-    response = client.download_from_link(torrent_link)
+    response = client.download_from_link(torrent_link, save_path=output_movie)
     print(response)
 
     # Verifica se o download foi iniciado com sucesso
@@ -183,12 +229,36 @@ def search_and_download_trailer(title, output_trailer):
         search_results.append(trailer.watch_url)
 
     if search_results:
-        video_path = os.path.join(output_trailer, 'trailer_video')
-        audio_path = os.path.join(output_trailer, 'trailer_audio')
-        YouTube(search_results[0]).streams.filter(progressive=False, file_extension='mp4').order_by('resolution').desc().first().download(output_path=video_path)
-        YouTube(search_results[0]).streams.filter(only_audio=True, file_extension='mp4').first().download(output_path=audio_path)
-        output_path = output_trailer + '.mp4'
-        subprocess.run(['ffmpeg', '-i', video_path, '-i', audio_path, '-c', 'copy', output_path])
-        print('Trailer baixado com sucesso!')
+        YouTube(search_results[0]).streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(output_path=output_trailer)
+        return True
     else:
-        print('Nenhum vídeo encontrado.')
+        return False
+
+def create_movie_entry(form):
+    media = models.Media(
+        media_file=form.cleaned_data['media_file'],
+        trailer=form.cleaned_data['trailer'],
+        title=form.cleaned_data['title'],
+        release_year=form.cleaned_data['release_year'],
+        poster=form.cleaned_data['poster'],
+    )
+    media.save()
+
+    genre = models.Genre(
+        category=form.cleaned_data['category']
+    )
+    genre.save()
+
+    movie = models.Movie(
+        description=form.cleaned_data['description'],
+        duration=form.cleaned_data['duration'],
+        classification=form.cleaned_data['classification'],
+        media=media,
+    )
+    movie.save()
+
+    movie_has_genre = models.Movie_has_genre(
+        genre=genre,
+        movie=movie
+    )
+    movie_has_genre.save()

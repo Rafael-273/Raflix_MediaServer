@@ -123,11 +123,6 @@ class Media(models.Model):
         for movie in movies:
             return movie.description
 
-    def getShortDescription(self):
-        movies = self.media_has_movie.all()
-        for movie in movies:
-            return movie.short_description
-
     def getCategory(self):
         movies = self.media_has_movie.all()
         for movie in movies:
@@ -136,7 +131,6 @@ class Media(models.Model):
 
 class Movie(models.Model):
     description = models.TextField()
-    short_description = models.TextField(max_length=500, null=True, blank=True)
     duration = models.CharField(max_length=10)
     classification = models.CharField(max_length=12)
     media = models.ForeignKey(

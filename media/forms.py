@@ -108,12 +108,6 @@ class CreateMovieForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira a descrição do filme'})
     )
 
-    short_description = forms.CharField(
-        label="Descrição Resumida",
-        max_length=255,
-        widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira a descrição resumida do filme'})
-    )
-
     banner = forms.ImageField(
         label="Banner",
         widget=forms.ClearableFileInput(attrs={'class': 'input_button', 'id': 'input_banner', 'hidden': 'hidden'}),
@@ -138,7 +132,7 @@ class CreateMovieForm(forms.ModelForm):
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
+        fields = ('title', 'description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
     
     def clean_poster(self):
         poster = self.cleaned_data['poster']
@@ -268,7 +262,7 @@ class EditMovieForm(forms.ModelForm):
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
+        fields = ('title', 'description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner','media_file',  'trailer')
 
     def clean_poster(self):
         poster = self.cleaned_data['poster']

@@ -18,7 +18,7 @@ from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm, Edi
 from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
-from utils.utils import search_movie_and_download_torrent
+from utils.utils import process_movie
 import threading
 import time
 
@@ -164,7 +164,7 @@ class SmartCreateMovieView(View):
             title = form.cleaned_data['title']
             print(title)
 
-            search_movie_and_download_torrent(title)
+            process_movie(title)
 
             return redirect(reverse_lazy('home'))
         else:
@@ -198,7 +198,6 @@ class CreateMovieView(View):
 
             movie = models.Movie(
                 description=form.cleaned_data['description'],
-                short_description=form.cleaned_data['short_description'],
                 duration=form.cleaned_data['duration'],
                 classification=form.cleaned_data['classification'],
                 media=media,
