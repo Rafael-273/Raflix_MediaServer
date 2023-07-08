@@ -5,6 +5,9 @@ from pytube import YouTube, Search
 from media import models
 from media.forms import CreateMovieForm
 import os
+from django.core.files import File
+from fuzzywuzzy import fuzz
+import time
 
 def search_movie(movie_name, movie_date):
     sites = [
@@ -170,30 +173,43 @@ def get_movie_poster(title):
 
 def process_movie(title):
     description, release_year, category, duration = get_movie_data(title)
+    category_sigla = next((sigla for sigla, label in models.genre_choices if label == category[0]), None)
     download_links = search_movie(title, release_year)
-    output_poster = get_movie_poster(title)
-    output_trailer = f'/home/rafael/Downloads/trailer_{title}'
-    output_movie = f'/home/rafael/Downloads/movie_{title}'
+    output_trailer = '/home/rafael/Downloads/trailer'
+    clean_title = title.replace(':', '').replace(' ', '_')
+    put_trailer = f'/home/rafael/Downloads/trailer/{clean_title}_trailer.mp4'
+    put_movie = f'/home/rafael/Downloads/movie/{clean_title}_movie.mkv'
+    put_poster = f'/home/rafael/Downloads/poster/{clean_title}_poster.jpg'
+    output_movie = '/home/rafael/Downloads/movie'
 
     if download_links:
-        movie_torrent = download_torrent(download_links[0], output_movie)
-        trailer_torrent = search_and_download_trailer(title, output_trailer)
+        movie_torrent = download_torrent(download_links[0], output_movie, clean_title)
+        get_movie_poster(clean_title)
+        trailer_torrent = search_and_download_trailer(clean_title, output_trailer)
 
-        download_torrent(download_links[0], output_movie)
-        search_and_download_trailer(title, output_trailer)
-        
         if movie_torrent and trailer_torrent:
+
             form = CreateMovieForm({
-                'media_file': output_movie,
-                'trailer': output_trailer,
+                'media_file': put_movie,
+                'trailer': put_trailer,
                 'title': title,
                 'release_year': release_year,
                 'description': description,
                 'duration': duration,
                 'classification': '12',
-                'category': category[0],
-                'poster': output_poster,
+                'category': category_sigla,
+                'poster': put_poster,
             })
+
+            # Crie os objetos de arquivo usando a classe File
+            movie_file_object = File(open(put_movie, 'rb'))
+            trailer_file_object = File(open(put_trailer, 'rb'))
+            poster_file_object = File(open(put_poster, 'rb'))
+
+            # Atribua os objetos de arquivo ao atributo 'files' do formulário
+            form.files['media_file'] = movie_file_object
+            form.files['trailer'] = trailer_file_object
+            form.files['poster'] = poster_file_object
 
             if form.is_valid():
                 create_movie_entry(form)
@@ -201,20 +217,40 @@ def process_movie(title):
             else:
                 errors = form.errors
                 print(errors)
-                return "Erro ao preencher o formulário para o filme '{title}'. Erros: {errors}"
+                return f"Erro ao preencher o formulário para o filme '{title}'. Erros: {errors}"
+
         else:
             return f"Erro ao baixar torrent ou trailer para o filme '{title}'."
     else:
         return f"O filme '{title}' foi encontrado, mas não foram encontrados dois links de torrent."
 
-def download_torrent(torrent_link, output_movie):
+def download_torrent(torrent_link, output_movie, title):
     client = qbittorrent.Client('http://localhost:8080/')
     client.login('admin', 'adminadmin')
     response = client.download_from_link(torrent_link, save_path=output_movie)
     print(response)
 
-    # Verifica se o download foi iniciado com sucesso
     if response == 'Ok.':
+
+        time.sleep(15)
+
+        files = os.listdir(output_movie)
+        mkv_files = [file for file in files if file.endswith('.mkv')]
+
+        best_match = None
+        best_similarity = 0
+
+        for filename in mkv_files:
+            similarity = fuzz.ratio(title, filename)
+            if similarity > best_similarity:
+                best_match = filename
+                best_similarity = similarity
+
+        if best_match:
+            original_filename = os.path.join(output_movie, best_match)
+            new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
+            os.rename(original_filename, new_filename)
+
         client.logout()
         return True
     else:
@@ -230,6 +266,11 @@ def search_and_download_trailer(title, output_trailer):
 
     if search_results:
         YouTube(search_results[0]).streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(output_path=output_trailer)
+
+        original_filename = os.path.join(output_trailer, os.listdir(output_trailer)[0])
+        new_filename = os.path.join(output_trailer, f'{title}_trailer.mp4')
+        os.rename(original_filename, new_filename)
+ 
         return True
     else:
         return False
