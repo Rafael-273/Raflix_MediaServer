@@ -8,6 +8,8 @@ import os
 from django.core.files import File
 from fuzzywuzzy import fuzz
 import time
+from django.conf import settings
+
 
 def search_movie(movie_name, movie_date):
     sites = [
@@ -160,10 +162,11 @@ def get_movie_poster(title):
             response = requests.get(image_url)
             if response.status_code == 200:
                 # Salvar a imagem em um diretório local
-                poster_directory = '/home/rafael/Downloads/poster'  # Altere o diretório conforme necessário
-                os.makedirs(poster_directory, exist_ok=True)
-                poster_filename = f'{title}_poster.jpg'
-                poster_path = os.path.join(poster_directory, poster_filename)
+                temp_directory = os.path.join(settings.BASE_DIR, 'img/temp/poster')
+                os.makedirs(temp_directory, exist_ok=True)
+                clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+                poster_filename = f'{clean_title}_poster.jpg'
+                poster_path = os.path.join(temp_directory, poster_filename)
                 with open(poster_path, 'wb') as f:
                     f.write(response.content)
 
@@ -175,16 +178,16 @@ def process_movie(title):
     description, release_year, category, duration = get_movie_data(title)
     category_sigla = next((sigla for sigla, label in models.genre_choices if label == category[0]), None)
     download_links = search_movie(title, release_year)
-    output_trailer = '/home/rafael/Downloads/trailer'
-    clean_title = title.replace(':', '').replace(' ', '_')
-    put_trailer = f'/home/rafael/Downloads/trailer/{clean_title}_trailer.mp4'
-    put_movie = f'/home/rafael/Downloads/movie/{clean_title}_movie.mkv'
-    put_poster = f'/home/rafael/Downloads/poster/{clean_title}_poster.jpg'
-    output_movie = '/home/rafael/Downloads/movie'
+    output_trailer = os.path.join(settings.BASE_DIR, 'img/temp/trailer')
+    output_movie = os.path.join(settings.BASE_DIR, 'img/temp/movie')
+    clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+    put_trailer = os.path.join(settings.BASE_DIR, f'img/temp/trailer/{clean_title}_trailer.mp4')
+    put_movie = os.path.join(settings.BASE_DIR, f'img/temp/movie/{clean_title}_movie.mkv')
+    put_poster = os.path.join(settings.BASE_DIR, f'img/temp/poster/{clean_title}_poster.jpg')
 
     if download_links:
         movie_torrent = download_torrent(download_links[0], output_movie, clean_title)
-        get_movie_poster(clean_title)
+        get_movie_poster(title)
         trailer_torrent = search_and_download_trailer(clean_title, output_trailer)
 
         if movie_torrent and trailer_torrent:
