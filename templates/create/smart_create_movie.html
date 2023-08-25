@@ -15,6 +15,28 @@ Create Movie
 
 {% block conteudo %}
 
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Processando o filme...</p>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="messages_movie">
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            <div class="buttons">
+                <a href="{% url 'home' %}" class="btn">Home</a>
+                <a href="javascript:history.back()" class="btn">Voltar</a>
+            </div>
+        </div>
+        <div class="background"></div>
+    {% endif %}
+
     <div class="div_create">
         <div class="create_body">
             <h1 class='title_smart'>Raflix Smart</h1>
@@ -26,7 +48,7 @@ Create Movie
                         <button type="button" id="researchMovieButton" class='research_smart_button'>Não Encontrou?</button>
             </div>
             <br>
-            <button type="submit">Baixar Filme</button>
+            <button id="save-button" type="submit">Baixar Filme</button>
             </form>
         </div>
     </div>
@@ -35,14 +57,18 @@ Create Movie
 
     let movieResults = [];
 
+    document.getElementById("searchMovieButton").addEventListener("click", function() {
+        const title = document.getElementById("id_title").value;
+        searchMovie(title);
+    });
+
     function searchMovie(title) {
         fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
             .then(response => response.json())
             .then(data => {
                 if (data.results.length > 0) {
-                    movieResults = data.results; // Armazena todos os resultados da busca
-
-                    const movie = movieResults[0]; // Obtém o primeiro resultado por padrão
+                    movieResults = data.results;
+                    const movie = movieResults[0];
 
                     fetch(`https://api.themoviedb.org/3/movie/${movie.id}?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR`)
                         .then(response => response.json())
@@ -76,31 +102,24 @@ Create Movie
             fetch(`https://api.themoviedb.org/3/movie/${nextMovie.id}?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR`)
                 .then(response => response.json())
                 .then(movieDetails => {
-
                     document.getElementById("id_title").value = nextMovie.title;
-                   
+                    // Atualizar outros campos com os detalhes do próximo filme, se necessário
                 })
                 .catch(error => {
-                    console.error("Ocorreu um erro ao buscar os detalhes do filme:", error);
-                    alert("Ocorreu um erro ao buscar os detalhes do filme.");
+                    console.error("Ocorreu um erro ao buscar os metadados do filme:", error);
+                    alert("Ocorreu um erro ao buscar os metadados do filme.");
                 });
-        } else {
-            alert("Não há outros resultados disponíveis.");
         }
     });
 
-    document.getElementById("searchMovieButton").addEventListener("click", function() {
-        const title = document.getElementById("id_title").value;
-
-        if (title) {
-            searchMovie(title);
-            fetchAndDisplayImage(title);
-        } else {
-            alert("Por favor, digite o título do filme.");
-        }
+    $(document).ready(function () {
+        $('#save-button').on('click', function () {
+            if ($('#id_title').val().trim() !== "") {
+                $('#loadingOverlay').show();
+            }
+        });
+        $('#loadingOverlay').hide();
     });
-
-
 </script>
-  
+
 {% endblock %}

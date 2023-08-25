@@ -3,13 +3,33 @@ import requests
 import urllib.parse
 from pytube import YouTube, Search
 from media import models
-from media.forms import CreateMovieForm
 import os
-from django.core.files import File
 from fuzzywuzzy import fuzz
 import time
 from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
+def parse_leachers(value):
+    suffixes = {
+        'K': 1000,
+        'M': 1000000,
+        'G': 1000000000,
+        # Adicione mais sufixos conforme necessário
+    }
+
+    # Remover espaços em branco não quebráveis
+    value = value.replace('\xa0', '')
+    value = value.replace('N/A', '')
+
+    # Verificar se a string não está vazia
+    if value:
+        if value[-1] in suffixes:
+            return int(float(value[:-1]) * suffixes[value[-1]])
+        else:
+            return int(value)
+    else:
+        return 0
 
 def search_movie(movie_name, movie_date):
     sites = [
@@ -60,7 +80,7 @@ def search_movie(movie_name, movie_date):
         search_url = f"{site['url']}?site={site['name']}&query={encoded_movie_name}&date={movie_date}&category={site['category']}&language={site['language']}"
 
         print(search_url)
-    
+
         response = requests.get(search_url)
 
         if response.status_code == 200:
@@ -71,14 +91,20 @@ def search_movie(movie_name, movie_date):
 
             for result in results:
                 name = result['name'].lower()
-                seeders = int(result['seeders'])
-                leechers = int(result['leechers'])
+                seeders = result['seeders']
+                leechers = result['leechers']
 
-                if '1080p' in name and seeders >= 10 and leechers >= 10:
+                seeders = parse_leachers(seeders)
+                # leechers = parse_leachers(leechers)
+
+                if 'cam' not in name and 'ts' not in name and '1080p' in name and seeders >= 10:
                     torrent_links_1080p[seeders] = result['magnet']
-                elif '720p' in name and seeders >= 10 and leechers >= 10:
+                elif 'cam' not in name and 'ts' not in name and '720p' in name and seeders >= 10:
                     torrent_links_720p[seeders] = result['magnet']
-        
+
+        else:
+            continue
+
     return get_download_links(torrent_links_1080p, torrent_links_720p)
 
 
@@ -130,13 +156,13 @@ def get_movie_data(title):
         release_year = movie_details['release_date'][:4]
 
         genre_ids = movie['genre_ids']
-        category = get_genre_names(genre_ids)
+        categories = get_genre_names(genre_ids)
 
         duration = None
         if 'runtime' in movie_details:
             duration = movie_details['runtime']
 
-        return description, release_year, category, duration
+        return description, release_year, categories, duration
 
     else:
         return None, None, None, None
@@ -162,7 +188,7 @@ def get_movie_poster(title):
             response = requests.get(image_url)
             if response.status_code == 200:
                 # Salvar a imagem em um diretório local
-                temp_directory = os.path.join(settings.BASE_DIR, 'img/temp/poster')
+                temp_directory = os.path.join(settings.BASE_DIR, 'img/static/media/poster/')
                 os.makedirs(temp_directory, exist_ok=True)
                 clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
                 poster_filename = f'{clean_title}_poster.jpg'
@@ -170,62 +196,77 @@ def get_movie_poster(title):
                 with open(poster_path, 'wb') as f:
                     f.write(response.content)
 
-                return poster_path
+                return f'/static/media/poster/{poster_filename}'
 
     return None
 
 def process_movie(title):
-    description, release_year, category, duration = get_movie_data(title)
-    category_sigla = next((sigla for sigla, label in models.genre_choices if label == category[0]), None)
-    download_links = search_movie(title, release_year)
-    output_trailer = os.path.join(settings.BASE_DIR, 'img/temp/trailer')
-    output_movie = os.path.join(settings.BASE_DIR, 'img/temp/movie')
-    clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
-    put_trailer = os.path.join(settings.BASE_DIR, f'img/temp/trailer/{clean_title}_trailer.mp4')
-    put_movie = os.path.join(settings.BASE_DIR, f'img/temp/movie/{clean_title}_movie.mkv')
-    put_poster = os.path.join(settings.BASE_DIR, f'img/temp/poster/{clean_title}_poster.jpg')
+    try:
+        movie = models.Media.objects.filter(title=title).first()
+        if not movie:
+            description, release_year, categories, duration = get_movie_data(title)
+            if not description or not release_year or not categories or not duration:
+                return "not_found"
 
-    if download_links:
-        movie_torrent = download_torrent(download_links[0], output_movie, clean_title)
-        get_movie_poster(title)
-        trailer_torrent = search_and_download_trailer(clean_title, output_trailer)
+            download_links = search_movie(title, release_year)
+            if not download_links:
+                return "not_found"
 
-        if movie_torrent and trailer_torrent:
+            output_trailer = os.path.join(settings.BASE_DIR, 'img/static/media/trailer')
+            output_movie = os.path.join(settings.BASE_DIR, 'img/static/media/video')
+            clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+            put_trailer = f'/static/media/trailer/{clean_title}_trailer.mp4'
+            put_movie = f'/static/media/video/{clean_title}_movie.mkv'
 
-            form = CreateMovieForm({
-                'media_file': put_movie,
-                'trailer': put_trailer,
-                'title': title,
-                'release_year': release_year,
-                'description': description,
-                'duration': duration,
-                'classification': '12',
-                'category': category_sigla,
-                'poster': put_poster,
-            })
+            movie_torrent = download_torrent(download_links[0], output_movie, clean_title)
+            if not movie_torrent:
+                return "not_found"
 
-            # Crie os objetos de arquivo usando a classe File
-            movie_file_object = File(open(put_movie, 'rb'))
-            trailer_file_object = File(open(put_trailer, 'rb'))
-            poster_file_object = File(open(put_poster, 'rb'))
+            put_poster = get_movie_poster(title)
+            if not put_poster:
+                return "error_process"
 
-            # Atribua os objetos de arquivo ao atributo 'files' do formulário
-            form.files['media_file'] = movie_file_object
-            form.files['trailer'] = trailer_file_object
-            form.files['poster'] = poster_file_object
+            trailer_torrent = search_and_download_trailer(clean_title, output_trailer)
+            if not trailer_torrent:
+                return "error_process"
 
-            if form.is_valid():
-                create_movie_entry(form)
-                return f"O filme '{title}' foi processado com sucesso e os registros foram criados."
-            else:
-                errors = form.errors
-                print(errors)
-                return f"Erro ao preencher o formulário para o filme '{title}'. Erros: {errors}"
+            media = models.Media.objects.create(
+                title=title,
+                release_year=release_year,
+                poster=put_poster,
+                media_file=put_movie,
+                trailer=put_trailer,
+            )
+
+            genres = []
+            for category in categories:
+                # Procura um objeto Genre com a categoria especificada
+                genre = models.Genre.objects.filter(category=category).first()
+
+                # Se não encontrar nenhum objeto Genre, cria um novo
+                if not genre:
+                    genre = models.Genre.objects.create(category=category)
+
+                genres.append(genre)
+
+            # Resto do seu código para criar o objeto Movie e a relação Movie_has_genre
+
+            movie = models.Movie.objects.create(
+                description=description,
+                duration=duration,
+                media=media,
+            )
+
+            for genre in genres:
+                models.Movie_has_genre.objects.get_or_create(movie=movie, genre=genre)
+
+            return True
 
         else:
-            return f"Erro ao baixar torrent ou trailer para o filme '{title}'."
-    else:
-        return f"O filme '{title}' foi encontrado, mas não foram encontrados dois links de torrent."
+            return "existing_movie"
+    except:
+        return False
+
 
 def download_torrent(torrent_link, output_movie, title):
     client = qbittorrent.Client('http://localhost:8080/')
@@ -235,47 +276,87 @@ def download_torrent(torrent_link, output_movie, title):
 
     if response == 'Ok.':
 
-        time.sleep(15)
+        time.sleep(7)
 
         files = os.listdir(output_movie)
         mkv_files = [file for file in files if file.endswith('.mkv')]
+        mp4_files = [file for file in files if file.endswith('.mp4')]
 
-        best_match = None
-        best_similarity = 0
+        if mkv_files:
+            best_match = None
+            best_similarity = 0
 
-        for filename in mkv_files:
-            similarity = fuzz.ratio(title, filename)
-            if similarity > best_similarity:
-                best_match = filename
-                best_similarity = similarity
+            for filename in mkv_files:
+                similarity = fuzz.ratio(title, filename)
+                if similarity > best_similarity:
+                    best_match = filename
+                    best_similarity = similarity
 
-        if best_match:
-            original_filename = os.path.join(output_movie, best_match)
-            new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
-            os.rename(original_filename, new_filename)
+            if best_match:
+                original_filename = os.path.join(output_movie, best_match)
+                new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
+                os.rename(original_filename, new_filename)
 
-        client.logout()
-        return True
+            client.logout()
+            return True
+
+        else:
+            best_match = None
+            best_similarity = 0
+
+            for filename in mp4_files:
+                similarity = fuzz.ratio(title, filename)
+                if similarity > best_similarity:
+                    best_match = filename
+                    best_similarity = similarity
+
+            if best_match:
+                original_filename = os.path.join(output_movie, best_match)
+                new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
+                os.rename(original_filename, new_filename)
+
+            client.logout()
+            return False
     else:
         client.logout()
         return False
+
+def find_file_by_name(directory, filename):
+    for root, dirs, files in os.walk(directory):
+        if filename in files:
+            return os.path.join(root, filename)
+    return None
 
 def search_and_download_trailer(title, output_trailer):
     search_trailer = Search(title + ' trailer dublado')
     search_results = []
 
-    for trailer in search_trailer.results:
-        search_results.append(trailer.watch_url)
+    try:
+        for i, trailer in enumerate(search_trailer.results):
+            if i >= 5:
+                break
+            search_results.append(trailer.watch_url)
 
-    if search_results:
-        YouTube(search_results[0]).streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download(output_path=output_trailer)
+        best_stream = None
 
-        original_filename = os.path.join(output_trailer, os.listdir(output_trailer)[0])
-        new_filename = os.path.join(output_trailer, f'{title}_trailer.mp4')
-        os.rename(original_filename, new_filename)
- 
+        for trailer_url in search_results:
+            youtube_video = YouTube(trailer_url)
+            stream = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+
+            if stream and (best_stream is None or stream.resolution > best_stream.resolution):
+                best_stream = stream
+
+        if best_stream:
+            best_stream.download(output_path=output_trailer)
+            original_name = best_stream.title.replace('|', '')
+
+            original_filename = os.path.join(output_trailer, f'{original_name}.mp4')
+            new_filename = os.path.join(output_trailer, f'{title}_trailer.mp4')
+            os.rename(original_filename, new_filename)
+
         return True
-    else:
+
+    except:
         return False
 
 def create_movie_entry(form):
