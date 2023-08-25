@@ -5,9 +5,8 @@ import os
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AbstractUser, Group, Permission
-from django.core.validators import RegexValidator
+from django.contrib.auth.models import AbstractUser, Group
+from django.core.files.uploadedfile import UploadedFile
 
 class User(AbstractUser):
     photo = models.ImageField(upload_to='static/media/user', blank=True, null=True)
@@ -50,28 +49,75 @@ class User(AbstractUser):
         verbose_name_plural = 'Users'
         db_table = 'auth_user'
 
+
+def custom_image_upload_path(instance, filename):
+    if os.path.isabs(filename):
+        return filename
+    else:
+        return f'static/media/poster/{filename}'
+
+def custom_movie_upload_path(instance, filename):
+    if os.path.isabs(filename):
+        return filename
+    else:
+        return f'static/media/video/{filename}'
+
+def custom_trailer_upload_path(instance, filename):
+    if os.path.isabs(filename):
+        return filename
+    else:
+        return f'static/media/trailer/{filename}'
+
+
+class CustomFileField(models.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 255)
+        super().__init__(*args, **kwargs)
+
+    def generate_filename(self, instance, filename):
+        return custom_movie_upload_path(instance, filename)
+
+
+class CustomImageField(models.ImageField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 255)
+        super().__init__(*args, **kwargs)
+
+    def generate_filename(self, instance, filename):
+        return custom_image_upload_path(instance, filename)
+
+
+class CustomTrailerField(models.ImageField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("max_length", 255)
+        super().__init__(*args, **kwargs)
+
+    def generate_filename(self, instance, filename):
+        return custom_trailer_upload_path(instance, filename)
+
+
 class Media(models.Model):
     title = models.CharField(max_length=255, blank=False)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, max_length=255)
     release_year = models.IntegerField(blank=True)
     favorited = models.BooleanField(default=False)
-    poster = models.ImageField(upload_to='static/media/poster', blank=True, null=False)
-    banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True)
-    media_file = models.FileField(
+    poster = CustomImageField(upload_to='static/media/poster', blank=True, null=False, max_length=255)
+    banner = models.ImageField(upload_to='static/media/banner', blank=True, null=True, max_length=255)
+    media_file = CustomFileField(
         null=False,
         blank=False,
         upload_to='static/media/video',
         validators=[
-            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv','h264'])
+            FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
         ])
-    trailer = models.FileField(
+    trailer = CustomTrailerField(
         null=False,
         blank=False,
         upload_to='static/media/trailer',
         validators=[
-            FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv','h264'])
+            FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv', 'h264'])
         ])
-    created = models.DateField(auto_now = True)
+    created = models.DateField(auto_now=True)
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -100,11 +146,6 @@ class Media(models.Model):
 
         super().save(*args, **kwargs)
 
-        max_image_size = 800
-
-        if self.poster:
-            self.resize_image(self.poster, max_image_size)
-
     def __str__(self):
         return self.title
 
@@ -117,7 +158,7 @@ class Media(models.Model):
         movies = self.media_has_movie.all()
         for movie in movies:
             return movie.duration
-    
+
     def getDescription(self):
         movies = self.media_has_movie.all()
         for movie in movies:
@@ -126,7 +167,7 @@ class Media(models.Model):
     def getCategory(self):
         movies = self.media_has_movie.all()
         for movie in movies:
-            genres = [related.genre.get_genre() for related in movie.movie_has_genre.all()]
+            genres = [related.genre.category for related in movie.movie_has_genre.all()]
             return genres
 
 class Movie(models.Model):
@@ -145,6 +186,7 @@ class Movie(models.Model):
 
 class Serie(models.Model):
     description = models.TextField()
+
     class Meta:
         verbose_name = 'Serie'
         verbose_name_plural = 'Series'
@@ -177,38 +219,29 @@ class Episode(models.Model):
         verbose_name = 'Episode'
         verbose_name_plural = 'Episodes'
 
-genre_choices = (
-            ('N', 'Não Definido'),
-            ('A', 'Ação'),
-            ('AN', 'Animação'),
-            ('AV', 'Aventura'),
-            ('C', 'Comédia'),
-            ('CR', 'Comédia Romântica'),
-            ('D', 'Documentário'),
-            ('F', 'Ficção Científica'),
-            ('G', 'Guerra'),
-            ('M', 'Musical'),
-            ('R', 'Romance'),
-            ('T', 'Terror'),
-            ('MA', 'Marvel'),
-            ('C', 'Crime'),
-            ('LA', 'Lançamento')
-        )
+# genre_choices = (
+#             ('N', 'Não Definido'),
+#             ('A', 'Ação'),
+#             ('AN', 'Animação'),
+#             ('AV', 'Aventura'),
+#             ('C', 'Comédia'),
+#             ('CR', 'Comédia Romântica'),
+#             ('D', 'Documentário'),
+#             ('F', 'Ficção Científica'),
+#             ('G', 'Guerra'),
+#             ('M', 'Musical'),
+#             ('R', 'Romance'),
+#             ('T', 'Terror'),
+#             ('MA', 'Marvel'),
+#             ('C', 'Crime'),
+#             ('LA', 'Lançamento')
+#         )
 
 class Genre(models.Model):
-    category = models.CharField(
-        default='N',
-        max_length=2,
-        choices=genre_choices
-        )
-
-    def get_genre(self):
-        for genre_content in genre_choices:
-            if self.category in genre_content:
-                return genre_content[1]
+    category = models.CharField(max_length=55)
 
     def __str__(self):
-        return self.get_genre() 
+        return self.category
 
     class Meta:
         verbose_name = 'Genre'

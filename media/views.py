@@ -19,8 +19,9 @@ from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
 from utils.utils import process_movie
-import threading
-import time
+from django.contrib import messages
+import os
+from django.conf import settings
 
 
 class LogoutView(View):
@@ -164,12 +165,40 @@ class SmartCreateMovieView(View):
             title = form.cleaned_data['title']
             print(title)
 
-            process_movie(title)
+            success = process_movie(title)
 
-            return redirect(reverse_lazy('home'))
+            if success == "not_found":
+                messages.error(request, f"Ops! Parece que '{title}' não foi encontrado (•ิ_•ิ)")
+                self.delete_related_files(title)
+            elif success == "error_process":
+                messages.error(request, f"O processamento de '{title}' foi um verdadeiro drama tecnológico, com twists inesperados. Tente Novamente (•ิ_•ิ)")
+                self.delete_related_files(title)
+            elif success == "existing_movie":
+                messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
+            elif success:
+                messages.success(request, f"Prepare a pipoca! '{title}' foi encontrado e o download foi iniciado ◕‿◕")
+            else:
+                messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
+                self.delete_related_files(title)
+
+            return redirect(reverse_lazy('smart_create_movie'))
+
         else:
             form = self.form_class()
         return render(request, self.template_name, {'form': form})
+
+    def delete_related_files(self, title):
+        clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+        trailer_path = os.path.join(settings.BASE_DIR, f'img/static/media/trailer/{clean_title}_trailer.mp4')
+        movie_path = os.path.join(settings.BASE_DIR, f'img/static/media/video/{clean_title}_movie.mkv')
+        poster_path = os.path.join(settings.BASE_DIR, f'img/static/media/poster/{clean_title}_poster.jpg')
+
+        if os.path.exists(trailer_path):
+            os.remove(trailer_path)
+        if os.path.exists(movie_path):
+            os.remove(movie_path)
+        if os.path.exists(poster_path):
+            os.remove(poster_path)
 
 
 class CreateMovieView(View):
@@ -310,7 +339,7 @@ class DeleteMovieView(View):
         movie = get_object_or_404(models.Media, slug=slug)
         movie.delete()
         return redirect('home')
-    
+
 
 class DeleteUserView(View):
     def get(self, request, id):

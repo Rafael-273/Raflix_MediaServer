@@ -18,10 +18,22 @@ const server = http.createServer((request, response) => {
 
   const stat = fs.statSync(filePath);
 
+  // Obtenha a extensão do arquivo para definir o Content-Type corretamente
+  const fileExtension = path.extname(filePath).toLowerCase();
+  let contentType = 'video/mp4'; // Defina um valor padrão para outros formatos de vídeo
+
+  if (fileExtension === '.mp4') {
+    contentType = 'video/mp4';
+  } else if (fileExtension === '.webm') {
+    contentType = 'video/webm';
+  } else if (fileExtension === '.mkv') {
+    contentType = 'video/x-matroska';
+  }
+
   response.setHeader('Cache-Control', 'public, max-age=3600');
 
   response.writeHead(200, {
-    'Content-Type': 'video/mp4',
+    'Content-Type': contentType,
     'Content-Length': stat.size
   });
 
