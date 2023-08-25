@@ -84,7 +84,7 @@ Home
     {% for movie in movies %}
     <div id="modal_{{ movie.slug }}" class="modal" onmouseenter="modalPlay(this)" onmouseleave="modalHidden(this); modalStop(this)">
         <video loop="true" controls muted controls class="video_trailer">
-            <source src="{{ movie.trailer.url }}" type="video/mp4"> 
+            <source src="http://localhost:3000{{ movie.trailer.url }}" type="video/mp4"> 
         </video>
         <div class="first_row">
             <button class="play">
@@ -137,7 +137,7 @@ Home
 
     <div class="url_info" hidden>{{ movie.slug }}</div>
     <div class="url_banner" hidden>play/{{ movie.slug }}</div>
-    <div class="trailer_banner" hidden>{{ movie.trailer.url }}</div>
+    <div class="trailer_banner" hidden>http://localhost:3000{{ movie.trailer.url }}</div>
     <div class="title_movie_banner" hidden>{{ movie.title }}</div>
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
     <div class="classification_banner" hidden>{{ movie.getClassification }}</div>

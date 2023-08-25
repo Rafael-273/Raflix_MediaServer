@@ -112,12 +112,16 @@ player.on('loadedmetadata', function() {
   });
 
   function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const remainingMinutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
-    const remainingSecondsFormatted = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
-
-    return `${minutes}:${remainingSecondsFormatted}`;
-  }
+  
+    const hoursFormatted = hours < 10 ? `0${hours}` : hours;
+    const minutesFormatted = remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+    const secondsFormatted = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+  
+    return `${hoursFormatted}:${minutesFormatted}:${secondsFormatted}`;
+  }  
 
   const progress = document.querySelector('.progress');
   const progressBar = document.querySelector('.progress-bar');
