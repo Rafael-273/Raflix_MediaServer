@@ -358,32 +358,3 @@ def search_and_download_trailer(title, output_trailer):
 
     except:
         return False
-
-def create_movie_entry(form):
-    media = models.Media(
-        media_file=form.cleaned_data['media_file'],
-        trailer=form.cleaned_data['trailer'],
-        title=form.cleaned_data['title'],
-        release_year=form.cleaned_data['release_year'],
-        poster=form.cleaned_data['poster'],
-    )
-    media.save()
-
-    genre = models.Genre(
-        category=form.cleaned_data['category']
-    )
-    genre.save()
-
-    movie = models.Movie(
-        description=form.cleaned_data['description'],
-        duration=form.cleaned_data['duration'],
-        classification=form.cleaned_data['classification'],
-        media=media,
-    )
-    movie.save()
-
-    movie_has_genre = models.Movie_has_genre(
-        genre=genre,
-        movie=movie
-    )
-    movie_has_genre.save()

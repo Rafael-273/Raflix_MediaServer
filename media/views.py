@@ -177,6 +177,7 @@ class SmartCreateMovieView(View):
                 messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
             elif success:
                 messages.success(request, f"Prepare a pipoca! '{title}' foi encontrado e o download foi iniciado ◕‿◕")
+                self.delete_non_mkv_files()
             else:
                 messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
                 self.delete_related_files(title)
@@ -199,6 +200,16 @@ class SmartCreateMovieView(View):
             os.remove(movie_path)
         if os.path.exists(poster_path):
             os.remove(poster_path)
+
+    def delete_non_mkv_files(self):
+        video_folder = os.path.join(settings.BASE_DIR, 'img/static/media/video')
+
+        for file_name in os.listdir(video_folder):
+            if not file_name.endswith('.mkv'):
+                file_path = os.path.join(video_folder, file_name)
+                os.remove(file_path)
+            else:
+                continue
 
 
 class CreateMovieView(View):
@@ -240,7 +251,7 @@ class CreateMovieView(View):
             movie_has_genre.save()
 
             return redirect(reverse_lazy('home'))
-        
+
         else:
             print(form.errors)
             # Se o formulário não for válido, exiba os erros
@@ -269,7 +280,7 @@ class ListUsersDeleteView(View):
     def get(self, request):
         users = models.User.objects.all()
         return render(request, 'remove/list_users_delete.html', {'users': users})
-    
+
 
 class EditMovieView(View):
     def get(self, request, slug):
@@ -337,8 +348,33 @@ class DeleteMovieView(View):
 
     def post(self, request, slug):
         movie = get_object_or_404(models.Media, slug=slug)
+        self.delete_related_files(movie.title)
+        self.delete_non_mkv_files()
         movie.delete()
         return redirect('home')
+
+    def delete_related_files(self, title):
+        clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+        trailer_path = os.path.join(settings.BASE_DIR, f'img/static/media/trailer/{clean_title}_trailer.mp4')
+        movie_path = os.path.join(settings.BASE_DIR, f'img/static/media/video/{clean_title}_movie.mkv')
+        poster_path = os.path.join(settings.BASE_DIR, f'img/static/media/poster/{clean_title}_poster.jpg')
+
+        if os.path.exists(trailer_path):
+            os.remove(trailer_path)
+        if os.path.exists(movie_path):
+            os.remove(movie_path)
+        if os.path.exists(poster_path):
+            os.remove(poster_path)
+
+    def delete_non_mkv_files(self):
+        video_folder = os.path.join(settings.BASE_DIR, 'img/static/media/video')
+
+        for file_name in os.listdir(video_folder):
+            if not file_name.endswith('.mkv'):
+                file_path = os.path.join(video_folder, file_name)
+                os.remove(file_path)
+            else:
+                continue
 
 
 class DeleteUserView(View):
