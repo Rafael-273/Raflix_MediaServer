@@ -22,6 +22,7 @@ from utils.utils import process_movie
 from django.contrib import messages
 import os
 from django.conf import settings
+import shutil
 
 
 class LogoutView(View):
@@ -211,12 +212,14 @@ class SmartCreateMovieView(View):
     def delete_non_mkv_files(self):
         video_folder = os.path.join(settings.BASE_DIR, 'img/static/media/video')
 
-        for file_name in os.listdir(video_folder):
-            if not file_name.endswith('.mkv'):
-                file_path = os.path.join(video_folder, file_name)
-                os.remove(file_path)
-            else:
-                continue
+        for item_name in os.listdir(video_folder):
+            item_path = os.path.join(video_folder, item_name)
+
+            if os.path.isfile(item_path) and not item_name.endswith('.mkv'):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                # Remova o diretório e todo o seu conteúdo (recursivamente)
+                shutil.rmtree(item_path)
 
 
 class CreateMovieView(View):
@@ -376,12 +379,15 @@ class DeleteMovieView(View):
     def delete_non_mkv_files(self):
         video_folder = os.path.join(settings.BASE_DIR, 'img/static/media/video')
 
-        for file_name in os.listdir(video_folder):
-            if not file_name.endswith('.mkv'):
-                file_path = os.path.join(video_folder, file_name)
-                os.remove(file_path)
-            else:
-                continue
+        for item_name in os.listdir(video_folder):
+            item_path = os.path.join(video_folder, item_name)
+
+            if os.path.isfile(item_path) and not item_name.endswith('.mkv'):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                # Remova o diretório e todo o seu conteúdo (recursivamente)
+                shutil.rmtree(item_path)
+
 
 
 class DeleteUserView(View):

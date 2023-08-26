@@ -7,7 +7,7 @@ import os
 from fuzzywuzzy import fuzz
 import time
 from django.conf import settings
-from django.contrib import messages
+import subprocess
 from django.shortcuts import render, redirect
 
 def parse_leachers(value):
@@ -92,7 +92,7 @@ def search_movie(movie_name, movie_date):
             for result in results:
                 name = result['name'].lower()
                 seeders = result['seeders']
-                leechers = result['leechers']
+                # leechers = result['leechers']
 
                 seeders = parse_leachers(seeders)
                 # leechers = parse_leachers(leechers)
@@ -218,7 +218,7 @@ def process_movie(title):
             put_trailer = f'/static/media/trailer/{clean_title}_trailer.mp4'
             put_movie = f'/static/media/video/{clean_title}_movie.mkv'
 
-            movie_torrent = download_torrent(download_links[0], output_movie, clean_title)
+            movie_torrent = download_torrent(download_links, output_movie, clean_title)
             if not movie_torrent:
                 return "not_found"
 
@@ -276,47 +276,18 @@ def download_torrent(torrent_link, output_movie, title):
 
     if response == 'Ok.':
 
-        time.sleep(7)
+        time.sleep(10)
 
         files = os.listdir(output_movie)
-        mkv_files = [file for file in files if file.endswith('.mkv')]
-        mp4_files = [file for file in files if file.endswith('.mp4')]
+        movie_file = [file for file in files if file.endswith('.mkv') or file.endswith('.mp4')]
 
-        if mkv_files:
-            best_match = None
-            best_similarity = 0
+        original_filename = os.path.join(output_movie, movie_file[0])
+        new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
+        os.rename(original_filename, new_filename)
 
-            for filename in mkv_files:
-                similarity = fuzz.ratio(title, filename)
-                if similarity > best_similarity:
-                    best_match = filename
-                    best_similarity = similarity
+        client.logout()
+        return True
 
-            if best_match:
-                original_filename = os.path.join(output_movie, best_match)
-                new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
-                os.rename(original_filename, new_filename)
-
-            client.logout()
-            return True
-
-        else:
-            best_match = None
-            best_similarity = 0
-
-            for filename in mp4_files:
-                similarity = fuzz.ratio(title, filename)
-                if similarity > best_similarity:
-                    best_match = filename
-                    best_similarity = similarity
-
-            if best_match:
-                original_filename = os.path.join(output_movie, best_match)
-                new_filename = os.path.join(output_movie, f'{title}_movie.mkv')
-                os.rename(original_filename, new_filename)
-
-            client.logout()
-            return False
     else:
         client.logout()
         return False
@@ -326,6 +297,35 @@ def find_file_by_name(directory, filename):
         if filename in files:
             return os.path.join(root, filename)
     return None
+
+def download_video_audio(url, output_path, title):
+    youtube_video = YouTube(url)
+    video_stream = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+    audio_stream = youtube_video.streams.filter(only_audio=True).first()
+
+    if video_stream and audio_stream:
+        video_filename = os.path.join(output_path, 'video.mp4')
+        audio_filename = os.path.join(output_path, 'audio.aac')
+
+        try:
+            video_stream.download(output_path=output_path, filename='video.mp4')
+            audio_stream.download(output_path=output_path, filename='audio.aac')
+
+            output_filename = os.path.join(output_path, f'{title}_trailer.mp4')
+            cmd = f'ffmpeg -i {video_filename} -i {audio_filename} -c:v copy -c:a copy {output_filename}'
+            subprocess.run(cmd, shell=True)
+
+            os.remove(video_filename)
+            os.remove(audio_filename)
+
+            return output_filename
+
+        except Exception as e:
+            print(f"Error while downloading and merging: {e}")
+            return None
+    else:
+        print("No suitable video or audio stream found.")
+        return None
 
 def search_and_download_trailer(title, output_trailer):
     search_trailer = Search(title + ' trailer dublado')
@@ -337,24 +337,19 @@ def search_and_download_trailer(title, output_trailer):
                 break
             search_results.append(trailer.watch_url)
 
-        best_stream = None
+        best_url = None
 
         for trailer_url in search_results:
             youtube_video = YouTube(trailer_url)
-            stream = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+            streams = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc()
 
-            if stream and (best_stream is None or stream.resolution > best_stream.resolution):
-                best_stream = stream
+            for stream in streams:
+                if best_url is None or stream.resolution > stream.resolution:
+                    best_url = trailer_url
 
-        if best_stream:
-            best_stream.download(output_path=output_trailer)
-            original_name = best_stream.title.replace('|', '')
-
-            original_filename = os.path.join(output_trailer, f'{original_name}.mp4')
-            new_filename = os.path.join(output_trailer, f'{title}_trailer.mp4')
-            os.rename(original_filename, new_filename)
-
-        return True
+        if best_url:
+            output_file = download_video_audio(best_url, output_trailer, title)
+            return output_file
 
     except:
-        return False
+        return None
