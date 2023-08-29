@@ -4,6 +4,28 @@
 
 {% endblock %}
 
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Processando o filme...</p>
+    </div>
+</div>
+
+{% if messages %}
+<div class="messages_movie">
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    <div class="buttons">
+        <a href="{% url 'home' %}" class="btn">Home</a>
+        <a href="javascript:history.back()" class="btn">Voltar</a>
+    </div>
+</div>
+<div class="background"></div>
+{% endif %}
+
 <!-- Menu -->
 <div class="nav" id="nav">
     <a href="{% url 'home' %}"><img src="{% static 'assets/logo.png' %}" alt="" class="nav__logo"></a>
@@ -39,6 +61,8 @@
     </ul>
 </div>
 
+<div id="overlay" style="display: none;"></div>
+
 <div class="search_smart">
     <input id="search-input-smart" type="text" placeholder="Não tem no catálogo? Adicione com a Raflix Smart" name="q">
     <i class="fas fa-search"></i>
@@ -53,8 +77,8 @@
                         <!-- Slides do carrossel de filmes serão adicionados aqui -->
                     </div>
                 </div>
-                <button class="carousel-prev" id="prevBtn">«</button>
-                <button class="carousel-next" id="nextBtn">»</button>
+                <button type="button" class="carousel-prev" id="prevBtn">«</button>
+                <button type="button" class="carousel-next" id="nextBtn">»</button>
             </div>        
             <button id="save-button" class="save_button" type="submit">Baixar Filme</button>
         </form>
@@ -195,6 +219,8 @@
                         }
                     }
 
+                    // Mostrar o botão de submit
+                    document.getElementById('save-button').style.display = 'block';
                 } else {
                     alert("Nenhum resultado encontrado para o filme informado.");
                 }
@@ -216,19 +242,23 @@
     const movieTitleInput = document.getElementById('movie-title-input');
 
     saveButton.addEventListener('click', (event) => {
-        // Impede o envio padrão do formulário
         event.preventDefault();
 
         const currentSlide = movieCarousel.children[slideIndex];
         const movieImage = currentSlide.querySelector('img');
         const movieTitle = movieImage.alt;
 
-        // Preencha o campo de entrada oculto com o título do filme
         movieTitleInput.value = movieTitle;
 
-        // Clique automaticamente no botão de envio do formulário
         const downloadForm = document.getElementById('download-form');
         downloadForm.submit();
+    });
+
+    $(document).ready(function () {
+        $('#save-button').on('click', function () {
+                $('#loadingOverlay').show();
+                $('#overlay').show();
+        })
     });
 
 </script>

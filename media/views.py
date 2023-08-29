@@ -193,7 +193,7 @@ class SmartCreateMovieView(View):
                     self.delete_related_files(movie_title)
 
             return redirect(reverse_lazy('home'))
-        
+
         elif page_source == 'pagina2':
             form = self.form_class(request.POST)
             if form.is_valid():
