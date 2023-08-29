@@ -198,3 +198,215 @@ a {
     text-decoration: none !important;
     color: white;
 } 
+
+.smart {
+    position: relative; 
+    left: 62.5vw;
+    top: -15px;
+    width: 100px;
+}
+
+.smart img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.3); 
+    transition: 0.5s;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.smart img:hover {
+    scale: 1.1;
+    transition: 0.5s;
+}
+
+#modal {
+    right: 16%;
+    top: 1.2%;
+}
+
+.search_smart {
+    display: none;
+    position: fixed;
+    top: 4vh;
+    left: 28vw;
+    width: 45vw;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999 !important;
+    padding: 30px;
+    cursor: pointer;
+}
+
+.search_smart input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45vw;
+    height: 5vh;
+    color: white;
+    background: transparent;
+    border: 1px solid;
+    outline: none;
+    border-radius: 6px;
+    padding: 0 10px 0 25px;
+    backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    z-index: 99999 !important;
+    transition: 0.2s;
+    animation: fadeDown 0.5s forwards;
+}
+
+.search_smart input::placeholder {
+    color: white;
+    padding: 15px;
+
+}
+
+.search_smart .fa-search {
+    position: absolute;
+    top: 27%;
+    left: 47px;
+    transform: translateX(-50%);
+    padding-right: 50px;
+    color: white;
+    border-radius: 1px solid white;
+}
+
+.background {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    z-index: -1;
+    transition: 0.2s;
+    animation: fadeIn 0.5s forwards;
+}
+
+#movie-results-container {
+    margin-top: 5vh;
+}
+
+@keyframes fadeDown {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 1vh;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+    width: 75%;
+    margin: 0 auto;
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.carousel-track {
+    display: flex;
+    margin-left: 3.3vw;
+}
+
+.carousel-track img {
+    border-radius: 30px;
+    width: 25vw;
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.carousel-prev,
+.carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 5px 20px;
+    height: 75vh;
+    cursor: pointer;
+}
+
+.carousel-prev {
+    left: 10px;
+    margin-left: 30px;
+    box-shadow: 12px 0px 15px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-next {
+    right: 10px;
+    margin-right: 30px;
+    box-shadow: -12px 0px 15px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-prev,
+.carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    height: 80vh;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    backdrop-filter: blur(5px);
+    transition: filter 0.3s ease;    
+}
+
+/* Remover efeito blur ao passar o mouse sobre os botões */
+.carousel-prev:hover,
+.carousel-next:hover {
+    filter: none;
+}
+
+.save_button {
+    height: 50px;
+    width: 65%;
+    color: white;
+    background-color: #e50914;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    margin-top: 20px;
+    transition: 0.5s;   
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: 0.5s;
+}
+
+.save_button:hover {
+    background-color: #fc1722;
+    cursor: pointer;
+    transition: 0.5s;
+}

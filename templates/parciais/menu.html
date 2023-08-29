@@ -1,5 +1,9 @@
 {% load static %}
 
+{% block head %}
+
+{% endblock %}
+
 <!-- Menu -->
 <div class="nav" id="nav">
     <a href="{% url 'home' %}"><img src="{% static 'assets/logo.png' %}" alt="" class="nav__logo"></a>
@@ -15,6 +19,16 @@
         <li>
             <a href="{% url 'favorites' %}">Favoritos</a>
         </li>
+        <div class="smart">
+            <img src="{% static 'assets/smart.png' %}" alt="">
+        </div>
+        <div class="icon_user" id="icon" onclick="modalAccount(this)">
+            {% for user in request.my_data %}
+                <div class="profile-picture">
+                    <img src="{{ user.photo.url }}" alt="{{ user.name }}">
+                </div>
+            {% endfor %}
+        </div>
         <form id="search-form" method="GET" action="{% url 'search' %}">
             {% csrf_token %}
             <div class="search">
@@ -24,6 +38,30 @@
         </form>
     </ul>
 </div>
+
+<div class="search_smart">
+    <input id="search-input-smart" type="text" placeholder="Não tem no catálogo? Adicione com a Raflix Smart" name="q">
+    <i class="fas fa-search"></i>
+    <div id="movie-results-container">
+        <form method="post" action="{% url 'smart_create_movie' %}" id="download-form" class="carousel-form">
+            {% csrf_token %}
+            <input type="hidden" name="page_source" value="pagina1">
+            <input type="hidden" name="movie_title" id="movie-title-input">
+            <div class="carousel">
+                <div class="carousel-container">
+                    <div class="carousel-track" id="movie-carousel">
+                        <!-- Slides do carrossel de filmes serão adicionados aqui -->
+                    </div>
+                </div>
+                <button class="carousel-prev" id="prevBtn">«</button>
+                <button class="carousel-next" id="nextBtn">»</button>
+            </div>        
+            <button id="save-button" class="save_button" type="submit">Baixar Filme</button>
+        </form>
+    </div>
+    <div class="background"></div>
+</div>
+
 
 <!-- Modal -->
 
@@ -58,15 +96,139 @@
     function modalAccount(icon){
         const modal = document.getElementById('modal')
         modal.style.cssText = "display: grid; transition: 0.5s;"
-        icon.style.cssText = "display: none;"
     }
 
     function closedModalMenu(){
-        const icon = document.querySelector('#icon')
         const modal = document.querySelector('#modal')
         modal.style.cssText = "display: none;"
-        icon.style.cssText = "display: block;"
     }
 
+    const inputSmart = document.getElementById('search-input-smart');
+    const defaultPlaceholder = "Não tem no catálogo? Adicione com a Raflix Smart";
+    const newPlaceholder = "Digite o nome do filme aqui";
+
+    inputSmart.addEventListener('click', () => {
+        inputSmart.placeholder = newPlaceholder;
+    });
+
+    // Reset the placeholder when the input loses focus
+    inputSmart.addEventListener('blur', () => {
+        inputSmart.placeholder = defaultPlaceholder;
+    });
+
+    const smartButton = document.querySelector('.smart');
+    const searchSmart = document.querySelector('.search_smart');
+    const background = document.querySelector('.background');
+
+    smartButton.addEventListener('click', () => {
+        searchSmart.style.display = 'block';
+        background.style.display = 'block';
+    });
+
+    background.addEventListener('click', () => {
+        searchSmart.style.display = 'none';
+        background.style.display = 'none';
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!searchSmart.contains(event.target) && !smartButton.contains(event.target)) {
+            searchSmart.style.display = 'none';
+            background.style.display = 'none';
+        }
+    });
+
+    const movieCarousel = document.getElementById('movie-carousel');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let slideIndex = 0;
+
+    prevBtn.addEventListener('click', () => {
+        slideIndex = Math.max(slideIndex - 1, 0);
+        updateCarouselPosition();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        slideIndex = Math.min(slideIndex + 1, movieCarousel.children.length - 1);
+        updateCarouselPosition();
+    });
+
+    function updateCarouselPosition() {
+        const slideWidth = movieCarousel.children[0].offsetWidth;
+        const translateX = -slideWidth * slideIndex;
+        movieCarousel.style.transform = `translateX(${translateX}px)`;
+    }
+
+    function searchMovie(title) {
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
+            .then(response => response.json())
+            .then(data => {
+                const movieCarousel = document.getElementById('movie-carousel');
+                movieCarousel.innerHTML = '';
+
+                if (data.results.length > 0) {
+                    const movieResults = data.results;
+
+                    for (const movie of movieResults) {
+                        const moviePosterPath = movie.poster_path;
+
+                        if (moviePosterPath) {
+                            const base_url = 'https://image.tmdb.org/t/p/';
+                            const image_url = `${base_url}w500${moviePosterPath}`;
+
+                            const slide = document.createElement('div');
+                            slide.classList.add('carousel-slide');
+                            slide.setAttribute('data-movie-title', movie.title); // Adiciona o atributo com o título do filme
+
+                            const movieLink = document.createElement('a');
+                            movieLink.href = `https://www.themoviedb.org/movie/${movie.id}`;
+                            movieLink.target = '_blank';
+
+                            const movieImage = document.createElement('img');
+                            movieImage.src = image_url;
+                            movieImage.alt = movie.title;
+
+                            movieLink.appendChild(movieImage);
+                            slide.appendChild(movieLink);
+
+                            movieCarousel.appendChild(slide);
+                        }
+                    }
+
+                } else {
+                    alert("Nenhum resultado encontrado para o filme informado.");
+                }
+            })
+            .catch(error => {
+                console.error("Ocorreu um erro ao buscar os metadados do filme:", error);
+                alert("Ocorreu um erro ao buscar os metadados do filme.");
+            });
+    }
+
+    inputSmart.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            const title = inputSmart.value;
+            searchMovie(title);
+        }
+    });
+
+    const saveButton = document.getElementById('save-button');
+    const movieTitleInput = document.getElementById('movie-title-input');
+
+    saveButton.addEventListener('click', (event) => {
+        // Impede o envio padrão do formulário
+        event.preventDefault();
+
+        const currentSlide = movieCarousel.children[slideIndex];
+        const movieImage = currentSlide.querySelector('img');
+        const movieTitle = movieImage.alt;
+
+        // Preencha o campo de entrada oculto com o título do filme
+        movieTitleInput.value = movieTitle;
+
+        // Clique automaticamente no botão de envio do formulário
+        const downloadForm = document.getElementById('download-form');
+        downloadForm.submit();
+    });
 
 </script>

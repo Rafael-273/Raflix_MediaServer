@@ -43,6 +43,7 @@ Create Movie
             <div class="scrool_info">
             <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        <input type="hidden" name="page_source" value="pagina2">
                         {{ form.title }}
                         <button type="button" id="searchMovieButton" class='search_smart_button'>Pesquisar Filme</button>
                         <button type="button" id="researchMovieButton" class='research_smart_button'>Não Encontrou?</button>

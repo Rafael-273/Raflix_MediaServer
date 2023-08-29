@@ -168,33 +168,60 @@ class SmartCreateMovieView(View):
         return render(request, 'create/smart_create_movie.html', {'form': form})
 
     def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            print(title)
+        page_source = request.POST.get('page_source')
+        if page_source == 'pagina1':
+            movie_title = request.POST.get('movie_title')
 
-            success = process_movie(title)
+            if movie_title:
+                print(movie_title)
 
-            if success == "not_found":
-                messages.error(request, f"Ops! Parece que '{title}' não foi encontrado (•ิ_•ิ)")
-                self.delete_related_files(title)
-            elif success == "error_process":
-                messages.error(request, f"O processamento de '{title}' foi um verdadeiro drama tecnológico, com twists inesperados. Tente Novamente (•ิ_•ิ)")
-                self.delete_related_files(title)
-            elif success == "existing_movie":
-                messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
-            elif success:
-                messages.success(request, f"Prepare a pipoca! '{title}' foi encontrado e o download foi iniciado ◕‿◕")
-                self.delete_non_mkv_files()
+                success = process_movie(movie_title)
+
+                if success == "not_found":
+                    messages.error(request, f"Ops! Parece que '{movie_title}' não foi encontrado (•ิ_•ิ)")
+                    self.delete_related_files(movie_title)
+                elif success == "error_process":
+                    messages.error(request, f"O processamento de '{movie_title}' foi um verdadeiro drama tecnológico, com twists inesperados. Tente Novamente (•ิ_•ิ)")
+                    self.delete_related_files(movie_title)
+                elif success == "existing_movie":
+                    messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
+                elif success:
+                    messages.success(request, f"Prepare a pipoca! '{movie_title}' foi encontrado e o download foi iniciado ◕‿◕")
+                    self.delete_non_mkv_files()
+                else:
+                    messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{movie_title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
+                    self.delete_related_files(movie_title)
+
+            return redirect(reverse_lazy('home'))
+        
+        elif page_source == 'pagina2':
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                title = form.cleaned_data['title']
+                print(title)
+
+                success = process_movie(title)
+
+                if success == "not_found":
+                    messages.error(request, f"Ops! Parece que '{title}' não foi encontrado (•ิ_•ิ)")
+                    self.delete_related_files(title)
+                elif success == "error_process":
+                    messages.error(request, f"O processamento de '{title}' foi um verdadeiro drama tecnológico, com twists inesperados. Tente Novamente (•ิ_•ิ)")
+                    self.delete_related_files(title)
+                elif success == "existing_movie":
+                    messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
+                elif success:
+                    messages.success(request, f"Prepare a pipoca! '{title}' foi encontrado e o download foi iniciado ◕‿◕")
+                    self.delete_non_mkv_files()
+                else:
+                    messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
+                    self.delete_related_files(title)
+
+                return redirect(reverse_lazy('smart_create_movie'))
+
             else:
-                messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
-                self.delete_related_files(title)
-
-            return redirect(reverse_lazy('smart_create_movie'))
-
-        else:
-            form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+                form = self.form_class()
+            return render(request, self.template_name, {'form': form})
 
     def delete_related_files(self, title):
         clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
@@ -387,7 +414,6 @@ class DeleteMovieView(View):
             elif os.path.isdir(item_path):
                 # Remova o diretório e todo o seu conteúdo (recursivamente)
                 shutil.rmtree(item_path)
-
 
 
 class DeleteUserView(View):
