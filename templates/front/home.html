@@ -65,10 +65,10 @@ Home
         <!-- Category Row -->
         {{ movie.poster.url }}
         <article class="c-carousel">
-            <h1 class="title_row">Marvel</h1>
+            <h1 class="title_row">Ação e Aventura</h1>
             <div class="c-carousel__slides js-carousel--responsive-category">
                 {% for movie in movies %}
-                {% if movie.getCategory|first == 'Marvel' %}
+                {% if 'Ação' in movie.getCategory or 'Aventura' in movie.getCategory %}
                 <a href="{{ movie.slug }}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src=""></div></a>
                 {% endif %}
                 {% endfor %}

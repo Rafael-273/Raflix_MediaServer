@@ -9,6 +9,7 @@ import time
 from django.conf import settings
 import subprocess
 from django.shortcuts import render, redirect
+from unidecode import unidecode
 
 def parse_leachers(value):
     suffixes = {
@@ -214,7 +215,7 @@ def process_movie(title):
 
             output_trailer = os.path.join(settings.BASE_DIR, 'img/static/media/trailer')
             output_movie = os.path.join(settings.BASE_DIR, 'img/static/media/video')
-            clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+            clean_title = unidecode(title).replace(':', '').replace(' ', '_').replace('.', '_')
             put_trailer = f'/static/media/trailer/{clean_title}_trailer.mp4'
             put_movie = f'/static/media/video/{clean_title}_movie.mkv'
 
@@ -333,7 +334,7 @@ def search_and_download_trailer(title, output_trailer):
 
     try:
         for i, trailer in enumerate(search_trailer.results):
-            if i >= 5:
+            if i >= 3:
                 break
             search_results.append(trailer.watch_url)
 

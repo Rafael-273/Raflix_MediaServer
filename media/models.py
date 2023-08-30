@@ -87,7 +87,7 @@ class CustomImageField(models.ImageField):
         return custom_image_upload_path(instance, filename)
 
 
-class CustomTrailerField(models.ImageField):
+class CustomTrailerField(models.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("max_length", 255)
         super().__init__(*args, **kwargs)
