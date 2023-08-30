@@ -412,7 +412,6 @@ class DeleteMovieView(View):
             if os.path.isfile(item_path) and not item_name.endswith('.mkv'):
                 os.remove(item_path)
             elif os.path.isdir(item_path):
-                # Remova o diretório e todo o seu conteúdo (recursivamente)
                 shutil.rmtree(item_path)
 
 

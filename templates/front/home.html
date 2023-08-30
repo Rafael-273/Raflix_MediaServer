@@ -69,7 +69,7 @@ Home
             <div class="c-carousel__slides js-carousel--responsive-category">
                 {% for movie in movies %}
                 {% if 'Ação' in movie.getCategory or 'Aventura' in movie.getCategory %}
-                <a href="{{ movie.slug }}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src=""></div></a>
+                <a href="{{ movie.slug }}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
                 {% endif %}
                 {% endfor %}
             </div>

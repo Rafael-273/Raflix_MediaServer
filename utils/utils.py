@@ -334,7 +334,7 @@ def search_and_download_trailer(title, output_trailer):
 
     try:
         for i, trailer in enumerate(search_trailer.results):
-            if i >= 3:
+            if i >= 5:
                 break
             search_results.append(trailer.watch_url)
 
@@ -342,11 +342,14 @@ def search_and_download_trailer(title, output_trailer):
 
         for trailer_url in search_results:
             youtube_video = YouTube(trailer_url)
-            streams = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc()
+            try:
+                streams = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc()
 
-            for stream in streams:
-                if best_url is None or stream.resolution > stream.resolution:
-                    best_url = trailer_url
+                for stream in streams:
+                    if best_url is None or stream.resolution > stream.resolution:
+                        best_url = trailer_url
+            except:
+                continue
 
         if best_url:
             output_file = download_video_audio(best_url, output_trailer, title)

@@ -170,6 +170,7 @@ class Media(models.Model):
             genres = [related.genre.category for related in movie.movie_has_genre.all()]
             return genres
 
+
 class Movie(models.Model):
     description = models.TextField()
     duration = models.CharField(max_length=10)
