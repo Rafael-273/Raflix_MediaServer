@@ -4,32 +4,12 @@
 
 {% endblock %}
 
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p>Processando o filme...</p>
-    </div>
-</div>
-
-{% if messages %}
-<div class="messages_movie">
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    <div class="buttons">
-        <a href="{% url 'home' %}" class="btn">Home</a>
-        <a href="javascript:history.back()" class="btn">Voltar</a>
-    </div>
-</div>
-<div class="background_messages"></div>
-{% endif %}
-
 <!-- Menu -->
+
 <div class="nav" id="nav">
     <a href="{% url 'home' %}"><img src="{% static 'assets/logo.png' %}" alt="" class="nav__logo"></a>
 </div>
+
 <div>
     <ul class="menu_list">
         <li>
@@ -61,6 +41,8 @@
     </ul>
 </div>
 
+<!-- Search Smart -->
+
 <div class="search_smart">
     <input id="search-input-smart" type="text" placeholder="Não tem no catálogo? Adicione com a Raflix Smart" name="q">
     <i class="fas fa-search"></i>
@@ -79,11 +61,38 @@
                 <button type="button" class="carousel-next" id="nextBtn">»</button>
             </div>        
             <button id="save-button" class="save_button" type="submit">Procurar Filme</button>
+            </div>        
+            <button id="save-button" class="save_button" type="submit">Procurar Filme</button>
         </form>
     </div>
     <div class="background"></div>
 </div>
 
+<!-- Loading -->
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Processando o filme...</p>
+    </div>
+</div>
+
+<!-- Mensagens -->
+
+{% if messages %}
+<div class="messages_movie">
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    <div class="buttons">
+        <a href="{% url 'home' %}" class="btn">Home</a>
+        <a href="javascript:history.back()" class="btn">Voltar</a>
+    </div>
+</div>
+<div class="background_messages"></div>
+{% endif %}
 
 <!-- Modal -->
 
@@ -115,16 +124,6 @@
     }
     });
 
-    function modalAccount(icon){
-        const modal = document.getElementById('modal')
-        modal.style.cssText = "display: grid; transition: 0.5s;"
-    }
-
-    function closedModalMenu(){
-        const modal = document.querySelector('#modal')
-        modal.style.cssText = "display: none;"
-    }
-
     const inputSmart = document.getElementById('search-input-smart');
     const defaultPlaceholder = "Não tem no catálogo? Adicione com a Raflix Smart";
     const newPlaceholder = "Digite o nome do filme aqui";
@@ -133,7 +132,6 @@
         inputSmart.placeholder = newPlaceholder;
     });
 
-    // Reset the placeholder when the input loses focus
     inputSmart.addEventListener('blur', () => {
         inputSmart.placeholder = defaultPlaceholder;
     });
@@ -141,12 +139,6 @@
     const smartButton = document.querySelector('.smart');
     const searchSmart = document.querySelector('.search_smart');
     const background = document.querySelector('.background');
-    const movieCarousel = document.getElementById('movie-carousel');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    prevBtn.style.display = 'none';
-    nextBtn.style.display = 'none';
 
     smartButton.addEventListener('click', () => {
         searchSmart.style.display = 'block';
@@ -166,6 +158,12 @@
     });
 
     let slideIndex = 0;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const movieCarousel = document.getElementById('movie-carousel');
+
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
 
     prevBtn.addEventListener('click', () => {
         slideIndex = Math.max(slideIndex - 1, 0);
@@ -182,6 +180,13 @@
         const translateX = -slideWidth * slideIndex;
         movieCarousel.style.transform = `translateX(${translateX}px)`;
     }
+
+    inputSmart.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            const title = inputSmart.value;
+            searchMovie(title);
+        }
+    });
 
     function searchMovie(title) {
         fetch(`https://api.themoviedb.org/3/search/movie?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR&query=${title}`)
@@ -246,13 +251,6 @@
             });
     }
 
-    inputSmart.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-            const title = inputSmart.value;
-            searchMovie(title);
-        }
-    });
-
     const saveButton = document.getElementById('save-button');
     const movieTitleInput = document.getElementById('movie-title-input');
 
@@ -275,5 +273,15 @@
                 $('body').addClass('disable-click');
         })
     });
+
+    function modalAccount(icon){
+        const modal = document.getElementById('modal')
+        modal.style.cssText = "display: grid; transition: 0.5s;"
+    }
+
+    function closedModalMenu(){
+        const modal = document.querySelector('#modal')
+        modal.style.cssText = "display: none;"
+    }
 
 </script>
