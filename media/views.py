@@ -18,7 +18,11 @@ from .forms import CreateMovieForm, CustomAuthenticationForm, EditMovieForm, Edi
 from django_otp import login as otp_login
 from .forms import CreateUserForm
 from django.contrib.auth import login
-from utils.utils import search_movie_and_download_torrent
+from utils.utils import process_movie
+from django.contrib import messages
+import os
+from django.conf import settings
+import shutil
 
 
 class LogoutView(View):
@@ -111,6 +115,13 @@ class Trailer(DetailView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        movie = self.get_object()
+        video_path = movie.trailer.url
+        context['video_path'] = video_path
+        return context
+
 
 class Favorites(ListView):
     model = models.Media
@@ -148,8 +159,8 @@ class ConfigAll(ListView):
 
 
 class SmartCreateMovieView(View):
-    model = models.Media  # Define o modelo a ser utilizado
-    template_name = 'create/smart_create_movie.html'  # Define o template a ser utilizado
+    model = models.Media
+    template_name = 'create/smart_create_movie.html'
     form_class = SmartCreateMovieForm
 
     def get(self, request):
@@ -157,16 +168,85 @@ class SmartCreateMovieView(View):
         return render(request, 'create/smart_create_movie.html', {'form': form})
 
     def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            
-            search_movie_and_download_torrent(title)
+        page_source = request.POST.get('page_source')
+        if page_source == 'pagina1':
+            movie_title = request.POST.get('movie_title')
+
+            if movie_title:
+                print(movie_title)
+
+                success = process_movie(movie_title)
+
+                if success == "not_found":
+                    messages.error(request, f"Ops! Parece que '{movie_title}' não foi encontrado (•ิ_•ิ)")
+                    self.delete_related_files(movie_title)
+                elif success == "error_process":
+                    messages.error(request, f"O processamento de '{movie_title}' foi um verdadeiro drama tecnológico, com twists inesperados. Tente Novamente (•ิ_•ิ)")
+                    self.delete_related_files(movie_title)
+                elif success == "existing_movie":
+                    messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
+                elif success:
+                    messages.success(request, f"Prepare a pipoca! '{movie_title}' foi encontrado e o download foi iniciado ◕‿◕")
+                    self.delete_non_mkv_files()
+                else:
+                    messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{movie_title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
+                    self.delete_related_files(movie_title)
 
             return redirect(reverse_lazy('home'))
-        else:
-            form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+
+        elif page_source == 'pagina2':
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                title = form.cleaned_data['title']
+                print(title)
+
+                success = process_movie(title)
+
+                if success == "not_found":
+                    messages.error(request, f"Ops! Parece que '{title}' não foi encontrado (•ิ_•ิ)")
+                    self.delete_related_files(title)
+                elif success == "error_process":
+                    messages.error(request, f"O processamento de '{title}' foi um verdadeiro drama tecnológico, com twists inesperados. Tente Novamente (•ิ_•ิ)")
+                    self.delete_related_files(title)
+                elif success == "existing_movie":
+                    messages.error(request, "Opa guerreiro! Nós já temos esse filme na lista (/•ิ_•ิ)/")
+                elif success:
+                    messages.success(request, f"Prepare a pipoca! '{title}' foi encontrado e o download foi iniciado ◕‿◕")
+                    self.delete_non_mkv_files()
+                else:
+                    messages.error(request, f"Um bug estranho roubou a cena enquanto processávamos '{title}'. Parece que os bytes estão atuando por conta própria ⊙▂⊙")
+                    self.delete_related_files(title)
+
+                return redirect(reverse_lazy('smart_create_movie'))
+
+            else:
+                form = self.form_class()
+            return render(request, self.template_name, {'form': form})
+
+    def delete_related_files(self, title):
+        clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+        trailer_path = os.path.join(settings.BASE_DIR, f'img/static/media/trailer/{clean_title}_trailer.mp4')
+        movie_path = os.path.join(settings.BASE_DIR, f'img/static/media/video/{clean_title}_movie.mkv')
+        poster_path = os.path.join(settings.BASE_DIR, f'img/static/media/poster/{clean_title}_poster.jpg')
+
+        if os.path.exists(trailer_path):
+            os.remove(trailer_path)
+        if os.path.exists(movie_path):
+            os.remove(movie_path)
+        if os.path.exists(poster_path):
+            os.remove(poster_path)
+
+    def delete_non_mkv_files(self):
+        video_folder = os.path.join(settings.BASE_DIR, 'img/static/media/video')
+
+        for item_name in os.listdir(video_folder):
+            item_path = os.path.join(video_folder, item_name)
+
+            if os.path.isfile(item_path) and not item_name.endswith('.mkv'):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                # Remova o diretório e todo o seu conteúdo (recursivamente)
+                shutil.rmtree(item_path)
 
 
 class CreateMovieView(View):
@@ -195,7 +275,6 @@ class CreateMovieView(View):
 
             movie = models.Movie(
                 description=form.cleaned_data['description'],
-                short_description=form.cleaned_data['short_description'],
                 duration=form.cleaned_data['duration'],
                 classification=form.cleaned_data['classification'],
                 media=media,
@@ -209,7 +288,7 @@ class CreateMovieView(View):
             movie_has_genre.save()
 
             return redirect(reverse_lazy('home'))
-        
+
         else:
             print(form.errors)
             # Se o formulário não for válido, exiba os erros
@@ -238,7 +317,7 @@ class ListUsersDeleteView(View):
     def get(self, request):
         users = models.User.objects.all()
         return render(request, 'remove/list_users_delete.html', {'users': users})
-    
+
 
 class EditMovieView(View):
     def get(self, request, slug):
@@ -306,9 +385,35 @@ class DeleteMovieView(View):
 
     def post(self, request, slug):
         movie = get_object_or_404(models.Media, slug=slug)
+        self.delete_related_files(movie.title)
+        self.delete_non_mkv_files()
         movie.delete()
         return redirect('home')
-    
+
+    def delete_related_files(self, title):
+        clean_title = title.replace(':', '').replace(' ', '_').replace('.', '_')
+        trailer_path = os.path.join(settings.BASE_DIR, f'img/static/media/trailer/{clean_title}_trailer.mp4')
+        movie_path = os.path.join(settings.BASE_DIR, f'img/static/media/video/{clean_title}_movie.mkv')
+        poster_path = os.path.join(settings.BASE_DIR, f'img/static/media/poster/{clean_title}_poster.jpg')
+
+        if os.path.exists(trailer_path):
+            os.remove(trailer_path)
+        if os.path.exists(movie_path):
+            os.remove(movie_path)
+        if os.path.exists(poster_path):
+            os.remove(poster_path)
+
+    def delete_non_mkv_files(self):
+        video_folder = os.path.join(settings.BASE_DIR, 'img/static/media/video')
+
+        for item_name in os.listdir(video_folder):
+            item_path = os.path.join(video_folder, item_name)
+
+            if os.path.isfile(item_path) and not item_name.endswith('.mkv'):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+
 
 class DeleteUserView(View):
     def get(self, request, id):

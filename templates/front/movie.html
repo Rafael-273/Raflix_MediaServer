@@ -16,9 +16,9 @@
 {% endblock %}
 
 {% block conteudo %}
-
     <!-- Header -->
     <div class="banner">
+        {{ movie.media_file }}
         <div class="content">
             {% if movie.title_img %}
             <img src="{{ movie.title_img.url }}" class="movieTitle">
@@ -63,7 +63,7 @@
                 </form>
             </div>
         </div>
-        <video src="{{ movie.trailer.url }}" width="440px" loop="true" autoplay="true" muted autoplay id="main_video" class="bg" controls></video>
+        <video src="{% static 'media/trailer/Vingadores_Ultimato_trailer.mp4' %}" width="440px" loop="true" autoplay="true" muted autoplay id="main_video" class="bg" controls></video>
         <div class="shadow"></div>
     </div>
 

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from .models import Movie, Media, User, genre_choices, Genre
+from .models import Movie, Media, User, Genre
 from django.db.models import Q
 from django.core.validators import FileExtensionValidator
 from django_otp.forms import OTPAuthenticationFormMixin
@@ -84,7 +84,6 @@ class CreateMovieForm(forms.ModelForm):
 
     category = forms.ChoiceField(
         label="Categoria",
-        choices=genre_choices,
         widget=forms.Select(attrs={'class': 'input_text'})
     )
 
@@ -106,12 +105,6 @@ class CreateMovieForm(forms.ModelForm):
     description = forms.CharField(
         label="Descrição",
         widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira a descrição do filme'})
-    )
-
-    short_description = forms.CharField(
-        label="Descrição Resumida",
-        max_length=255,
-        widget=forms.Textarea(attrs={'class': 'input_textarea', 'placeholder': 'Insira a descrição resumida do filme'})
     )
 
     banner = forms.ImageField(
@@ -138,7 +131,7 @@ class CreateMovieForm(forms.ModelForm):
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
+        fields = ('title', 'description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
     
     def clean_poster(self):
         poster = self.cleaned_data['poster']
@@ -220,7 +213,6 @@ class EditMovieForm(forms.ModelForm):
     )
 
     category = forms.ChoiceField(
-        choices=genre_choices,
         widget=forms.Select(attrs={'class': 'input_text'})
     )
 
@@ -262,13 +254,13 @@ class EditMovieForm(forms.ModelForm):
         self.fields['banner'].initial = self.instance.media.banner
         self.fields['media_file'].initial = self.instance.media.media_file
         self.fields['trailer'].initial = self.instance.media.trailer
-        self.fields['category'].choices = genre_choices
+        # self.fields['category'].choices = genre_choices
         category_value = self.instance.media.getCategory()
         self.fields['category'].initial = category_value
 
     class Meta:
         model = Movie
-        fields = ('title', 'description', 'short_description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner', 'media_file', 'trailer')
+        fields = ('title', 'description', 'release_year', 'duration', 'classification', 'category', 'poster', 'banner','media_file',  'trailer')
 
     def clean_poster(self):
         poster = self.cleaned_data['poster']

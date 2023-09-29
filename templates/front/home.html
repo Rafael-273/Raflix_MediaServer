@@ -63,12 +63,12 @@ Home
         </article>
     
         <!-- Category Row -->
-    
+        {{ movie.poster.url }}
         <article class="c-carousel">
-            <h1 class="title_row">Marvel</h1>
+            <h1 class="title_row">Ação e Aventura</h1>
             <div class="c-carousel__slides js-carousel--responsive-category">
                 {% for movie in movies %}
-                {% if movie.getCategory|first == 'Marvel' %}
+                {% if 'Ação' in movie.getCategory or 'Aventura' in movie.getCategory %}
                 <a href="{{ movie.slug }}"><div name="{{ movie.slug }}" class="c-carousel__slide" onmouseenter="modalDisplay(this)"><img src="{{ movie.poster.url }}"></div></a>
                 {% endif %}
                 {% endfor %}
@@ -84,7 +84,7 @@ Home
     {% for movie in movies %}
     <div id="modal_{{ movie.slug }}" class="modal" onmouseenter="modalPlay(this)" onmouseleave="modalHidden(this); modalStop(this)">
         <video loop="true" controls muted controls class="video_trailer">
-            <source src="{{ movie.trailer.url }}" type="video/mp4"> 
+            <source src="http://localhost:3000{{ movie.trailer.url }}" type="video/mp4"> 
         </video>
         <div class="first_row">
             <button class="play">
@@ -135,9 +135,11 @@ Home
     <!-- info banner -->
     {% for movie in movies|slice:"-3:" %}
 
+    <!-- <div class="teste">http://localhost:3000{{ movie.trailer.url }}</div> -->
+
     <div class="url_info" hidden>{{ movie.slug }}</div>
     <div class="url_banner" hidden>play/{{ movie.slug }}</div>
-    <div class="trailer_banner" hidden>{{ movie.trailer.url }}</div>
+    <div class="trailer_banner" hidden>http://localhost:3000{{ movie.trailer.url }}</div>
     <div class="title_movie_banner" hidden>{{ movie.title }}</div>
     <div class="year_banner" hidden>{{ movie.release_year }}</div>
     <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
@@ -316,8 +318,7 @@ Home
             updateBanner(index);
         }, 15000);
 
-
-        $(document).on('submit', 'form', function(e) {
+        $(document).on('submit', 'form:not(.carousel-form)', function(e) {
             e.preventDefault();
             const movieSlug = $(this).find('input[name="slug"]').val();
             const formData = new FormData(this);

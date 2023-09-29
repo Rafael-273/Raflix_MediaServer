@@ -35,7 +35,7 @@
     height: 100vh;
     object-fit: cover;
     filter: brightness(80%);
-    transform: scale(1.1);
+    transform: scale(1.18);
 }
 
 .grid_banner {

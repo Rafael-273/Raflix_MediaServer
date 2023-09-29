@@ -210,7 +210,6 @@ Create Movie
             fetch(`https://api.themoviedb.org/3/movie/${nextMovie.id}?api_key=c3ed7390e52d4dddf37320bd22ea8a64&language=pt-BR`)
                 .then(response => response.json())
                 .then(movieDetails => {
-                    console.log(movieDetails);
 
                     document.getElementById("id_title").value = nextMovie.title;
                     document.getElementById("id_description").value = nextMovie.overview;
