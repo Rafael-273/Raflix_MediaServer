@@ -8,20 +8,20 @@ player.on('loadedmetadata', function() {
   playButton.addEventListener('click', function() {
     if (player.paused()) {
       player.play();
-      iconPausePlay.innerHTML = "pause";
+      iconPausePlay.innerHTML = "play_arrow";
     } else {
       player.pause();
-      iconPausePlay.innerHTML = "play_arrow";
+      iconPausePlay.innerHTML = "pause";
     }
   });
 
   player.on('click', function() {
     if (this.paused()) {
       this.play();
-      iconPausePlay.innerHTML = "pause";
+      iconPausePlay.innerHTML = "play_arrow";
     } else {
       this.pause();
-      iconPausePlay.innerHTML = "play_arrow";
+      iconPausePlay.innerHTML = "pause";
     }
   });
 

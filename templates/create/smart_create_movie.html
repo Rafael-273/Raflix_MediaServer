@@ -15,7 +15,7 @@ Create Movie
 
 {% block conteudo %}
 
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay" id="loadingOverlaySmart">
         <div class="loading-content">
             <div class="loading-spinner"></div>
             <p>Processando o filme...</p>
@@ -114,13 +114,18 @@ Create Movie
     });
 
     $(document).ready(function () {
+        // Ocultar o overlay de carregamento inicialmente
+        $('#loadingOverlaySmart').hide();
+        
         $('#save-button').on('click', function () {
             if ($('#id_title').val().trim() !== "") {
-                $('#loadingOverlay').show();
+                console.log('teste');
+                // Exibir o overlay de carregamento quando o botão for clicado e a condição for atendida
+                $('#loadingOverlaySmart').show();
             }
         });
-        $('#loadingOverlay').hide();
     });
+
 </script>
 
 {% endblock %}

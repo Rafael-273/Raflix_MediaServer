@@ -58,24 +58,22 @@ Favoritos
 </section>
 
     <!-- info banner -->
-    {% for movie in movies %}
-        {% if movie.favorited %}
-            <div class="url_info" hidden>{{ movie.slug }}</div>
-            <div class="url_banner" hidden>play/{{ movie.slug }}</div>
-            <div class="banner_movie" hidden>{{ movie.banner.url }}</div>
-            <div class="title_movie_banner" hidden>{{ movie.title }}</div>
-            <div class="year_banner" hidden>{{ movie.release_year }}</div>
-            <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
-            <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
-            <div class="category_banner" hidden>
-                {% for genre in movie.getCategory %}
+    {% for movie in movies.getFavoritesMovies %}
+        <div class="url_info" hidden>{{ movie.slug }}</div>
+        <div class="url_banner" hidden>play/{{ movie.slug }}</div>
+        <div class="banner_movie" hidden>{{ movie.banner.url }}</div>
+        <div class="title_movie_banner" hidden>{{ movie.title }}</div>
+        <div class="year_banner" hidden>{{ movie.release_year }}</div>
+        <div class="classification_banner" hidden>{{ movie.getClassification }}</div>
+        <div class="duration_banner" hidden>{{ movie.getDuration }}</div>
+        <div class="category_banner" hidden>
+            {% for genre in movie.getCategory %}
 
-                {{ genre }}
+            {{ genre }}
 
-                {% endfor %}
-            </div>
-            <div class="description_banner" hidden>{{ movie.getDescription }}</div>
-        {% endif %}
+            {% endfor %}
+        </div>
+        <div class="description_banner" hidden>{{ movie.getDescription }}</div>
     {% endfor %}
 
     <script>

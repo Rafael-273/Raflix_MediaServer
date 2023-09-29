@@ -170,6 +170,15 @@ class Media(models.Model):
             genres = [related.genre.category for related in movie.movie_has_genre.all()]
             return genres
 
+    def getMoviesBanner(self):
+        movies_with_banner = models.Media.objects.filter(banner__isnull=False).order_by('-id')[:3]
+        return movies_with_banner
+
+    def getFavoritesMovies(self):
+        movies_with_banner_and_favorited = models.Media.objects.filter(banner__isnull=False, favorited=True).order_by('-id')[:3]
+        return movies_with_banner_and_favorited
+
+
 
 class Movie(models.Model):
     description = models.TextField()
